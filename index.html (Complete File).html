@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palletised MOF Digital Twin</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    
+    <style>
+        :root { --primary: #0a4275; --secondary: #17a2b8; --bg: #f0f2f5; --card: #ffffff; --text: #333; --border: #e0e4e8; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); margin: 0; padding: 20px; color: var(--text); }
+        .header { max-width: 1500px; margin: 0 auto 20px auto; border-bottom: 3px solid var(--primary); padding-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .header-text h1 { color: var(--primary); margin: 0; font-size: 28px; text-transform: uppercase; letter-spacing: 1px;}
+        .header-text p { font-size: 15px; color: #6c757d; margin: 5px 0 0 0; font-weight: 500;}
+        
+        /* Auth UI */
+        .auth-panel { display: flex; align-items: center; gap: 15px; }
+        .auth-btn { background: var(--card); border: 1px solid #ced4da; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; color: #495057; display: flex; align-items: center; gap: 8px; transition: 0.2s;}
+        .auth-btn:hover { background: #e9ecef; }
+        .user-info { display: none; align-items: center; gap: 10px; font-size: 14px; font-weight: bold; }
+        .user-info img { width: 32px; height: 32px; border-radius: 50%; }
+
+        .dashboard-wrapper { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; max-width: 1500px; margin: 0 auto; }
+        .panel { background: var(--card); padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+        .panel-title { margin-top: 0; font-size: 16px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 20px; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: #f8f9fa; padding: 15px; border-radius: 6px; border-left: 4px solid var(--secondary); }
+        .stat-card h3 { margin: 0 0 5px 0; font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-card p { margin: 0; font-size: 22px; font-weight: 800; color: var(--primary); }
+        .chart-container { position: relative; height: 280px; width: 100%; margin-bottom: 30px; }
+        
+        /* Interactive Predictor */
+        .predictor-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid var(--border); }
+        .input-section h3 { margin-top: 0; color: var(--primary); font-size: 15px; margin-bottom: 15px; }
+        .input-group { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; font-size: 14px; font-weight: 500;}
+        .input-group input { width: 90px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-weight: bold; color: var(--primary);}
+        
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+        .calc-btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; flex: 1; transition: 0.2s;}
+        .calc-btn:hover { background: #073056; }
+        .save-btn { background: #198754; color: white; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; flex: 1; display: none; }
+        .save-btn:hover { background: #157347; }
+        .save-btn:disabled { background: #6c757d; cursor: not-allowed; }
+
+        /* Engineering Breakdown Box */
+        .breakdown-box { background: var(--card); border: 1px dashed #adb5bd; border-radius: 6px; padding: 15px; font-size: 13px; color: #495057; display: flex; flex-direction: column; justify-content: center;}
+        .breakdown-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #f1f3f5; padding-bottom: 4px;}
+        .final-yield { font-size: 20px; font-weight: 900; color: #198754; text-align: center; margin-top: 15px; padding-top: 15px; border-top: 2px solid #e9ecef; }
+        .context-tag { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; margin-top: 10px; text-align: center;}
+        .tag-good { background: #d1e7dd; color: #0f5132; }
+        .tag-bad { background: #f8d7da; color: #842029; }
+
+        /* Engineering Context Sidebar */
+        .context-sidebar { background: #e9ecef; padding: 15px; border-radius: 6px; margin-bottom: 20px; font-size: 13px; color: #495057;}
+        .context-sidebar ul { margin: 10px 0 0 0; padding-left: 20px; }
+        .context-sidebar li { margin-bottom: 6px; }
+
+        .viewer-container { width: 100%; height: 400px; background-color: #e9ecef; border-radius: 6px; position: relative; border: 1px solid var(--border); margin-bottom: 20px;}
+        model-viewer { width: 100%; height: 100%; }
+        .viewer-label { position: absolute; bottom: 15px; left: 15px; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; border: 1px solid #ccc; pointer-events: none;}
+        
+        .saved-runs-container { margin-top: 20px; }
+        .saved-run-item { background: #f8f9fa; border: 1px solid var(--border); padding: 12px; border-radius: 4px; margin-bottom: 8px; font-size: 13px; display: flex; justify-content: space-between; align-items: center;}
+        
+        @media (max-width: 1100px) { .dashboard-wrapper { grid-template-columns: 1fr; } .predictor-wrapper { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-text">
+        <h1>Palletised MOF Harvester</h1>
+        <p>Live Digital Twin & Thermodynamic Yield Predictor</p>
+    </div>
+    <div class="auth-panel">
+        <button id="login-btn" class="auth-btn" onclick="signInWithGoogle()">
+            <svg style="width:18px;height:18px;" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            Sign in to Save
+        </button>
+        <div id="user-profile" class="user-info">
+            <img id="user-photo" src="" alt="Profile">
+            <span id="user-name"></span>
+            <button class="auth-btn" style="padding: 5px 10px; font-size: 12px;" onclick="signOut()">Log Out</button>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-wrapper">
+    <!-- LEFT PANEL: Historical Data & Analytics -->
+    <div class="panel">
+        <h2 class="panel-title">Historical Simulation Analytics (Cape Town)</h2>
+        
+        <div class="stats-grid">
+            <div class="stat-card"><h3>Structural Sorbent Mass</h3><p id="mass-display">2.688 kg</p></div>
+            <div class="stat-card"><h3>Target Yield</h3><p>0.250 L/day</p></div>
+            <div class="stat-card"><h3>Simulated Avg Yield</h3><p id="avg-yield-display">-- L</p></div>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="yieldChart"></canvas>
+        </div>
+
+        <h2 class="panel-title">Thermodynamic Yield Predictor</h2>
+        <div class="predictor-wrapper">
+            <div class="input-section">
+                <h3>Custom Environmental Inputs</h3>
+                <div class="input-group">
+                    <label>Nighttime Humidity (%)</label>
+                    <input type="number" id="input-rh" value="80" max="100" min="0">
+                </div>
+                <div class="input-group">
+                    <label>Nighttime Temperature (°C)</label>
+                    <input type="number" id="input-temp" value="16">
+                </div>
+                <div class="input-group">
+                    <label>MOF Max Uptake (kg/kg)</label>
+                    <input type="number" id="input-capacity" value="0.40" step="0.05">
+                </div>
+                
+                <div class="btn-group">
+                    <button class="calc-btn" onclick="calculateManualYield()">Run Simulation</button>
+                    <button id="save-btn" class="save-btn" onclick="savePrediction()" disabled>Save Log</button>
+                </div>
+            </div>
+
+            <!-- Visible Math Breakdown -->
+            <div class="breakdown-box" id="prediction-result">
+                <div style="text-align: center; color: #888; font-style: italic; margin: 30px 0;">
+                    Awaiting manual execution...<br>Enter properties and click Run.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL: 3D Visualization & Context -->
+    <div class="panel">
+        <h2 class="panel-title">Physical Envelope (350x270mm)</h2>
+        <div class="viewer-container">
+            <model-viewer src="housing_model.glb" auto-rotate camera-controls shadow-intensity="1" exposure="1.2"></model-viewer>
+            <div class="viewer-label">Interactive Model: Click & Drag</div>
+        </div>
+        
+        <div class="context-sidebar">
+            <strong>System Constants & Rules:</strong>
+            <ul>
+                <li><strong>Sorption Model:</strong> Type V Logistic Isotherm.</li>
+                <li><strong>Thermal Degradation:</strong> Uptake degrades exponentially if external temp exceeds 65°C.</li>
+                <li><strong>Desorption Base:</strong> Modeled at 75°C with 5% internal RH. Sorbent cannot fully release 100% of water.</li>
+                <li><strong>Condenser Loss:</strong> Assumes a fixed 85% mechanical condensation efficiency.</li>
+            </ul>
+        </div>
+
+        <div id="saved-runs-section" class="saved-runs-container" style="display: none;">
+            <h2 class="panel-title">Saved Execution Logs</h2>
+            <div id="saved-runs-list"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- 1. FIREBASE SETUP ---
+    // REPLACE THESE WITH YOUR ACTUAL FIREBASE PROJECT KEYS
+    const firebaseConfig = {
+       apiKey: "AIzaSyCkzGGq1ZjgaNmFZH1lNJ-jR795IibHuLY",
+  authDomain: "mof-harvester-sim.firebaseapp.com",
+  projectId: "mof-harvester-sim",
+  storageBucket: "mof-harvester-sim.firebasestorage.app",
+  messagingSenderId: "792227245265",
+  appId: "1:792227245265:web:0622c8067a6ff2f92b29f0"
+};
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    let historicalYields = [];
+    let currentUser = null;
+    let lastCalculatedResult = null;
+
+    // --- 2. AUTHENTICATION ---
+    const provider = new firebase.auth.GoogleAuthProvider();
+    function signInWithGoogle() { auth.signInWithPopup(provider).catch(error => console.error(error)); }
+    function signOut() { auth.signOut(); }
+
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            currentUser = user;
+            document.getElementById('login-btn').style.display = 'none';
+            document.getElementById('user-profile').style.display = 'flex';
+            document.getElementById('user-photo').src = user.photoURL;
+            document.getElementById('user-name').innerText = user.displayName;
+            
+            document.getElementById('save-btn').style.display = 'block';
+            document.getElementById('saved-runs-section').style.display = 'block';
+            loadUserSavedRuns();
+        } else {
+            currentUser = null;
+            document.getElementById('login-btn').style.display = 'flex';
+            document.getElementById('user-profile').style.display = 'none';
+            document.getElementById('save-btn').style.display = 'none';
+            document.getElementById('saved-runs-section').style.display = 'none';
+        }
+    });
+
+    // --- 3. HISTORICAL CLOUD DATA FETCH ---
+    async function loadSimulationData() {
+        try {
+            const snapshot = await db.collection('simulation_results').where('site', '==', 'cape_town').orderBy('date', 'asc').get();
+            if(snapshot.empty) return;
+
+            const dates = [];
+            let totalYield = 0;
+
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                dates.push(data.date);
+                historicalYields.push(data.yield_liters);
+                totalYield += data.yield_liters;
+            });
+
+            document.getElementById('avg-yield-display').innerText = (totalYield / historicalYields.length).toFixed(3) + ' L';
+
+            new Chart(document.getElementById('yieldChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [
+                        { label: 'Simulated Water Yield (Liters)', data: historicalYields, backgroundColor: 'rgba(23, 162, 184, 0.2)', borderColor: '#17a2b8', borderWidth: 2, fill: true, pointRadius: 0 },
+                        { label: 'Target Yield (0.25 L)', data: Array(dates.length).fill(0.25), type: 'line', borderColor: '#dc3545', borderDash: [5, 5], fill: false, pointRadius: 0 }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        } catch(error) { console.error("Error fetching data:", error); }
+    }
+    loadSimulationData();
+
+    // --- 4. PREDICTION ENGINE (VISIBLE MATH) ---
+    function calculateManualYield() {
+        const rh = parseFloat(document.getElementById('input-rh').value);
+        const tempC = parseFloat(document.getElementById('input-temp').value);
+        const maxCapacity = parseFloat(document.getElementById('input-capacity').value);
+        const mofMass = 2.688; 
+        
+        function getUptake(targetRh, currentTemp) {
+            const steepness = 60.0, rhStep = 0.13;
+            let s = (x) => 1.0 / (1.0 + Math.exp(-steepness * (x - rhStep)));
+            let uptake = maxCapacity * (s(targetRh) - s(0.0)) / (s(1.0) - s(0.0));
+            if (currentTemp > 65.0) uptake *= Math.exp(-0.08 * (currentTemp - 65.0));
+            return Math.max(0.0, uptake);
+        }
+
+        const waterCaptured = getUptake(rh / 100.0, tempC) * mofMass;
+        const waterRetained = getUptake(0.05, 75.0) * mofMass;
+        const theoreticalYield = waterCaptured - waterRetained;
+        let finalYield = Math.max(0, theoreticalYield * 0.85);
+
+        let likelihood = "Data unavailable";
+        let tagClass = "tag-bad";
+        if (historicalYields.length > 0) {
+            let percentile = (historicalYields.filter(y => y <= finalYield).length / historicalYields.length) * 100;
+            if (percentile >= 90) { likelihood = "Top 10% Condition"; tagClass = "tag-good"; }
+            else if (percentile >= 50) { likelihood = "Above Average"; tagClass = "tag-good"; }
+            else if (percentile >= 20) { likelihood = "Below Average"; tagClass = "tag-bad"; }
+            else { likelihood = "Bottom 20% Condition"; tagClass = "tag-bad"; }
+        }
+
+        lastCalculatedResult = { yield: finalYield.toFixed(3), rh: rh, temp: tempC, capacity: maxCapacity, likelihood: likelihood, timestamp: firebase.firestore.FieldValue.serverTimestamp() };
+
+        document.getElementById('prediction-result').innerHTML = `
+            <div class="breakdown-row"><span>Total Mass Adsorbed:</span> <strong>${waterCaptured.toFixed(3)} L</strong></div>
+            <div class="breakdown-row"><span>Desorption Retention Loss:</span> <strong style="color:#dc3545;">-${waterRetained.toFixed(3)} L</strong></div>
+            <div class="breakdown-row"><span>Theoretical Desorption:</span> <strong>${Math.max(0, theoreticalYield).toFixed(3)} L</strong></div>
+            <div class="breakdown-row"><span>Condenser Efficiency:</span> <strong>85%</strong></div>
+            <div class="final-yield">${finalYield.toFixed(3)} L/day Net Yield</div>
+            <div style="text-align:center;"><span class="context-tag ${tagClass}">${likelihood}</span></div>
+        `;
+        
+        if(currentUser) document.getElementById('save-btn').disabled = false;
+    }
+
+    async function savePrediction() {
+        if (!currentUser || !lastCalculatedResult) return;
+        try {
+            await db.collection('user_predictions').doc(currentUser.uid).collection('saved_runs').add(lastCalculatedResult);
+            document.getElementById('save-btn').disabled = true;
+            document.getElementById('save-btn').innerText = "Saved!";
+            setTimeout(() => { document.getElementById('save-btn').innerText = "Save Log"; }, 2000);
+            loadUserSavedRuns();
+        } catch (error) { console.error("Error saving: ", error); }
+    }
+
+    async function loadUserSavedRuns() {
+        if (!currentUser) return;
+        const listDiv = document.getElementById('saved-runs-list');
+        try {
+            const snapshot = await db.collection('user_predictions').doc(currentUser.uid).collection('saved_runs').orderBy('timestamp', 'desc').limit(5).get();
+            if (snapshot.empty) { listDiv.innerHTML = "<em style='color:#888;'>No runs saved yet.</em>"; return; }
+            let html = "";
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                html += `<div class="saved-run-item"><div><strong>${data.yield} L</strong> <span style="color:#6c757d; margin-left:5px;">(${data.rh}% RH | ${data.temp}°C | ${data.capacity} Cap)</span></div><div style="font-size:11px; color:#adb5bd;">${data.likelihood}</div></div>`;
+            });
+            listDiv.innerHTML = html;
+        } catch (error) { listDiv.innerHTML = "<em style='color:red;'>Error loading history.</em>"; }
+    }
+</script>
+</body>
+</html>
