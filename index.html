@@ -92,7 +92,6 @@
 </div>
 
 <div class="dashboard-wrapper">
-    <!-- LEFT PANEL: Historical Data & Analytics -->
     <div class="panel">
         <h2 class="panel-title">Historical Simulation Analytics (Cape Town)</h2>
         
@@ -129,7 +128,6 @@
                 </div>
             </div>
 
-            <!-- Visible Math Breakdown -->
             <div class="breakdown-box" id="prediction-result">
                 <div style="text-align: center; color: #888; font-style: italic; margin: 30px 0;">
                     Awaiting manual execution...<br>Enter properties and click Run.
@@ -138,7 +136,6 @@
         </div>
     </div>
 
-    <!-- RIGHT PANEL: 3D Visualization & Context -->
     <div class="panel">
         <h2 class="panel-title">Physical Envelope (350x270mm)</h2>
         <div class="viewer-container">
@@ -164,16 +161,15 @@
 </div>
 
 <script>
-    // --- 1. FIREBASE SETUP ---
-    // REPLACE THESE WITH YOUR ACTUAL FIREBASE PROJECT KEYS
+    // 1. FIREBASE SETUP
     const firebaseConfig = {
        apiKey: "AIzaSyCkzGGq1ZjgaNmFZH1lNJ-jR795IibHuLY",
-  authDomain: "mof-harvester-sim.firebaseapp.com",
-  projectId: "mof-harvester-sim",
-  storageBucket: "mof-harvester-sim.firebasestorage.app",
-  messagingSenderId: "792227245265",
-  appId: "1:792227245265:web:0622c8067a6ff2f92b29f0"
-};
+       authDomain: "mof-harvester-sim.firebaseapp.com",
+       projectId: "mof-harvester-sim",
+       storageBucket: "mof-harvester-sim.firebasestorage.app",
+       messagingSenderId: "792227245265",
+       appId: "1:792227245265:web:0622c8067a6ff2f92b29f0"
+    };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const auth = firebase.auth();
@@ -182,7 +178,7 @@
     let currentUser = null;
     let lastCalculatedResult = null;
 
-    // --- 2. AUTHENTICATION ---
+    // 2. AUTHENTICATION
     const provider = new firebase.auth.GoogleAuthProvider();
     function signInWithGoogle() { auth.signInWithPopup(provider).catch(error => console.error(error)); }
     function signOut() { auth.signOut(); }
@@ -207,23 +203,35 @@
         }
     });
 
-    // --- 3. HISTORICAL CLOUD DATA FETCH ---
+    // 3. HISTORICAL CLOUD DATA FETCH (UPDATED TO BYPASS COMPOSITE INDEX)
     async function loadSimulationData() {
         try {
-            const snapshot = await db.collection('simulation_results').where('site', '==', 'cape_town').orderBy('date', 'asc').get();
-            if(snapshot.empty) return;
+            // Fetch ordered by date only, bypassing the need for a strict composite index
+            const snapshot = await db.collection('simulation_results').orderBy('date', 'asc').get();
+            
+            if(snapshot.empty) {
+                document.getElementById('avg-yield-display').innerText = "Empty DB";
+                return;
+            }
 
             const dates = [];
             let totalYield = 0;
+            let count = 0;
 
+            // Filter for cape_town locally instead of in the query
             snapshot.forEach(doc => {
                 const data = doc.data();
-                dates.push(data.date);
-                historicalYields.push(data.yield_liters);
-                totalYield += data.yield_liters;
+                if (data.site === 'cape_town') {
+                    dates.push(data.date);
+                    historicalYields.push(data.yield_liters);
+                    totalYield += data.yield_liters;
+                    count++;
+                }
             });
 
-            document.getElementById('avg-yield-display').innerText = (totalYield / historicalYields.length).toFixed(3) + ' L';
+            if (count === 0) return;
+
+            document.getElementById('avg-yield-display').innerText = (totalYield / count).toFixed(3) + ' L';
 
             new Chart(document.getElementById('yieldChart').getContext('2d'), {
                 type: 'line',
@@ -236,11 +244,16 @@
                 },
                 options: { responsive: true, maintainAspectRatio: false }
             });
-        } catch(error) { console.error("Error fetching data:", error); }
+            
+        } catch(error) { 
+            console.error("Firestore Error:", error); 
+            document.getElementById('avg-yield-display').innerHTML = `<span style="color:red; font-size:14px; font-weight:bold;">Rule Blocked</span>`;
+            alert("Firebase blocked the data read.\n\nPlease go to Firebase Console > Firestore > Rules, and change 'allow read: if false;' to 'allow read: if true;'");
+        }
     }
     loadSimulationData();
 
-    // --- 4. PREDICTION ENGINE (VISIBLE MATH) ---
+    // 4. PREDICTION ENGINE (VISIBLE MATH)
     function calculateManualYield() {
         const rh = parseFloat(document.getElementById('input-rh').value);
         const tempC = parseFloat(document.getElementById('input-temp').value);
