@@ -11,66 +11,81 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     
     <style>
-        :root { --primary: #0a4275; --secondary: #17a2b8; --bg: #f0f2f5; --card: #ffffff; --text: #333; --border: #e0e4e8; }
+        /* Dark, Professional Theme Variables */
+        :root { 
+            --primary: #58a6ff;       /* Sophisticated bright blue accent */
+            --secondary: #3fb950;     /* Green accent for success metrics */
+            --bg: #0d1117;            /* Deep black/grey background */
+            --card: #161b22;          /* Slightly lighter panel background */
+            --text: #c9d1d9;          /* Soft grey/white for readability */
+            --text-muted: #8b949e;    /* Muted text for labels */
+            --border: #30363d;        /* Subtle dark borders */
+        }
+        
         body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); margin: 0; padding: 20px; color: var(--text); }
-        .header { max-width: 1500px; margin: 0 auto 20px auto; border-bottom: 3px solid var(--primary); padding-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .header-text h1 { color: var(--primary); margin: 0; font-size: 28px; text-transform: uppercase; letter-spacing: 1px;}
-        .header-text p { font-size: 15px; color: #6c757d; margin: 5px 0 0 0; font-weight: 500;}
+        .header { max-width: 1500px; margin: 0 auto 20px auto; border-bottom: 2px solid var(--border); padding-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .header-text h1 { color: var(--text); margin: 0; font-size: 28px; text-transform: uppercase; letter-spacing: 1px;}
+        .header-text h1 span { color: var(--primary); }
+        .header-text p { font-size: 15px; color: var(--primary); margin: 5px 0 0 0; font-weight: 500;}
         
         /* Auth UI */
         .auth-panel { display: flex; align-items: center; gap: 15px; }
-        .auth-btn { background: var(--card); border: 1px solid #ced4da; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; color: #495057; display: flex; align-items: center; gap: 8px; transition: 0.2s;}
-        .auth-btn:hover { background: #e9ecef; }
+        .auth-btn { background: #21262d; border: 1px solid var(--border); padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; color: var(--text); display: flex; align-items: center; gap: 8px; transition: 0.2s;}
+        .auth-btn:hover { background: #30363d; border-color: #8b949e; }
         .user-info { display: none; align-items: center; gap: 10px; font-size: 14px; font-weight: bold; }
         .user-info img { width: 32px; height: 32px; border-radius: 50%; }
 
         .dashboard-wrapper { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; max-width: 1500px; margin: 0 auto; }
-        .panel { background: var(--card); padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid var(--border); }
-        .panel-title { margin-top: 0; font-size: 16px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;}
+        .panel { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+        .panel-title { margin-top: 0; font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center;}
         
-        .site-selector { padding: 6px 12px; border-radius: 4px; border: 1px solid #ccc; font-weight: bold; color: var(--primary); background: #f8f9fa; cursor: pointer; }
+        .site-selector { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); font-weight: bold; color: var(--primary); background: #0d1117; cursor: pointer; }
         
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: #f8f9fa; padding: 15px; border-radius: 6px; border-left: 4px solid var(--secondary); }
-        .stat-card h3 { margin: 0 0 5px 0; font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; }
-        .stat-card p { margin: 0; font-size: 22px; font-weight: 800; color: var(--primary); }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
+        .stat-card { background: #0d1117; padding: 18px; border-radius: 8px; border-left: 4px solid var(--primary); border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .stat-card h3 { margin: 0 0 8px 0; font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-card p { margin: 0; font-size: 24px; font-weight: 800; color: var(--text); }
+        
         .chart-container { position: relative; height: 300px; width: 100%; margin-bottom: 30px; }
         
         /* Interactive Predictor */
-        .predictor-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid var(--border); }
-        .input-section h3 { margin-top: 0; color: var(--primary); font-size: 15px; margin-bottom: 15px; border-bottom: 1px solid #dee2e6; padding-bottom: 8px;}
-        .input-group { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; font-size: 13px; font-weight: 500;}
-        .input-group input[type="number"] { width: 70px; padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-weight: bold; color: var(--primary); text-align: center;}
-        .input-group input[type="range"] { width: 100px; }
+        .predictor-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; background: #0d1117; padding: 25px; border-radius: 8px; border: 1px solid var(--border); }
+        .input-section h3 { margin-top: 0; color: var(--text); font-size: 15px; margin-bottom: 18px; border-bottom: 1px solid var(--border); padding-bottom: 8px;}
+        .input-group { display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center; font-size: 13px; font-weight: 500; color: var(--text-muted); }
+        .input-group input[type="number"] { width: 70px; padding: 6px; border: 1px solid var(--border); border-radius: 4px; font-weight: bold; color: var(--primary); background: var(--card); text-align: center;}
+        .input-group input[type="number"]:focus { outline: none; border-color: var(--primary); }
+        .input-group input[type="range"] { width: 100px; accent-color: var(--primary); }
         .range-val { display: inline-block; width: 45px; text-align: right; font-weight: bold; color: var(--primary); }
 
-        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
-        .calc-btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; flex: 1; transition: 0.2s;}
-        .calc-btn:hover { background: #073056; }
-        .save-btn { background: #198754; color: white; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; flex: 1; display: none; }
-        .save-btn:hover { background: #157347; }
-        .save-btn:disabled { background: #6c757d; cursor: not-allowed; }
+        .btn-group { display: flex; gap: 12px; margin-top: 25px; }
+        .calc-btn { background: var(--primary); color: #0d1117; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 800; flex: 1; transition: 0.2s;}
+        .calc-btn:hover { background: #79c0ff; }
+        .save-btn { background: var(--secondary); color: #0d1117; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 800; flex: 1; display: none; }
+        .save-btn:hover { background: #56d364; }
+        .save-btn:disabled { background: #21262d; color: var(--text-muted); cursor: not-allowed; }
 
         /* Engineering Breakdown Box */
-        .breakdown-box { background: var(--card); border: 1px dashed #adb5bd; border-radius: 6px; padding: 15px; font-size: 13px; color: #495057; display: flex; flex-direction: column; justify-content: center;}
-        .breakdown-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #f1f3f5; padding-bottom: 4px;}
-        .final-yield { font-size: 22px; font-weight: 900; color: #198754; text-align: center; margin-top: 10px; padding-top: 15px; border-top: 2px solid #e9ecef; }
+        .breakdown-box { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; font-size: 13px; color: var(--text); display: flex; flex-direction: column; justify-content: center;}
+        .breakdown-row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px dashed var(--border); padding-bottom: 6px;}
+        .final-yield { font-size: 22px; font-weight: 900; color: var(--secondary); text-align: center; margin-top: 15px; padding-top: 20px; border-top: 2px solid var(--border); }
         
-        /* Analysis Recommendation Box */
-        .analysis-box { margin-top: 15px; padding: 12px; border-radius: 6px; font-size: 12px; line-height: 1.5; font-weight: 500; }
-        .analysis-bad { background: #fff3cd; border: 1px solid #ffecb5; color: #664d03; }
-        .analysis-good { background: #d1e7dd; border: 1px solid #badbcc; color: #0f5132; }
+        /* Analysis Recommendation Box (Dark Mode Adjusted) */
+        .analysis-box { margin-top: 15px; padding: 15px; border-radius: 6px; font-size: 12px; line-height: 1.6; font-weight: 500; }
+        .analysis-bad { background: #3d2c00; border: 1px solid #7a5900; color: #ffda6a; }
+        .analysis-good { background: #003d1f; border: 1px solid #007a3e; color: #6affb3; }
 
         /* Engineering Context Sidebar */
-        .context-sidebar { background: #e9ecef; padding: 15px; border-radius: 6px; margin-bottom: 20px; font-size: 13px; color: #495057;}
+        .context-sidebar { background: #0d1117; padding: 18px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; font-size: 13px; color: var(--text-muted); line-height: 1.5;}
         .context-sidebar ul { margin: 10px 0 0 0; padding-left: 20px; }
-        .context-sidebar li { margin-bottom: 6px; }
+        .context-sidebar li { margin-bottom: 8px; }
 
-        .viewer-container { width: 100%; height: 350px; background-color: #e9ecef; border-radius: 6px; position: relative; border: 1px solid var(--border); margin-bottom: 20px;}
-        .viewer-label { position: absolute; bottom: 15px; left: 15px; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; border: 1px solid #ccc; pointer-events: none;}
+        /* Pseudo-3D Viewer Dark Mode Inversion */
+        .viewer-container { width: 100%; height: 350px; background-color: #0d1117; border-radius: 8px; position: relative; border: 1px solid var(--border); margin-bottom: 20px;}
+        #pseudo-3d-image { filter: invert(1) hue-rotate(180deg) brightness(1.2); } /* Turns white background black, lines to white/blue */
+        .viewer-label { position: absolute; bottom: 15px; left: 15px; background: rgba(22, 27, 34, 0.9); color: var(--primary); padding: 8px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; border: 1px solid var(--border); pointer-events: none;}
         
         .saved-runs-container { margin-top: 20px; }
-        .saved-run-item { background: #f8f9fa; border: 1px solid var(--border); padding: 12px; border-radius: 4px; margin-bottom: 8px; font-size: 13px; display: flex; justify-content: space-between; align-items: center;}
+        .saved-run-item { background: #0d1117; border: 1px solid var(--border); padding: 12px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; color: var(--text);}
         
         @media (max-width: 1100px) { .dashboard-wrapper { grid-template-columns: 1fr; } .predictor-wrapper { grid-template-columns: 1fr; } }
     </style>
@@ -79,7 +94,7 @@
 
 <div class="header">
     <div class="header-text">
-        <h1>Palletised MOF Harvester|CPUT Research Project (RPR585S)</h1>
+        <h1>Palletised <span>MOF Harvester</span> | CPUT Research Project (RPR585S)</h1>
         <p>Live Digital Twin & Thermodynamic Yield Predictor</p>
     </div>
     <div class="auth-panel">
@@ -157,7 +172,7 @@
 
             <!-- Visible Math Breakdown & Analysis Output -->
             <div class="breakdown-box" id="prediction-result">
-                <div style="text-align: center; color: #888; font-style: italic; margin: 30px 0;">
+                <div style="text-align: center; color: var(--text-muted); font-style: italic; margin: 30px 0;">
                     Adjust parameters and click Analyze to generate actionable design recommendations.
                 </div>
             </div>
@@ -167,13 +182,13 @@
     <!-- RIGHT PANEL: Pseudo-3D Visualization & Context -->
     <div class="panel">
         <h2 class="panel-title">Physical Envelope (350x270mm)</h2>
-        <div class="viewer-container" id="pseudo-3d-container" style="perspective: 1000px; overflow: hidden; display: flex; justify-content: center; align-items: center; background: #ffffff;">
+        <div class="viewer-container" id="pseudo-3d-container" style="perspective: 1000px; overflow: hidden; display: flex; justify-content: center; align-items: center;">
             <img id="pseudo-3d-image" src="MOF Design-SCHEMATIC PLAN (2)-page-00001.jpg" alt="MOF Schematic Diagram" style="width: 90%; height: 90%; object-fit: contain; transform-style: preserve-3d; will-change: transform;">
             <div class="viewer-label" style="pointer-events: none;">Interactive Hover: Move Mouse</div>
         </div>
         
         <div class="context-sidebar">
-            <strong>Thermodynamic Rules:</strong>
+            <strong style="color: var(--text);">Thermodynamic Rules:</strong>
             <ul>
                 <li><strong>Sorption Model:</strong> Type V Logistic Isotherm.</li>
                 <li><strong>Thermal Limit:</strong> Uptake degrades exponentially if external temp > 65°C.</li>
@@ -190,6 +205,10 @@
 </div>
 
 <script>
+    // --- Dark Theme Chart Defaults ---
+    Chart.defaults.color = '#8b949e';
+    Chart.defaults.borderColor = '#30363d';
+
     // --- 1. FIREBASE SETUP ---
     const firebaseConfig = {
        apiKey: "AIzaSyCkzGGq1ZjgaNmFZH1lNJ-jR795IibHuLY",
@@ -282,8 +301,8 @@
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'Monthly Average Yield (Liters)', data: monthlyAverages, backgroundColor: '#17a2b8', borderRadius: 4 },
-                        { label: 'Target Yield (0.25 L)', data: Array(labels.length).fill(0.25), type: 'line', borderColor: '#dc3545', borderWidth: 2, borderDash: [5, 5], fill: false, pointRadius: 0 }
+                        { label: 'Monthly Average Yield (Liters)', data: monthlyAverages, backgroundColor: '#58a6ff', borderRadius: 4 },
+                        { label: 'Target Yield (0.25 L)', data: Array(labels.length).fill(0.25), type: 'line', borderColor: '#f85149', borderWidth: 2, borderDash: [5, 5], fill: false, pointRadius: 0 }
                     ]
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { tooltip: { mode: 'index', intersect: false } } }
@@ -297,14 +316,12 @@
 
     // --- 4. PREDICTION ENGINE WITH ACTIONABLE ENGINEERING ANALYSIS ---
     function calculateManualYield() {
-        // Read Inputs
         const rh = parseFloat(document.getElementById('input-rh').value);
         const tempC = parseFloat(document.getElementById('input-temp').value);
         const maxCapacity = parseFloat(document.getElementById('input-capacity').value);
         const th_mm = parseFloat(document.getElementById('input-thickness').value);
         const u_val = parseFloat(document.getElementById('input-uvalue').value);
         
-        // Sorbent Mass: 10 trays * 0.28m * 0.2m * thickness * 600 kg/m3 density
         const mofMass = 10 * 0.28 * 0.20 * (th_mm / 1000.0) * 600.0; 
         
         function getUptake(targetRh, currentTemp) {
@@ -319,18 +336,16 @@
         const waterRetained = getUptake(0.05, 75.0) * mofMass;
         let theoreticalYield = waterCaptured - waterRetained;
         
-        // --- THERMAL BOTTLENECK & ANALYSIS LOGIC ---
-        // A generic clear sunny day brings ~18 MJ/m² of solar energy
         const dailySolarJoules_per_m2 = 18000000; 
-        const A_ap = 0.350 * Math.hypot(0.270, 0.220 - 0.147654); // Aperture ~0.098 m2
-        const solarGain = dailySolarJoules_per_m2 * A_ap * 0.72; // ~1.27 MJ collected
+        const A_ap = 0.350 * Math.hypot(0.270, 0.220 - 0.147654); 
+        const solarGain = dailySolarJoules_per_m2 * A_ap * 0.72; 
         
         const A_ext = A_ap + 2*(0.270*(0.220+0.147654)/2) + 0.350*(0.220+0.147654); 
         const UA = u_val * A_ext + 1.2 * (0.350*0.270);
-        const heatLoss = UA * 40 * 8 * 3600; // Est loss: 40C diff over 8 hours
+        const heatLoss = UA * 40 * 8 * 3600; 
         
         const netEnergy = Math.max(0, solarGain - heatLoss);
-        const requiredEnergy = mofMass * 2800000; // 2.8 MJ/kg Heat of desorption
+        const requiredEnergy = mofMass * 2800000; 
         
         let analysisHTML = "";
         let finalYield = 0;
@@ -339,13 +354,12 @@
             const thermallyLimitedYield = (netEnergy / 2800000) * 0.85; 
             finalYield = Math.max(0, Math.min(theoreticalYield * 0.85, thermallyLimitedYield));
             
-            // Generate Actionable Engineering Directives
             let requiredAperture = (requiredEnergy + heatLoss) / (dailySolarJoules_per_m2 * 0.72);
             let requiredMultiplier = requiredAperture / A_ap;
             
             analysisHTML = `
                 <div class="analysis-box analysis-bad">
-                    <strong style="display:block; margin-bottom:6px; font-size:14px;">⚠️ Design Failure: Thermal Deficit</strong>
+                    <strong style="display:block; margin-bottom:6px; font-size:14px; color:#ffda6a;">⚠️ Design Failure: Thermal Deficit</strong>
                     The current 350x270mm aperture captures a maximum of <strong>${(solarGain/1e6).toFixed(2)} MJ</strong> of usable solar energy per day, but you require <strong>${(requiredEnergy/1e6).toFixed(2)} MJ</strong> to fully desorb ${mofMass.toFixed(2)} kg of sorbent.<br><br>
                     <strong>ACTION REQUIRED (Choose One):</strong><br>
                     1. <strong>Add Solar Concentrators:</strong> Attach reflective CPC mirrors to multiply sunlight capture by <strong>${requiredMultiplier.toFixed(1)}x</strong>.<br>
@@ -355,7 +369,7 @@
             finalYield = Math.max(0, theoreticalYield * 0.85);
             analysisHTML = `
                 <div class="analysis-box analysis-good">
-                    <strong style="display:block; margin-bottom:6px; font-size:14px;">✅ Design Verified: Thermally Viable</strong>
+                    <strong style="display:block; margin-bottom:6px; font-size:14px; color:#6affb3;">✅ Design Verified: Thermally Viable</strong>
                     The 350x270mm aperture collects sufficient solar energy (${(solarGain/1e6).toFixed(2)} MJ) to fully overcome the heat of desorption (${(requiredEnergy/1e6).toFixed(2)} MJ) for this sorbent mass.
                 </div>`;
         }
@@ -365,9 +379,9 @@
         document.getElementById('prediction-result').innerHTML = `
             ${analysisHTML}
             <div style="margin-top: 15px;">
-                <div class="breakdown-row"><span>Sorbent Mass (Calculated):</span> <strong>${mofMass.toFixed(3)} kg</strong></div>
-                <div class="breakdown-row"><span>Total Mass Adsorbed:</span> <strong>${waterCaptured.toFixed(3)} L</strong></div>
-                <div class="breakdown-row"><span>Desorption Retention Loss:</span> <strong style="color:#dc3545;">-${waterRetained.toFixed(3)} L</strong></div>
+                <div class="breakdown-row"><span>Sorbent Mass (Calculated):</span> <strong style="color:var(--text);">${mofMass.toFixed(3)} kg</strong></div>
+                <div class="breakdown-row"><span>Total Mass Adsorbed:</span> <strong style="color:var(--text);">${waterCaptured.toFixed(3)} L</strong></div>
+                <div class="breakdown-row"><span>Desorption Retention Loss:</span> <strong style="color:#f85149;">-${waterRetained.toFixed(3)} L</strong></div>
                 <div class="final-yield">${finalYield.toFixed(3)} L/day Net Yield</div>
             </div>
         `;
@@ -391,14 +405,14 @@
         const listDiv = document.getElementById('saved-runs-list');
         try {
             const snapshot = await db.collection('user_predictions').doc(currentUser.uid).collection('saved_runs').orderBy('timestamp', 'desc').limit(5).get();
-            if (snapshot.empty) { listDiv.innerHTML = "<em style='color:#888;'>No runs saved yet.</em>"; return; }
+            if (snapshot.empty) { listDiv.innerHTML = "<em style='color:var(--text-muted);'>No runs saved yet.</em>"; return; }
             let html = "";
             snapshot.forEach(doc => {
                 const data = doc.data();
-                html += `<div class="saved-run-item"><div><strong>${data.yield} L</strong> <span style="color:#6c757d; margin-left:5px;">(${data.thickness}mm Tray | ${data.uval} U-Val)</span></div></div>`;
+                html += `<div class="saved-run-item"><div><strong style="color:var(--primary);">${data.yield} L</strong> <span style="color:var(--text-muted); margin-left:5px;">(${data.thickness}mm Tray | ${data.uval} U-Val)</span></div></div>`;
             });
             listDiv.innerHTML = html;
-        } catch (error) { listDiv.innerHTML = "<em style='color:red;'>Error loading history.</em>"; }
+        } catch (error) { listDiv.innerHTML = "<em style='color:#f85149;'>Error loading history.</em>"; }
     }
 
     // --- 5. PSEUDO-3D IMAGE TILT EFFECT ---
