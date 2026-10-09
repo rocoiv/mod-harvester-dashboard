@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palletised MOF Digital Twin| Research Project (RPR585S)</title>
+    <title>Palletised MOF Digital Twin</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
     
     <style>
         :root { --primary: #0a4275; --secondary: #17a2b8; --bg: #f0f2f5; --card: #ffffff; --text: #333; --border: #e0e4e8; }
@@ -68,7 +67,6 @@
         .context-sidebar li { margin-bottom: 6px; }
 
         .viewer-container { width: 100%; height: 350px; background-color: #e9ecef; border-radius: 6px; position: relative; border: 1px solid var(--border); margin-bottom: 20px;}
-        model-viewer { width: 100%; height: 100%; }
         .viewer-label { position: absolute; bottom: 15px; left: 15px; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; border: 1px solid #ccc; pointer-events: none;}
         
         .saved-runs-container { margin-top: 20px; }
@@ -81,7 +79,7 @@
 
 <div class="header">
     <div class="header-text">
-        <h1>Palletised MOF Harvester</h1>
+        <h1>Palletised MOF Harvester|CPUT Research Project (RPR585S)</h1>
         <p>Live Digital Twin & Thermodynamic Yield Predictor</p>
     </div>
     <div class="auth-panel">
@@ -166,12 +164,12 @@
         </div>
     </div>
 
-    <!-- RIGHT PANEL: 3D Visualization & Context -->
+    <!-- RIGHT PANEL: Pseudo-3D Visualization & Context -->
     <div class="panel">
         <h2 class="panel-title">Physical Envelope (350x270mm)</h2>
-        <div class="viewer-container">
-            <model-viewer src="housing_model.glb" auto-rotate camera-controls shadow-intensity="1" exposure="1.2"></model-viewer>
-            <div class="viewer-label">Interactive Model: Click & Drag</div>
+        <div class="viewer-container" id="pseudo-3d-container" style="perspective: 1000px; overflow: hidden; display: flex; justify-content: center; align-items: center; background: #ffffff;">
+            <img id="pseudo-3d-image" src="MOF Design-SCHEMATIC PLAN (2)-page-00001.jpg" alt="MOF Schematic Diagram" style="width: 90%; height: 90%; object-fit: contain; transform-style: preserve-3d; will-change: transform;">
+            <div class="viewer-label" style="pointer-events: none;">Interactive Hover: Move Mouse</div>
         </div>
         
         <div class="context-sidebar">
@@ -401,6 +399,31 @@
             });
             listDiv.innerHTML = html;
         } catch (error) { listDiv.innerHTML = "<em style='color:red;'>Error loading history.</em>"; }
+    }
+
+    // --- 5. PSEUDO-3D IMAGE TILT EFFECT ---
+    const tiltContainer = document.getElementById('pseudo-3d-container');
+    const tiltImg = document.getElementById('pseudo-3d-image');
+
+    if (tiltContainer && tiltImg) {
+        tiltContainer.addEventListener('mousemove', (e) => {
+            const rect = tiltContainer.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = ((y - centerY) / centerY) * -15; 
+            const rotateY = ((x - centerX) / centerX) * 15;
+            
+            tiltImg.style.transition = 'transform 0.1s ease-out';
+            tiltImg.style.transform = `scale(1.05) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        tiltContainer.addEventListener('mouseleave', () => {
+            tiltImg.style.transition = 'transform 0.5s ease-in-out';
+            tiltImg.style.transform = 'scale(1) rotateX(0deg) rotateY(0deg)';
+        });
     }
 </script>
 </body>
