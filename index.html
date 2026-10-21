@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palletised MOF Digital Twin & Manual Engineering Simulator</title>
+    <title>Palletised MOF Digital Twin & Material-Agnostic Engineering Simulator</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -17,6 +17,7 @@
             --warning: #d29922;
             --danger: #f85149;
             --purple: #bc8cff;
+            --cyan: #39c5cf;
             --bg: #0d1117;
             --card: #161b22;
             --card-inner: #0d1117;
@@ -26,12 +27,11 @@
         }
         
         body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: var(--bg); margin: 0; padding: 20px; color: var(--text); }
-        .header { max-width: 1620px; margin: 0 auto 20px auto; border-bottom: 2px solid var(--border); padding-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .header-text h1 { color: var(--text); margin: 0; font-size: 25px; text-transform: uppercase; letter-spacing: 1px;}
+        .header { max-width: 1640px; margin: 0 auto 20px auto; border-bottom: 2px solid var(--border); padding-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .header-text h1 { color: var(--text); margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 1px;}
         .header-text h1 span { color: var(--primary); }
-        .header-text p { font-size: 14px; color: var(--primary); margin: 5px 0 0 0; font-weight: 500;}
+        .header-text p { font-size: 13.5px; color: var(--primary); margin: 5px 0 0 0; font-weight: 500;}
         
-        /* Clean Mathematical Variable Styling (Prevents Uppercase Distortion) */
         .math-var { font-family: 'Cambria Math', 'Times New Roman', serif; font-style: italic; text-transform: none !important; font-weight: 600; letter-spacing: 0; }
         .math-var sub, .math-var sup { font-style: normal; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 0.78em; }
         .no-caps { text-transform: none !important; }
@@ -42,86 +42,91 @@
         .user-info { display: none; align-items: center; gap: 10px; font-size: 14px; font-weight: bold; }
         .user-info img { width: 32px; height: 32px; border-radius: 50%; }
 
-        .dashboard-wrapper { display: grid; grid-template-columns: 2.25fr 1fr; gap: 25px; max-width: 1620px; margin: 0 auto; }
-        .panel { background: var(--card); padding: 24px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
-        .panel-title { margin-top: 0; font-size: 14px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;}
+        .dashboard-wrapper { display: grid; grid-template-columns: 2.3fr 1fr; gap: 24px; max-width: 1640px; margin: 0 auto; }
+        .panel { background: var(--card); padding: 22px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+        .panel-title { margin-top: 0; font-size: 13.5px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center;}
         
         .site-selector { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); font-weight: bold; color: var(--primary); background: var(--card-inner); cursor: pointer; }
         
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
-        .stat-card { background: var(--card-inner); padding: 14px; border-radius: 8px; border-left: 4px solid var(--primary); border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-        .stat-card h3 { margin: 0 0 5px 0; font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-        .stat-card p { margin: 0; font-size: 20px; font-weight: 800; color: var(--text); }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
+        .stat-card { background: var(--card-inner); padding: 13px; border-radius: 8px; border-left: 4px solid var(--primary); border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .stat-card h3 { margin: 0 0 4px 0; font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-card p { margin: 0; font-size: 19px; font-weight: 800; color: var(--text); }
         
-        .charts-dual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .charts-dual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 22px; }
         .chart-box { background: var(--card-inner); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
-        .chart-box h4 { margin: 0 0 10px 0; font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; }
-        .chart-container { position: relative; height: 210px; width: 100%; }
+        .chart-box h4 { margin: 0 0 8px 0; font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; }
+        .chart-container { position: relative; height: 200px; width: 100%; }
         
         /* Manual Simulator Workbench */
-        .predictor-wrapper { display: grid; grid-template-columns: 1fr 1.15fr; gap: 20px; background: var(--card-inner); padding: 20px; border-radius: 8px; border: 1px solid var(--border); }
-        .input-section h3 { margin-top: 0; color: var(--text); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center;}
-        .input-group { display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center; font-size: 12.5px; font-weight: 500; color: var(--text-muted); }
-        .input-group input[type="number"] { width: 75px; padding: 4px 6px; border: 1px solid var(--border); border-radius: 4px; font-weight: bold; color: var(--primary); background: var(--card); text-align: center;}
-        .input-group input[type="number"]:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(88,166,255,0.2); }
-        .input-group input[type="range"] { width: 90px; accent-color: var(--primary); cursor: pointer; }
-        .range-val { display: inline-block; width: 45px; text-align: right; font-weight: bold; color: var(--primary); font-size: 12px; }
+        .predictor-wrapper { display: grid; grid-template-columns: 1.05fr 1.15fr; gap: 20px; background: var(--card-inner); padding: 18px; border-radius: 8px; border: 1px solid var(--border); }
+        .input-section h3 { margin-top: 0; color: var(--text); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 4px; display: flex; justify-content: space-between; align-items: center;}
+        .input-grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; margin-bottom: 8px; }
+        .input-group { display: flex; justify-content: space-between; margin-bottom: 6px; align-items: center; font-size: 12px; font-weight: 500; color: var(--text-muted); }
+        .input-group input[type="number"], .input-group input[type="text"] { width: 68px; padding: 4px 6px; border: 1px solid var(--border); border-radius: 4px; font-weight: bold; color: var(--primary); background: var(--card); text-align: center; font-size: 12px;}
+        .input-group input[type="text"] { width: 125px; color: var(--cyan); }
+        .input-group input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(88,166,255,0.2); }
+        .input-group input[type="range"] { width: 85px; accent-color: var(--primary); cursor: pointer; }
+        .range-val { display: inline-block; width: 42px; text-align: right; font-weight: bold; color: var(--primary); font-size: 11.5px; }
 
-        .preset-bar { display: flex; gap: 6px; margin-bottom: 12px; }
-        .preset-btn { flex: 1; background: #21262d; border: 1px solid var(--border); color: var(--text-muted); padding: 6px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: 600; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.3px; }
+        .preset-bar { display: flex; gap: 5px; margin-bottom: 10px; }
+        .preset-btn { flex: 1; background: #21262d; border: 1px solid var(--border); color: var(--text-muted); padding: 5px 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer; font-weight: 600; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.2px; }
         .preset-btn:hover { color: var(--primary); border-color: var(--primary); }
+        .preset-btn-mof:hover { color: var(--cyan); border-color: var(--cyan); }
 
-        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-        .calc-btn { background: var(--primary); color: #0d1117; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 800; flex: 1.6; transition: 0.2s; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.4px;}
+        .btn-group { display: flex; gap: 10px; margin-top: 12px; }
+        .calc-btn { background: var(--primary); color: #0d1117; border: none; padding: 11px; border-radius: 6px; cursor: pointer; font-weight: 800; flex: 1.6; transition: 0.2s; font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px;}
         .calc-btn:hover { background: #79c0ff; }
-        .reset-btn { background: #21262d; color: var(--text-muted); border: 1px solid var(--border); padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 600; flex: 0.7; transition: 0.2s; font-size: 11.5px; text-transform: uppercase;}
+        .reset-btn { background: #21262d; color: var(--text-muted); border: 1px solid var(--border); padding: 11px; border-radius: 6px; cursor: pointer; font-weight: 600; flex: 0.7; transition: 0.2s; font-size: 11px; text-transform: uppercase;}
         .reset-btn:hover { color: var(--text); border-color: var(--text-muted); }
 
         /* Full-System Diagnostic & Optimum Panel */
         .breakdown-box { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; font-size: 12px; color: var(--text); display: flex; flex-direction: column; justify-content: space-between;}
         .breakdown-row { display: flex; justify-content: space-between; margin-bottom: 5px; border-bottom: 1px dashed var(--border); padding-bottom: 4px;}
-        .final-yield { font-size: 19px; font-weight: 900; color: var(--secondary); text-align: center; margin-top: 8px; padding-top: 10px; border-top: 2px solid var(--border); }
+        .final-yield { font-size: 18px; font-weight: 900; color: var(--secondary); text-align: center; margin-top: 8px; padding-top: 10px; border-top: 2px solid var(--border); }
         
-        .analysis-box { padding: 12px; border-radius: 6px; font-size: 11.5px; line-height: 1.45; font-weight: 500; margin-bottom: 10px; }
+        .analysis-box { padding: 11px; border-radius: 6px; font-size: 11.5px; line-height: 1.45; font-weight: 500; margin-bottom: 8px; }
         .analysis-bad { background: rgba(248, 81, 73, 0.1); border: 1px solid var(--danger); color: #ffaba8; }
         .analysis-good { background: rgba(63, 185, 80, 0.12); border: 1px solid var(--secondary); color: #6affb3; }
+        .geom-warn { background: rgba(210, 153, 34, 0.15); border: 1px solid var(--warning); color: #ffda6a; padding: 8px 10px; border-radius: 5px; font-size: 11px; margin-bottom: 8px; }
 
-        .optimum-matrix { background: var(--card-inner); border: 1px solid var(--border); border-radius: 6px; padding: 10px; margin-bottom: 10px; }
-        .optimum-matrix h4 { margin: 0 0 8px 0; font-size: 11px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .optimum-matrix { background: var(--card-inner); border: 1px solid var(--border); border-radius: 6px; padding: 10px; margin-bottom: 8px; }
+        .optimum-matrix h4 { margin: 0 0 7px 0; font-size: 10.5px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
         .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-        .opt-item { background: #161b22; border: 1px solid var(--border); padding: 6px 8px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
-        .opt-apply-pill { background: rgba(88, 166, 255, 0.15); border: 1px solid var(--primary); color: var(--primary); padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        .opt-item { background: #161b22; border: 1px solid var(--border); padding: 5px 8px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
+        .opt-apply-pill { background: rgba(88, 166, 255, 0.15); border: 1px solid var(--primary); color: var(--primary); padding: 2px 7px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: bold; text-transform: uppercase; }
         .opt-apply-pill:hover { background: var(--primary); color: #0d1117; }
 
-        .impact-banner { padding: 10px; border-radius: 6px; background: rgba(188, 140, 255, 0.08); border: 1px solid var(--purple); color: #e2c5ff; font-size: 11px; line-height: 1.45; margin-bottom: 10px; }
+        .impact-banner { padding: 9px; border-radius: 6px; background: rgba(188, 140, 255, 0.08); border: 1px solid var(--purple); color: #e2c5ff; font-size: 11px; line-height: 1.4; margin-bottom: 8px; }
 
         /* Iterative Test History Table */
-        .history-section { margin-top: 25px; border-top: 1px solid var(--border); padding-top: 20px; }
+        .history-section { margin-top: 22px; border-top: 1px solid var(--border); padding-top: 18px; }
         .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .history-header h3 { margin: 0; font-size: 14px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .history-header h3 { margin: 0; font-size: 13.5px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
         .export-btn { background: var(--secondary); color: #0d1117; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 11.5px; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.4px;}
         .export-btn:hover { background: #56d364; }
         .export-btn:disabled { background: #21262d; color: var(--text-muted); cursor: not-allowed; }
         
         .table-responsive { overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; }
-        .test-table { width: 100%; border-collapse: collapse; font-size: 11.5px; text-align: left; background: var(--card-inner); }
-        .test-table th { background: #21262d; color: var(--text); padding: 10px; position: sticky; top: 0; border-bottom: 1px solid var(--border); text-transform: uppercase; font-size: 10.5px; }
-        .test-table td { padding: 10px; border-bottom: 1px solid var(--border); color: var(--text-muted); vertical-align: top; }
+        .test-table { width: 100%; border-collapse: collapse; font-size: 11px; text-align: left; background: var(--card-inner); }
+        .test-table th { background: #21262d; color: var(--text); padding: 9px; position: sticky; top: 0; border-bottom: 1px solid var(--border); text-transform: uppercase; font-size: 10px; }
+        .test-table td { padding: 9px; border-bottom: 1px solid var(--border); color: var(--text-muted); vertical-align: top; }
         .test-table tr:hover td { background: rgba(88, 166, 255, 0.04); color: var(--text); }
-        .badge-fail { background: rgba(248, 81, 73, 0.15); color: var(--danger); border: 1px solid var(--danger); padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; display: inline-block; }
-        .badge-pass { background: rgba(63, 185, 80, 0.15); color: var(--secondary); border: 1px solid var(--secondary); padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; display: inline-block; }
-        .delta-tag { display: inline-block; background: #21262d; color: var(--primary); border: 1px solid var(--border); padding: 2px 5px; border-radius: 3px; font-size: 10px; margin: 1px; font-family: monospace; }
+        .badge-fail { background: rgba(248, 81, 73, 0.15); color: var(--danger); border: 1px solid var(--danger); padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 9.5px; display: inline-block; }
+        .badge-pass { background: rgba(63, 185, 80, 0.15); color: var(--secondary); border: 1px solid var(--secondary); padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 9.5px; display: inline-block; }
+        .delta-tag { display: inline-block; background: #21262d; color: var(--primary); border: 1px solid var(--border); padding: 1px 5px; border-radius: 3px; font-size: 9.5px; margin: 1px; font-family: monospace; }
         .delta-weather { border-color: var(--purple); color: #e2c5ff; }
+        .delta-mof { border-color: var(--cyan); color: var(--cyan); }
 
-        .context-sidebar { background: var(--card-inner); padding: 16px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; font-size: 12.5px; color: var(--text-muted); line-height: 1.5;}
+        .context-sidebar { background: var(--card-inner); padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 18px; font-size: 12px; color: var(--text-muted); line-height: 1.5;}
         .context-sidebar ul { margin: 8px 0 0 0; padding-left: 18px; }
         .context-sidebar li { margin-bottom: 6px; }
 
-        .viewer-container { width: 100%; height: 320px; background-color: var(--card-inner); border-radius: 8px; position: relative; border: 1px solid var(--border); margin-bottom: 20px;}
+        .viewer-container { width: 100%; height: 300px; background-color: var(--card-inner); border-radius: 8px; position: relative; border: 1px solid var(--border); margin-bottom: 18px;}
         #pseudo-3d-image { filter: invert(1) hue-rotate(180deg) brightness(1.2); }
         .viewer-label { position: absolute; bottom: 12px; left: 12px; background: rgba(22, 27, 34, 0.9); color: var(--primary); padding: 6px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; border: 1px solid var(--border); pointer-events: none;}
         
-        @media (max-width: 1200px) { .dashboard-wrapper { grid-template-columns: 1fr; } .predictor-wrapper { grid-template-columns: 1fr; } .charts-dual-grid { grid-template-columns: 1fr; } .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 1250px) { .dashboard-wrapper { grid-template-columns: 1fr; } .predictor-wrapper { grid-template-columns: 1fr; } .charts-dual-grid { grid-template-columns: 1fr; } .stats-grid { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
@@ -129,7 +134,7 @@
 <div class="header">
     <div class="header-text">
         <h1>Palletised <span>MOF Harvester</span> | CPUT Research Project (RPR585S)</h1>
-        <p>Full-Control Manual Digital Twin: Simultaneous Multi-Parameter Analysis & Iteration Logger</p>
+        <p>Material-Agnostic Digital Twin: Custom Sorbent (UJ / Literature) & Multi-Parameter Iteration Simulator</p>
     </div>
     <div class="auth-panel">
         <button id="login-btn" class="auth-btn" onclick="signInWithGoogle()">
@@ -169,21 +174,21 @@
                 <p id="tau-display">235 s</p>
             </div>
             <div class="stat-card">
-                <h3>Historical DB Mean Yield</h3>
-                <p id="avg-yield-display">-- L</p>
+                <h3>First-Law Energy Residual</h3>
+                <p id="energy-res-display">0.000 MJ</p>
             </div>
         </div>
 
         <div class="charts-dual-grid">
             <div class="chart-box">
-                <h4><span>Historical Monthly Database Yield</span> <span>Target: 0.25 L/d</span></h4>
+                <h4><span>Historical Monthly Database Yield</span> <span id="db-mean-badge">DB Mean: -- L</span></h4>
                 <div class="chart-container">
                     <canvas id="yieldChart"></canvas>
                 </div>
             </div>
             <div class="chart-box">
                 <h4>
-                    <span>Live 144-Step Diurnal ODE Simulation (06:00&ndash;18:00)</span>
+                    <span>Live Adaptive ODE Simulation (06:00&ndash;18:00)</span>
                     <span id="ode-chart-label" class="no-caps" style="color:var(--primary);">Awaiting Run</span>
                 </h4>
                 <div class="chart-container">
@@ -192,84 +197,128 @@
             </div>
         </div>
 
-        <h2 class="panel-title" style="margin-top: 20px;">
-            <span>2. Manual Simulation Workbench (All Weather & Geometry Unlocked at Every Iteration)</span>
+        <h2 class="panel-title" style="margin-top: 18px;">
+            <span>2. Material-Agnostic Simulation Workbench (Weather, Geometry & Custom MOF Unlocked)</span>
             <span id="next-test-badge" class="no-caps" style="background:#21262d; padding:4px 10px; border-radius:4px; font-size:12px; color:var(--primary);">Ready for Iteration #1</span>
         </h2>
 
         <div class="predictor-wrapper">
             <div class="input-section">
                 <h3>
-                    <span>A. Weather Boundary Conditions (Editable Anytime)</span>
-                    <span style="font-size:10px; color:var(--purple);">Presets:</span>
+                    <span>A. Weather Boundary Conditions</span>
+                    <span style="font-size:10px; color:var(--purple);">Climate Presets:</span>
                 </h3>
                 <div class="preset-bar">
                     <button class="preset-btn" onclick="applyWeatherPreset(80, 15, 25, 920)">CT Summer</button>
                     <button class="preset-btn" onclick="applyWeatherPreset(85, 9, 16, 480)">CT Winter</button>
                     <button class="preset-btn" onclick="applyWeatherPreset(32, 18, 38, 1080)">Upington Arid</button>
                 </div>
-                <div class="input-group">
-                    <label>Nighttime Relative Humidity (<span class="math-var">RH<sub>night</sub></span>, %)</label>
-                    <input type="number" id="input-rh" value="80" max="100" min="1" step="1">
-                </div>
-                <div class="input-group">
-                    <label>Nighttime Ambient Temp (<span class="math-var">T<sub>night</sub></span>, &deg;C)</label>
-                    <input type="number" id="input-temp-night" value="15" step="0.5">
-                </div>
-                <div class="input-group">
-                    <label>Daytime Peak Ambient Temp (<span class="math-var">T<sub>day</sub></span>, &deg;C)</label>
-                    <input type="number" id="input-temp-day" value="25" step="0.5">
-                </div>
-                <div class="input-group">
-                    <label>Peak Solar Irradiance (<span class="math-var">G<sub>max</sub></span>, W/m&sup2;)</label>
-                    <input type="number" id="input-gmax" value="920" min="100" max="1400" step="10">
-                </div>
-
-                <h3 style="margin-top: 14px;">B. Structural Envelope & Optics (Editable Anytime)</h3>
-                <div class="input-group">
-                    <label>Envelope Length (<span class="math-var">L<sub>x</sub></span>, mm)</label>
-                    <input type="number" id="input-lx" value="350" min="200" max="3000" step="10">
-                </div>
-                <div class="input-group">
-                    <label>Envelope Depth (<span class="math-var">L<sub>y</sub></span>, mm)</label>
-                    <input type="number" id="input-ly" value="270" min="150" max="3000" step="10">
-                </div>
-                <div class="input-group">
-                    <label>Solar Concentrator (<span class="math-var">C<sub>conc</sub></span>, &times;)</label>
-                    <input type="number" id="input-conc" value="1.0" min="1.0" max="15.0" step="0.1">
+                <div class="input-grid-2col">
+                    <div class="input-group">
+                        <label>Night RH (<span class="math-var">RH<sub>night</sub></span>, %)</label>
+                        <input type="number" id="input-rh" value="80" max="100" min="1" step="1">
+                    </div>
+                    <div class="input-group">
+                        <label>Night Temp (<span class="math-var">T<sub>night</sub></span>, &deg;C)</label>
+                        <input type="number" id="input-temp-night" value="15" min="-10" max="45" step="0.5">
+                    </div>
+                    <div class="input-group">
+                        <label>Day Peak (<span class="math-var">T<sub>day</sub></span>, &deg;C)</label>
+                        <input type="number" id="input-temp-day" value="25" min="0" max="55" step="0.5">
+                    </div>
+                    <div class="input-group">
+                        <label>Peak Solar (<span class="math-var">G<sub>max</sub></span>, W/m&sup2;)</label>
+                        <input type="number" id="input-gmax" value="920" min="100" max="1400" step="10">
+                    </div>
                 </div>
 
-                <h3 style="margin-top: 14px;">C. Sorbent Bed & Glazing Properties (Editable Anytime)</h3>
-                <div class="input-group">
-                    <label>MOF Max Capacity (<span class="math-var">w<sub>max</sub></span>, g/g)</label>
-                    <input type="number" id="input-capacity" value="0.40" step="0.02">
-                </div>
-                <div class="input-group">
-                    <label>Tray Bed Thickness (<span class="math-var">L<sub>bed</sub></span>, mm)</label>
-                    <div>
-                        <input type="range" id="input-thickness" min="2" max="15" value="8" oninput="document.getElementById('thick-val').innerText = this.value + 'mm'">
-                        <span id="thick-val" class="range-val">8mm</span>
+                <h3 style="margin-top: 10px;">B. Structural Housing & Tray Geometry</h3>
+                <div class="input-grid-2col">
+                    <div class="input-group">
+                        <label>Box Length (<span class="math-var">L<sub>x</sub></span>, mm)</label>
+                        <input type="number" id="input-lx" value="350" min="280" max="3000" step="10">
+                    </div>
+                    <div class="input-group">
+                        <label>Box Depth (<span class="math-var">L<sub>y</sub></span>, mm)</label>
+                        <input type="number" id="input-ly" value="270" min="200" max="3000" step="10">
+                    </div>
+                    <div class="input-group">
+                        <label>Concentrator (<span class="math-var">C<sub>conc</sub></span>, &times;)</label>
+                        <input type="number" id="input-conc" value="1.0" min="1.0" max="15.0" step="0.1">
+                    </div>
+                    <div class="input-group">
+                        <label>Glazing <span class="math-var">U</span> (W/m&sup2;K)</label>
+                        <input type="number" id="input-uvalue" value="5.6" min="0.8" max="8.0" step="0.1">
                     </div>
                 </div>
                 <div class="input-group">
-                    <label>Envelope <span class="math-var">U</span>-Value (W/m&sup2;K)</label>
+                    <label>Tray Bed Thickness (<span class="math-var">L<sub>bed</sub></span>, mm) [10 Trays, 280&times;200mm]</label>
                     <div>
-                        <input type="range" id="input-uvalue" min="1.0" max="8.0" step="0.1" value="5.6" oninput="document.getElementById('u-val').innerText = this.value">
-                        <span id="u-val" class="range-val">5.6</span>
+                        <input type="range" id="input-thickness" min="2" max="14" value="8" oninput="document.getElementById('thick-val').innerText = this.value + 'mm'">
+                        <span id="thick-val" class="range-val">8mm</span>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 10px;">
+                    <span style="color:var(--cyan);">C. Custom Sorbent / UJ MOF Properties (Editable)</span>
+                    <span style="font-size:10px; color:var(--cyan);">Sorbent Presets:</span>
+                </h3>
+                <div class="preset-bar">
+                    <button class="preset-btn preset-btn-mof" onclick="applyMofPreset('MOF-303 (Lit)', 0.40, 13.0, 60, 600, 2.80, 1000, 1.5, 0.20)">MOF-303</button>
+                    <button class="preset-btn preset-btn-mof" onclick="applyMofPreset('MOF-801 (Zr)', 0.36, 22.0, 45, 680, 2.95, 950, 1.2, 0.22)">MOF-801</button>
+                    <button class="preset-btn preset-btn-mof" onclick="applyMofPreset('MIL-101(Cr)', 1.05, 42.0, 35, 420, 2.55, 1100, 2.2, 0.15)">MIL-101(Cr)</button>
+                    <button class="preset-btn preset-btn-mof" onclick="applyMofPreset('UJ Lab MOF', 0.45, 15.0, 55, 550, 2.70, 1000, 1.8, 0.21)">UJ Custom</button>
+                </div>
+                <div class="input-group">
+                    <label>Sorbent Identifier / Designation</label>
+                    <input type="text" id="input-mof-name" value="MOF-303 (Lit)">
+                </div>
+                <div class="input-grid-2col">
+                    <div class="input-group">
+                        <label>Max Uptake (<span class="math-var">w<sub>max</sub></span>, g/g)</label>
+                        <input type="number" id="input-capacity" value="0.40" min="0.05" max="2.50" step="0.02">
+                    </div>
+                    <div class="input-group">
+                        <label>Isotherm Step (<span class="math-var">RH<sub>step</sub></span>, %)</label>
+                        <input type="number" id="input-rh-step" value="13.0" min="2.0" max="85.0" step="1.0">
+                    </div>
+                    <div class="input-group">
+                        <label>Step Steepness (<span class="math-var">k<sub>iso</sub></span>)</label>
+                        <input type="number" id="input-k-iso" value="60" min="10" max="150" step="5">
+                    </div>
+                    <div class="input-group">
+                        <label>Bulk Density (<span class="math-var">&rho;<sub>b</sub></span>, kg/m&sup3;)</label>
+                        <input type="number" id="input-rho" value="600" min="150" max="1500" step="10">
+                    </div>
+                    <div class="input-group">
+                        <label>Desorp Heat (<span class="math-var">&Delta;H<sub>des</sub></span>, MJ/kg)</label>
+                        <input type="number" id="input-dh" value="2.80" min="2.20" max="4.00" step="0.05">
+                    </div>
+                    <div class="input-group">
+                        <label>Specific Heat (<span class="math-var">c<sub>p,s</sub></span>, J/kgK)</label>
+                        <input type="number" id="input-cp" value="1000" min="500" max="2500" step="50">
+                    </div>
+                    <div class="input-group">
+                        <label>Diffusivity (<span class="math-var">D<sub>eff</sub></span>, &times;10<sup>&minus;6</sup> m&sup2;/s)</label>
+                        <input type="number" id="input-deff" value="1.50" min="0.10" max="10.0" step="0.10">
+                    </div>
+                    <div class="input-group">
+                        <label>Bed Cond (<span class="math-var">k<sub>bed</sub></span>, W/mK)</label>
+                        <input type="number" id="input-kbed" value="0.20" min="0.05" max="2.00" step="0.02">
                     </div>
                 </div>
                 
                 <div class="btn-group">
                     <button class="calc-btn" onclick="runAndLogTest()">Run Full Analysis & Log Iteration</button>
-                    <button class="reset-btn" onclick="resetToBaseline()">Reset to CAD Default</button>
+                    <button class="reset-btn" onclick="resetToBaseline()">Reset Defaults</button>
                 </div>
             </div>
 
             <!-- Full-System Diagnostic & Complete Optimum Matrix Output -->
             <div class="breakdown-box" id="prediction-result">
                 <div style="text-align: center; color: var(--text-muted); font-style: italic; margin: auto 0; padding: 20px;">
-                    Configure any combination of weather and geometry, then click <strong>"Run Full Analysis & Log Iteration"</strong>.<br><br>
-                    Every single iteration performs a complete multi-parameter analysis: water yield, failure bottlenecks, exact optimum target values for that specific configuration, and a dual comparison against Iteration #1 and the previous iteration.
+                    Insert any custom UJ or literature MOF parameters, weather boundaries, and housing dimensions, then click <strong>"Run Full Analysis & Log Iteration"</strong>.<br><br>
+                    The simulator dynamically adapts its isotherm inflection step (<span class="math-var">RH<sub>step</sub></span>), diffusion kinetics (<span class="math-var">&tau;</span>), and desorption enthalpy (<span class="math-var">&Delta;H<sub>des</sub></span>) to evaluate any sorbent material.
                 </div>
             </div>
         </div>
@@ -277,7 +326,7 @@
         <!-- SEQUENTIAL TEST LOG & REPORT GENERATOR -->
         <div class="history-section">
             <div class="history-header">
-                <h3>3. Complete Multi-Iteration Engineering Log (Full Analysis per Iteration)</h3>
+                <h3>3. Complete Multi-Iteration Engineering Log (Weather, Geometry & Custom MOF Telemetry)</h3>
                 <div style="display:flex; gap:10px;">
                     <button id="clear-log-btn" class="reset-btn" style="padding:6px 12px;" onclick="clearTestHistory()">Clear Session</button>
                     <button id="export-csv-btn" class="export-btn" onclick="downloadTestReportCSV()" disabled>Download Full Dissertation CSV Report</button>
@@ -289,16 +338,16 @@
                         <tr>
                             <th>Iter #</th>
                             <th>Status & Bottleneck</th>
-                            <th>Configured Weather & Geometry</th>
+                            <th>Sorbent Material & Properties</th>
+                            <th>Weather & Housing Geometry</th>
                             <th>Deltas (vs Iter #1 & vs Prev)</th>
                             <th>Simulated Yield & Telemetry</th>
-                            <th>Optimum Values Calculated for This Set</th>
-                            <th>Causal Analysis (How Changes Affected Outcome)</th>
+                            <th>Optimum Values & Causal Attribution</th>
                         </tr>
                     </thead>
                     <tbody id="test-log-tbody">
                         <tr>
-                            <td colspan="7" style="text-align:center; padding: 20px; font-style:italic;">No iterations logged yet. You have full manual control&mdash;run Iteration #1 to start recording.</td>
+                            <td colspan="7" style="text-align:center; padding: 20px; font-style:italic;">No iterations logged yet. Configure your MOF and housing parameters above and run Iteration #1.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -318,11 +367,11 @@
         </div>
         
         <div class="context-sidebar">
-            <strong style="color: var(--text);">Simultaneous Multi-Parameter Analysis:</strong>
+            <strong style="color: var(--text);">Audited Material-Agnostic Physics Engine:</strong>
             <ul>
-                <li><strong>100% User-Controlled:</strong> No locked steps. Change weather, dimensions, tray thickness, or insulation in any combination at any iteration.</li>
-                <li><strong>Complete Iteration Diagnostics:</strong> Each run simultaneously computes water yield, thermal/vapor bottlenecks, and the exact optimum parameter targets for your active weather conditions.</li>
-                <li><strong>Dual-Reference Delta Tracking:</strong> Tracks parameter shifts relative to both <strong>Iteration #1 (Baseline)</strong> and <strong>Iteration <span class="math-var">N</span>&minus;1 (Previous Run)</strong> for rigorous thesis tables.</li>
+                <li><strong>Universal Sorbent Testing:</strong> Supports any custom MOF or UJ experimental characterization (<span class="math-var">w<sub>max</sub>, RH<sub>step</sub>, k<sub>iso</sub>, &rho;<sub>b</sub>, &Delta;H<sub>des</sub>, c<sub>p,s</sub>, D<sub>eff</sub>, k<sub>bed</sub></span>).</li>
+                <li><strong>Adaptive Sub-Stepping ODE Solver:</strong> Automatically subdivides the 300 s Euler step whenever <span class="math-var">&tau;</span> is small (thin beds or high <span class="math-var">D<sub>eff</sub></span>), guaranteeing numerical stability and exact First-Law energy closure.</li>
+                <li><strong>Dynamic Psychrometric Pass Criterion:</strong> Viability requires Yield &ge; 0.250 L/day and <span class="math-var">RH<sub>eff,min</sub> &le; RH<sub>step</sub> + 1.5%</span> for the active sorbent.</li>
             </ul>
         </div>
     </div>
@@ -352,7 +401,7 @@
     let currentOptimums = null;
 
     window.addEventListener('DOMContentLoaded', () => {
-        const savedSession = localStorage.getItem('mof_manual_sim_v4');
+        const savedSession = localStorage.getItem('mof_manual_sim_v5') || localStorage.getItem('mof_manual_sim_v4');
         if (savedSession) {
             try {
                 testHistory = JSON.parse(savedSession);
@@ -387,7 +436,7 @@
         try {
             const snapshot = await db.collection('simulation_results').orderBy('date', 'asc').get();
             if(snapshot.empty) {
-                document.getElementById('avg-yield-display').innerText = "Empty DB";
+                document.getElementById('db-mean-badge').innerText = "DB Mean: Empty";
                 return;
             }
 
@@ -407,12 +456,12 @@
             });
 
             if (count === 0) {
-                document.getElementById('avg-yield-display').innerText = "-- L";
+                document.getElementById('db-mean-badge').innerText = "DB Mean: -- L";
                 if(yieldChartInstance) yieldChartInstance.destroy();
                 return;
             }
 
-            document.getElementById('avg-yield-display').innerText = (totalYield / count).toFixed(3) + ' L';
+            document.getElementById('db-mean-badge').innerText = "DB Mean: " + (totalYield / count).toFixed(3) + " L/d";
             const labels = Object.keys(monthlyData).sort();
             const monthlyAverages = labels.map(m => monthlyData[m].sum / monthlyData[m].count);
 
@@ -460,24 +509,35 @@
         document.getElementById('input-gmax').value = gmax;
     }
 
-    // --- 4. CORE 144-STEP EULER ODE PHYSICS ENGINE ---
+    function applyMofPreset(name, wmax, rhstep, kiso, rho, dh, cp, deff, kbed) {
+        document.getElementById('input-mof-name').value = name;
+        document.getElementById('input-capacity').value = wmax;
+        document.getElementById('input-rh-step').value = rhstep;
+        document.getElementById('input-k-iso').value = kiso;
+        document.getElementById('input-rho').value = rho;
+        document.getElementById('input-dh').value = dh;
+        document.getElementById('input-cp').value = cp;
+        document.getElementById('input-deff').value = deff;
+        document.getElementById('input-kbed').value = kbed;
+    }
+
+    // --- 4. AUDITED MATERIAL-AGNOSTIC ODE PHYSICS ENGINE (WITH ADAPTIVE SUB-STEPPING) ---
     function psat_kpa(t_c) {
         return 0.61094 * Math.exp((17.625 * t_c) / (t_c + 243.04));
     }
 
-    function isoUptake(rh_frac, t_c, w_max) {
+    // Pure Type V Logistic Isotherm driven by user's custom MOF parameters (no double-counted temperature penalty)
+    function isoUptake(rh_frac, w_max, rh_step_frac, k_iso) {
         const rh = Math.min(Math.max(rh_frac, 0.0), 1.0);
-        const k = 60.0, rh_step = 0.13;
-        const s = (x) => 1.0 / (1.0 + Math.exp(-k * (x - rh_step)));
-        let uptake = w_max * (s(rh) - s(0.0)) / (s(1.0) - s(0.0));
-        // Thermal limit: uptake degrades exponentially only if external/bed temp > 65C
-        if (t_c > 65.0) uptake *= Math.exp(-0.08 * (t_c - 65.0));
+        const s = (x) => 1.0 / (1.0 + Math.exp(-k_iso * (x - rh_step_frac)));
+        const uptake = w_max * (s(rh) - s(0.0)) / (s(1.0) - s(0.0));
         return Math.max(0.0, uptake);
     }
 
     function simulateCyclePhysics(params) {
-        const Lx = params.lx_mm / 1000.0;
-        const Ly = params.ly_mm / 1000.0;
+        // Enforce physical clearance so envelope is never smaller than the 280x200mm internal tray rack
+        const Lx = Math.max(0.280, params.lx_mm / 1000.0);
+        const Ly = Math.max(0.200, params.ly_mm / 1000.0);
         const h_back = 0.220, h_front = 0.147654;
         const drop = h_back - h_front;
         const slant = Math.hypot(Ly, drop);
@@ -486,10 +546,17 @@
         const A_ext = A_ap + 2 * A_side + Lx * (h_back + h_front);
         const A_div = Lx * Ly;
 
+        // Custom Sorbent Material Properties
         const th = params.th_mm / 1000.0;
-        const rho = 600.0, cp_s = 1000.0, dH = 2.8e6;
+        const rho = params.rho;
+        const cp_s = params.cp_s;
+        const dH = params.dh_mj * 1e6; // Convert MJ/kg to J/kg
+        const D_eff = params.deff_e6 * 1e-6; // Convert 10^-6 m2/s to m2/s
+        const k_bed = params.k_bed;
+        const rh_step_frac = params.rh_step_pct / 100.0;
+        const k_iso = params.k_iso;
+
         const m_s = 10 * 0.280 * 0.200 * th * rho;
-        const D_eff = 1.5e-6, k_bed = 0.2;
         const alpha = k_bed / (rho * cp_s);
         const tau = (th * th) / D_eff + (th * th) / alpha;
 
@@ -508,42 +575,49 @@
             G_hourly.push(params.g_max * Math.max(0.0, Math.sin(Math.PI * (hour - 6) / 12.0)));
         }
 
-        const steps_per_h = 12;
-        const dt_s = 3600.0 / steps_per_h;
-        let w0 = isoUptake(params.rh_night / 100.0, params.t_night, params.w_max);
+        const base_steps_per_h = 12;
+        const base_dt = 3600.0 / base_steps_per_h; // 300s
+        // Adaptive sub-stepping to guarantee numerical stability for thin beds / fast diffusivity
+        const sub_steps = Math.max(1, Math.ceil(base_dt / Math.max(5.0, Math.min(tau, C_th / UA) * 0.25)));
+        const dt_s = base_dt / sub_steps;
+
+        let w0 = isoUptake(params.rh_night / 100.0, params.w_max, rh_step_frac, k_iso);
         let w = w0;
         let Tc = T_hourly[0];
+        const Tc_init = Tc;
         let t_peak = Tc;
         let min_rh_eff = 1.0;
-        let got_yield = 0.0, e_sol_in = 0.0, e_loss_out = 0.0;
+        let got_yield = 0.0, e_sol_in = 0.0, e_loss_net = 0.0;
         const chartLabels = [], chartTc = [], chartYield = [];
 
         for (let h = 0; h < 12; h++) {
-            for (let s = 0; s < steps_per_h; s++) {
-                let f = s / steps_per_h;
-                let Ta = T_hourly[h] * (1 - f) + T_hourly[h + 1] * f;
-                let g = G_hourly[h] * (1 - f) + G_hourly[h + 1] * f;
+            for (let s = 0; s < base_steps_per_h; s++) {
+                for (let sub = 0; sub < sub_steps; sub++) {
+                    let f = (s + (sub / sub_steps)) / base_steps_per_h;
+                    let Ta = T_hourly[h] * (1 - f) + T_hourly[h + 1] * f;
+                    let g = G_hourly[h] * (1 - f) + G_hourly[h + 1] * f;
 
-                let q_sol = g * A_ap * tau_alpha * params.conc;
-                let q_loss = UA * (Tc - Ta);
-                let rh_eff = Math.min(1.0, psat_kpa(Ta + dT_cond) / psat_kpa(Tc));
-                min_rh_eff = Math.min(min_rh_eff, rh_eff);
-                let w_eq = isoUptake(rh_eff, Tc, params.w_max);
+                    let q_sol = g * A_ap * tau_alpha * params.conc;
+                    let q_loss = UA * (Tc - Ta);
+                    let rh_eff = Math.min(1.0, psat_kpa(Ta + dT_cond) / psat_kpa(Tc));
+                    min_rh_eff = Math.min(min_rh_eff, rh_eff);
+                    let w_eq = isoUptake(rh_eff, params.w_max, rh_step_frac, k_iso);
 
-                let dm = 0.0;
-                if (w > w_eq) {
-                    let dm_kin = (w - w_eq) * (1.0 - Math.exp(-dt_s / tau)) * m_s;
-                    let net_heat_j = (q_sol - q_loss) * dt_s;
-                    let dm_therm = Math.max(0.0, net_heat_j) / dH;
-                    dm = Math.min(dm_kin, dm_therm);
-                    w -= dm / m_s;
+                    let dm = 0.0;
+                    if (w > w_eq) {
+                        let dm_kin = (w - w_eq) * (1.0 - Math.exp(-dt_s / tau)) * m_s;
+                        let net_heat_j = (q_sol - q_loss) * dt_s;
+                        let dm_therm = Math.max(0.0, net_heat_j) / dH;
+                        dm = Math.min(dm_kin, dm_therm);
+                        w -= dm / m_s;
+                    }
+
+                    Tc += (((q_sol - q_loss) * dt_s) - (dm * dH)) / C_th;
+                    got_yield += dm * capture_eff;
+                    e_sol_in += q_sol * dt_s;
+                    e_loss_net += q_loss * dt_s;
+                    t_peak = Math.max(t_peak, Tc);
                 }
-
-                Tc += (((q_sol - q_loss) * dt_s) - (dm * dH)) / C_th;
-                got_yield += dm * capture_eff;
-                e_sol_in += q_sol * dt_s;
-                e_loss_out += Math.max(0.0, q_loss) * dt_s;
-                t_peak = Math.max(t_peak, Tc);
             }
             let currentHour = 7 + h;
             chartLabels.push((currentHour < 10 ? '0' : '') + currentHour + ':00');
@@ -551,28 +625,58 @@
             chartYield.push(parseFloat(got_yield.toFixed(4)));
         }
 
+        // Exact First-Law Energy Balance Closure Audit: E_sol - E_loss_net - E_desorp - dE_sensible = 0
+        const e_desorp = (w0 - w) * m_s * dH;
+        const dE_sensible = C_th * (Tc - Tc_init);
+        const energy_residual_mj = Math.abs(e_sol_in - e_loss_net - e_desorp - dE_sensible) / 1e6;
+
         return {
             A_ap, A_ext, m_s, tau, UA, w0, w_end: w, t_peak, min_rh_eff,
-            got_yield, e_sol_in, e_loss_out, chartLabels, chartTc, chartYield
+            got_yield, e_sol_in, e_loss_out: Math.max(0.0, e_loss_net),
+            energy_residual_mj, chartLabels, chartTc, chartYield
         };
     }
 
-    // --- 5. FULL-SYSTEM DIAGNOSTIC & OPTIMUM SOLVER PER ITERATION ---
+    // --- 5. INPUT VALIDATION, DIAGNOSTIC & OPTIMUM SOLVER PER ITERATION ---
+    function clampVal(id, minV, maxV, fallback) {
+        const el = document.getElementById(id);
+        let v = parseFloat(el.value);
+        if (isNaN(v)) v = fallback;
+        v = Math.min(maxV, Math.max(minV, v));
+        el.value = v;
+        return v;
+    }
+
     function runAndLogTest() {
+        const mofName = (document.getElementById('input-mof-name').value || "Custom-MOF").trim();
         const params = {
-            rh_night: parseFloat(document.getElementById('input-rh').value),
-            t_night: parseFloat(document.getElementById('input-temp-night').value),
-            t_day: parseFloat(document.getElementById('input-temp-day').value),
-            g_max: parseFloat(document.getElementById('input-gmax').value),
-            lx_mm: parseFloat(document.getElementById('input-lx').value),
-            ly_mm: parseFloat(document.getElementById('input-ly').value),
-            conc: parseFloat(document.getElementById('input-conc').value),
-            w_max: parseFloat(document.getElementById('input-capacity').value),
+            mof_name: mofName,
+            rh_night: clampVal('input-rh', 1, 100, 80),
+            t_night: clampVal('input-temp-night', -10, 45, 15),
+            t_day: clampVal('input-temp-day', 0, 55, 25),
+            g_max: clampVal('input-gmax', 100, 1400, 920),
+            lx_mm: clampVal('input-lx', 280, 3000, 350),
+            ly_mm: clampVal('input-ly', 200, 3000, 270),
+            conc: clampVal('input-conc', 1.0, 15.0, 1.0),
+            u_val: clampVal('input-uvalue', 0.8, 8.0, 5.6),
             th_mm: parseFloat(document.getElementById('input-thickness').value),
-            u_val: parseFloat(document.getElementById('input-uvalue').value)
+            w_max: clampVal('input-capacity', 0.05, 2.50, 0.40),
+            rh_step_pct: clampVal('input-rh-step', 2.0, 85.0, 13.0),
+            k_iso: clampVal('input-k-iso', 10, 150, 60),
+            rho: clampVal('input-rho', 150, 1500, 600),
+            dh_mj: clampVal('input-dh', 2.20, 4.00, 2.80),
+            cp_s: clampVal('input-cp', 500, 2500, 1000),
+            deff_e6: clampVal('input-deff', 0.10, 10.0, 1.50),
+            k_bed: clampVal('input-kbed', 0.05, 2.00, 0.20)
         };
 
-        // 1. Run 144-Step Physics Simulation on Current Inputs
+        // Check geometric stack clearance (10 trays * th_mm vs 147.65mm front height)
+        let geomWarning = "";
+        if (10 * params.th_mm > 120) {
+            geomWarning = `<div class="geom-warn"><strong>Geometric Clearance Warning:</strong> 10 trays at ${params.th_mm}mm thickness occupy ${10*params.th_mm}mm of the 147.7mm front chamber height, restricting airflow pitch (&lt;2.8mm gap).</div>`;
+        }
+
+        // 1. Run Physics Simulation on Current Inputs
         const sim = simulateCyclePhysics(params);
         const iterNum = testHistory.length + 1;
 
@@ -580,70 +684,93 @@
         document.getElementById('mass-display').innerText = sim.m_s.toFixed(3) + ' kg';
         document.getElementById('tpeak-display').innerText = sim.t_peak.toFixed(1) + ' °C';
         document.getElementById('tau-display').innerText = Math.round(sim.tau) + ' s';
+        document.getElementById('energy-res-display').innerText = sim.energy_residual_mj.toFixed(4) + ' MJ';
         document.getElementById('right-panel-dims').innerText = `${Math.round(params.lx_mm)} × ${Math.round(params.ly_mm)} mm`;
-        document.getElementById('ode-chart-label').innerHTML = `Iter #${iterNum} (<span class="math-var">T<sub>peak</sub></span>: ${sim.t_peak.toFixed(1)}&deg;C, Yield: ${sim.got_yield.toFixed(3)} L)`;
+        document.getElementById('ode-chart-label').innerHTML = `Iter #${iterNum}: ${mofName} (<span class="math-var">T<sub>peak</sub></span>: ${sim.t_peak.toFixed(1)}&deg;C, Yield: ${sim.got_yield.toFixed(3)} L)`;
         transientChartInstance.data.labels = sim.chartLabels;
         transientChartInstance.data.datasets[0].data = sim.chartTc;
         transientChartInstance.data.datasets[1].data = sim.chartYield;
         transientChartInstance.update();
 
-        // 2. Compute Complete Set of Optimum Values for THIS Exact Configuration
+        // 2. Compute Complete Set of Optimum Values for THIS Sorbent & Weather Set
+        const stepThreshold = (params.rh_step_pct / 100.0) + 0.015;
+
         let bestTh = params.th_mm, maxThYield = sim.got_yield;
-        for (let testTh = 2; testTh <= 15; testTh++) {
+        for (let testTh = 2; testTh <= 14; testTh++) {
             let resTh = simulateCyclePhysics({ ...params, th_mm: testTh });
             if (resTh.got_yield > maxThYield) { maxThYield = resTh.got_yield; bestTh = testTh; }
         }
 
-        const optU = Math.min(params.u_val, 2.0);
+        let optU = params.u_val;
+        for (let testU = 5.6; testU >= 1.2; testU -= 0.4) {
+            let uRound = parseFloat(testU.toFixed(1));
+            let resU = simulateCyclePhysics({ ...params, u_val: uRound });
+            if (resU.got_yield >= 0.25 && resU.min_rh_eff <= stepThreshold) { optU = uRound; break; }
+            optU = 2.0;
+        }
 
         let optLx = params.lx_mm, optLy = params.ly_mm;
-        if (sim.got_yield < 0.25 && sim.w0 >= 0.12) {
+        if (sim.got_yield < 0.25 && sim.w0 >= params.w_max * 0.30) {
             for (let scale = 1.05; scale <= 4.5; scale += 0.1) {
                 let testLx = Math.ceil((350 * scale) / 10) * 10;
                 let testLy = Math.ceil((270 * scale) / 10) * 10;
                 let resBox = simulateCyclePhysics({ ...params, lx_mm: testLx, ly_mm: testLy, u_val: optU, th_mm: bestTh });
                 optLx = testLx; optLy = testLy;
-                if (resBox.got_yield >= 0.25 && resBox.min_rh_eff <= 0.145) break;
+                if (resBox.got_yield >= 0.25 && resBox.min_rh_eff <= stepThreshold) break;
             }
         }
 
         let optConc = params.conc;
-        if (sim.got_yield < 0.25 && sim.w0 >= 0.12) {
+        if (sim.got_yield < 0.25 && sim.w0 >= params.w_max * 0.30) {
             for (let c = 1.2; c <= 10.0; c += 0.2) {
                 let resC = simulateCyclePhysics({ ...params, conc: parseFloat(c.toFixed(1)) });
                 optConc = parseFloat(c.toFixed(1));
-                if (resC.got_yield >= 0.25 && resC.min_rh_eff <= 0.145) break;
+                if (resC.got_yield >= 0.25 && resC.min_rh_eff <= stepThreshold) break;
             }
         }
 
-        const optRH = params.rh_night < 25 ? 45 : params.rh_night;
-
+        const optRH = params.rh_night < (params.rh_step_pct + 10) ? Math.min(95, Math.round(params.rh_step_pct + 20)) : params.rh_night;
         currentOptimums = { optLx, optLy, optU, bestTh, optConc, optRH };
-        const optimumSummaryStr = `Box: ${optLx}x${optLy}mm (at U=${optU}) | OR Conc: ${optConc}x on ${params.lx_mm}x${params.ly_mm}mm | Opt Tray: ${bestTh}mm | Min RH: ${optRH}%`;
+        const optimumSummaryStr = `Box: ${optLx}x${optLy}mm (U=${optU}) | OR Conc: ${optConc}x | Opt Tray: ${bestTh}mm | Min RH: ${optRH}%`;
 
-        // 3. Diagnose All Bottlenecks Simultaneously
+        // 3. Diagnose All Bottlenecks Simultaneously (Material-Agnostic Step Threshold)
         const waterCaptured_L = sim.w0 * sim.m_s;
-        const reqDesorp_MJ = (waterCaptured_L * 2.8e6) / 1e6;
+        const reqDesorp_MJ = (waterCaptured_L * params.dh_mj);
         const sol_MJ = sim.e_sol_in / 1e6;
         const loss_MJ = sim.e_loss_out / 1e6;
 
         let failures = [];
         let statusBadge = "OPTIMAL (Pass)";
-        const isViable = (sim.got_yield >= 0.25) && (sim.min_rh_eff <= 0.145);
+        const isViable = (sim.got_yield >= 0.25) && (sim.min_rh_eff <= stepThreshold);
 
         if (!isViable) {
-            if (sim.w0 < 0.15) failures.push(`Vapor Starvation (Night RH ${params.rh_night}% near/below 13% isotherm step; only adsorbed ${waterCaptured_L.toFixed(2)} L)`);
-            if (sim.min_rh_eff > 0.145) failures.push(`Chamber Psychrometric Deficit (T_peak=${sim.t_peak.toFixed(1)}°C left min RH_eff=${(sim.min_rh_eff*100).toFixed(1)}% above 13% desorption step)`);
-            if (loss_MJ > sol_MJ * 0.45) failures.push(`Excessive Wall Heat Loss (U=${params.u_val} W/m²K lost ${loss_MJ.toFixed(2)} MJ of ${sol_MJ.toFixed(2)} MJ solar gain)`);
-            if (sol_MJ < reqDesorp_MJ) failures.push(`Insufficient Aperture Solar Capture (Collected ${sol_MJ.toFixed(2)} MJ vs ${reqDesorp_MJ.toFixed(2)} MJ required for full bed desorption)`);
-            statusBadge = "FAIL (" + (sim.w0 < 0.15 ? "Vapor Starved" : "Thermal Deficit") + ")";
+            if (sim.w0 < params.w_max * 0.35) {
+                failures.push(`Vapor Starvation (Night RH ${params.rh_night}% is near/below ${mofName} step RH_step=${params.rh_step_pct}%; loaded w0=${sim.w0.toFixed(3)} g/g)`);
+            }
+            if (sim.min_rh_eff > stepThreshold) {
+                failures.push(`Psychrometric Desorption Deficit (T_peak=${sim.t_peak.toFixed(1)}°C left min RH_eff=${(sim.min_rh_eff*100).toFixed(1)}% above ${mofName} step ${params.rh_step_pct}%)`);
+            }
+            if (loss_MJ > sol_MJ * 0.45) {
+                failures.push(`High Envelope Heat Loss (U=${params.u_val} W/m²K lost ${loss_MJ.toFixed(2)} MJ of ${sol_MJ.toFixed(2)} MJ solar gain)`);
+            }
+            if (sol_MJ < reqDesorp_MJ) {
+                failures.push(`Insufficient Aperture Solar Capture (Collected ${sol_MJ.toFixed(2)} MJ vs ${reqDesorp_MJ.toFixed(2)} MJ required for full desorption)`);
+            }
+            statusBadge = "FAIL (" + (sim.w0 < params.w_max * 0.35 ? "Vapor Starved" : "Thermal Deficit") + ")";
         }
 
-        const failureText = failures.length > 0 ? failures.join(" | ") : "All thermodynamic, psychrometric (RH_eff <= 13% step), and kinetic thresholds satisfied (>= 0.25 L/day).";
+        const failureText = failures.length > 0 ? failures.join(" | ") : `All thermodynamic, psychrometric (RH_eff <= ${params.rh_step_pct}% step), and kinetic thresholds satisfied (>= 0.25 L/day).`;
 
-        // 4. Compute Dual Deltas (vs Iteration #1 Baseline AND vs Previous Iteration N-1)
+        // 4. Compute Dual Deltas (Including Custom MOF Property Changes) & One-at-a-Time Attribution
         function computeDeltaList(refRecord, labelPrefix) {
             let d = [];
+            if (refRecord.mof_name !== params.mof_name) d.push(`MOF:${refRecord.mof_name}->${params.mof_name}`);
+            if (refRecord.w_max !== params.w_max) d.push(`w_max:${refRecord.w_max}->${params.w_max}`);
+            if (refRecord.rh_step_pct !== params.rh_step_pct) d.push(`RH_step:${refRecord.rh_step_pct}->${params.rh_step_pct}%`);
+            if (refRecord.rho !== params.rho) d.push(`rho:${refRecord.rho}->${params.rho}`);
+            if (refRecord.dh_mj !== params.dh_mj) d.push(`dH:${refRecord.dh_mj}->${params.dh_mj}MJ`);
+            if (refRecord.deff_e6 !== params.deff_e6) d.push(`D_eff:${refRecord.deff_e6}->${params.deff_e6}`);
+            if (refRecord.k_bed !== params.k_bed) d.push(`k_bed:${refRecord.k_bed}->${params.k_bed}`);
             if (refRecord.rh !== params.rh_night) d.push(`RH:${refRecord.rh}->${params.rh_night}%`);
             if (refRecord.t_night !== params.t_night || refRecord.t_day !== params.t_day) d.push(`T:${refRecord.t_night}/${refRecord.t_day}->${params.t_night}/${params.t_day}C`);
             if (refRecord.g_max !== params.g_max) d.push(`G:${refRecord.g_max}->${params.g_max}W/m2`);
@@ -651,7 +778,6 @@
             if (refRecord.th_mm !== params.th_mm) d.push(`Tray:${refRecord.th_mm}->${params.th_mm}mm`);
             if (refRecord.u_val !== params.u_val) d.push(`U:${refRecord.u_val}->${params.u_val}`);
             if (refRecord.conc !== params.conc) d.push(`Conc:${refRecord.conc}->${params.conc}x`);
-            if (refRecord.w_max !== params.w_max) d.push(`Cap:${refRecord.w_max}->${params.w_max}`);
             return d.length > 0 ? d : [`No change vs ${labelPrefix}`];
         }
 
@@ -660,7 +786,7 @@
         let causalNarrative = "";
 
         if (testHistory.length === 0) {
-            causalNarrative = `Iteration #1 Baseline: At RH=${params.rh_night}%, T=${params.t_night}/${params.t_day}°C, G_max=${params.g_max} W/m², and ${params.lx_mm}x${params.ly_mm}mm (Tray=${params.th_mm}mm, U=${params.u_val}), the bed adsorbed ${waterCaptured_L.toFixed(2)} L (w0=${sim.w0.toFixed(3)} g/g), reached T_peak=${sim.t_peak.toFixed(1)}°C, and yielded ${sim.got_yield.toFixed(3)} L/day.`;
+            causalNarrative = `Iteration #1 Baseline (${mofName}, w_max=${params.w_max} g/g, RH_step=${params.rh_step_pct}%, rho=${params.rho} kg/m³): At RH=${params.rh_night}%, G_max=${params.g_max} W/m², and ${params.lx_mm}x${params.ly_mm}mm (Tray=${params.th_mm}mm, U=${params.u_val}), the bed adsorbed ${waterCaptured_L.toFixed(2)} L (w0=${sim.w0.toFixed(3)} g/g), reached T_peak=${sim.t_peak.toFixed(1)}°C, and yielded ${sim.got_yield.toFixed(3)} L/day.`;
         } else {
             const first = testHistory[0];
             const prev = testHistory[testHistory.length - 1];
@@ -671,33 +797,44 @@
             const dY_base = sim.got_yield - parseFloat(first.yield_L);
             const dT_prev = sim.t_peak - parseFloat(prev.t_peak);
 
+            // Isolate exact contribution of Weather vs Sorbent Material vs Housing Geometry
             let effects = [];
-            if (prev.rh !== params.rh_night || prev.t_night !== params.t_night) {
-                effects.push(`Weather shift (RH ${prev.rh}%->${params.rh_night}%, T_night ${prev.t_night}->${params.t_night}°C) changed nighttime pore uptake w0 from ${prev.w_start} to ${sim.w0.toFixed(3)} g/g (${waterCaptured_L.toFixed(2)} L adsorbed)`);
+            if (prev.mof_name !== params.mof_name || prev.w_max !== params.w_max || prev.rh_step_pct !== params.rh_step_pct || prev.rho !== params.rho || prev.dh_mj !== params.dh_mj || prev.deff_e6 !== params.deff_e6 || prev.k_bed !== params.k_bed) {
+                effects.push(`Sorbent material update (${params.mof_name}: w_max=${params.w_max} g/g, RH_step=${params.rh_step_pct}%, rho=${params.rho} kg/m³, dH=${params.dh_mj} MJ/kg) set bed mass to ${sim.m_s.toFixed(3)} kg and diffusion constant tau=${Math.round(sim.tau)} s`);
             }
-            if (prev.g_max !== params.g_max || prev.t_day !== params.t_day) {
-                effects.push(`Daytime climate shift (G_max ${prev.g_max}->${params.g_max} W/m², T_day ${prev.t_day}->${params.t_day}°C) altered incident solar energy (${prev.solar_MJ}->${sol_MJ.toFixed(2)} MJ)`);
+            if (prev.rh !== params.rh_night || prev.t_night !== params.t_night || prev.g_max !== params.g_max || prev.t_day !== params.t_day) {
+                effects.push(`Weather boundary change (RH ${prev.rh}%->${params.rh_night}%, G_max ${prev.g_max}->${params.g_max} W/m²) shifted initial uptake w0=${prev.w_start}->${sim.w0.toFixed(3)} g/g and incident solar energy ${prev.solar_MJ}->${sol_MJ.toFixed(2)} MJ`);
             }
             if (prev.lx !== params.lx_mm || prev.ly !== params.ly_mm || prev.u_val !== params.u_val || prev.conc !== params.conc || prev.th_mm !== params.th_mm) {
-                effects.push(`Hardware reconfiguration (${deltasVsPrev.filter(x => !x.startsWith('RH') && !x.startsWith('T:') && !x.startsWith('G:')).join(', ')}) shifted chamber peak temperature by ${dT_prev >= 0 ? '+' : ''}${dT_prev.toFixed(1)}°C (to ${sim.t_peak.toFixed(1)}°C, min RH_eff=${(sim.min_rh_eff*100).toFixed(1)}%)`);
+                effects.push(`Housing reconfiguration (Box ${prev.lx}x${prev.ly}->${params.lx_mm}x${params.ly_mm}mm, Tray ${prev.th_mm}->${params.th_mm}mm, U ${prev.u_val}->${params.u_val}, Conc ${prev.conc}->${params.conc}x) shifted T_peak by ${dT_prev >= 0 ? '+' : ''}${dT_prev.toFixed(1)}°C (to ${sim.t_peak.toFixed(1)}°C, min RH_eff=${(sim.min_rh_eff*100).toFixed(1)}%)`);
             }
 
-            causalNarrative = (effects.length > 0 ? effects.join("; ") + ". " : "Repeat run. ") +
-                `Resulting Yield Impact: ${dY_prev >= 0 ? '+' : ''}${dY_prev.toFixed(3)} L/d vs Iter #${prev.testNumber} (${dY_base >= 0 ? '+' : ''}${dY_base.toFixed(3)} L/d vs Iter #1 Baseline).`;
+            causalNarrative = (effects.length > 0 ? effects.join("; ") + ". " : "Repeat verification run. ") +
+                `Net Yield Impact: ${dY_prev >= 0 ? '+' : ''}${dY_prev.toFixed(3)} L/d vs Iter #${prev.testNumber} (${dY_base >= 0 ? '+' : ''}${dY_base.toFixed(3)} L/d vs Iter #1 Baseline).`;
         }
 
-        // 5. Save Full Iteration Record
+        // 5. Save Full Iteration Record (Including All Custom Sorbent Parameters)
         const record = {
             testNumber: iterNum,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
             status: statusBadge,
+            mof_name: params.mof_name,
+            w_max: params.w_max,
+            rh_step_pct: params.rh_step_pct,
+            k_iso: params.k_iso,
+            rho: params.rho,
+            dh_mj: params.dh_mj,
+            cp_s: params.cp_s,
+            deff_e6: params.deff_e6,
+            k_bed: params.k_bed,
             rh: params.rh_night, t_night: params.t_night, t_day: params.t_day, g_max: params.g_max,
-            w_max: params.w_max, lx: params.lx_mm, ly: params.ly_mm,
+            lx: params.lx_mm, ly: params.ly_mm,
             aperture_m2: sim.A_ap.toFixed(3), th_mm: params.th_mm, u_val: params.u_val, conc: params.conc,
             mofMass_kg: sim.m_s.toFixed(3), tau_s: Math.round(sim.tau),
             w_start: sim.w0.toFixed(3), w_end: sim.w_end.toFixed(3),
             t_peak: sim.t_peak.toFixed(1), min_rh_eff_pct: (sim.min_rh_eff * 100).toFixed(1),
             solar_MJ: sol_MJ.toFixed(2), loss_MJ: loss_MJ.toFixed(2), req_MJ: reqDesorp_MJ.toFixed(2),
+            energy_res_MJ: sim.energy_residual_mj.toFixed(4),
             yield_L: sim.got_yield.toFixed(3),
             deltasVsPrev: deltasVsPrev,
             deltasVsBase: deltasVsBase,
@@ -707,7 +844,7 @@
         };
 
         testHistory.push(record);
-        localStorage.setItem('mof_manual_sim_v4', JSON.stringify(testHistory));
+        localStorage.setItem('mof_manual_sim_v5', JSON.stringify(testHistory));
 
         if (currentUser) {
             db.collection('user_predictions').doc(currentUser.uid).collection('saved_runs').add({
@@ -718,15 +855,16 @@
         // 6. Render Complete Right-Side Diagnostic & Selective Optimum Panel
         document.getElementById('prediction-result').innerHTML = `
             <div>
+                ${geomWarning}
                 <div class="analysis-box ${isViable ? 'analysis-good' : 'analysis-bad'}">
-                    <strong style="display:block; margin-bottom:4px; font-size:12.5px; text-transform:uppercase; letter-spacing:0.3px;">
-                        Iteration #${iterNum} Full System Diagnosis: ${statusBadge}
+                    <strong style="display:block; margin-bottom:4px; font-size:12px; text-transform:uppercase; letter-spacing:0.3px;">
+                        Iteration #${iterNum} [${mofName}] Diagnosis: ${statusBadge}
                     </strong>
                     <strong>Bottleneck Analysis:</strong> ${failureText}
                 </div>
 
                 <div class="optimum-matrix">
-                    <h4>Calculated Optimum Values for Current Weather (${params.rh_night}% RH, ${params.g_max} W/m&sup2;)</h4>
+                    <h4>Calculated Optimum Values for ${mofName} at ${params.rh_night}% RH, ${params.g_max} W/m&sup2;</h4>
                     <div class="opt-grid">
                         <div class="opt-item">
                             <span>Optimum Box: <strong>${optLx}&times;${optLy} mm</strong></span>
@@ -755,12 +893,16 @@
 
             <div>
                 <div class="breakdown-row">
+                    <span>Sorbent (<span class="math-var">RH<sub>step</sub></span> = ${params.rh_step_pct}%, <span class="math-var">&Delta;H</span> = ${params.dh_mj} MJ/kg):</span>
+                    <strong style="color:var(--cyan);">${mofName} (${sim.m_s.toFixed(3)} kg)</strong>
+                </div>
+                <div class="breakdown-row">
                     <span>Night Sorption (<span class="math-var">w<sub>0</sub> &rarr; w<sub>end</sub></span>):</span>
                     <strong style="color:var(--primary);">${sim.w0.toFixed(3)} &rarr; ${sim.w_end.toFixed(3)} g/g (${waterCaptured_L.toFixed(2)} L adsorbed)</strong>
                 </div>
                 <div class="breakdown-row">
                     <span>Peak Chamber Temp (<span class="math-var">T<sub>peak</sub></span>) / Min <span class="math-var">RH<sub>eff</sub></span>:</span>
-                    <strong style="color:var(--text);">${sim.t_peak.toFixed(1)} &deg;C / ${(sim.min_rh_eff*100).toFixed(1)}% (Step: 13%)</strong>
+                    <strong style="color:var(--text);">${sim.t_peak.toFixed(1)} &deg;C / ${(sim.min_rh_eff*100).toFixed(1)}% (Step: ${params.rh_step_pct}%)</strong>
                 </div>
                 <div class="breakdown-row">
                     <span>Solar Gain / Wall Loss / Req Desorp:</span>
@@ -780,7 +922,6 @@
             document.getElementById('input-ly').value = currentOptimums.optLy;
         } else if (type === 'u') {
             document.getElementById('input-uvalue').value = currentOptimums.optU;
-            document.getElementById('u-val').innerText = currentOptimums.optU;
         } else if (type === 'th') {
             document.getElementById('input-thickness').value = currentOptimums.bestTh;
             document.getElementById('thick-val').innerText = currentOptimums.bestTh + 'mm';
@@ -790,18 +931,14 @@
     }
 
     function resetToBaseline() {
-        document.getElementById('input-rh').value = 80;
-        document.getElementById('input-temp-night').value = 15;
-        document.getElementById('input-temp-day').value = 25;
-        document.getElementById('input-gmax').value = 920;
-        document.getElementById('input-capacity').value = 0.40;
+        applyWeatherPreset(80, 15, 25, 920);
+        applyMofPreset('MOF-303 (Lit)', 0.40, 13.0, 60, 600, 2.80, 1000, 1.50, 0.20);
         document.getElementById('input-lx').value = 350;
         document.getElementById('input-ly').value = 270;
         document.getElementById('input-conc').value = 1.0;
         document.getElementById('input-thickness').value = 8;
         document.getElementById('thick-val').innerText = '8mm';
         document.getElementById('input-uvalue').value = 5.6;
-        document.getElementById('u-val').innerText = '5.6';
     }
 
     function renderTestTable() {
@@ -813,7 +950,7 @@
 
         if (testHistory.length === 0) {
             exportBtn.disabled = true;
-            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px; font-style:italic;">No iterations logged yet. You have full manual control&mdash;run Iteration #1 to start recording.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px; font-style:italic;">No iterations logged yet. Configure your MOF and housing parameters above and run Iteration #1.</td></tr>`;
             return;
         }
 
@@ -823,31 +960,40 @@
             const isPass = t.status.includes("OPTIMAL");
             const badgeHTML = isPass ? `<span class="badge-pass">PASS</span>` : `<span class="badge-fail">${t.status}</span>`;
             
-            const prevTags = (t.deltasVsPrev || []).map(d => `<span class="delta-tag ${d.startsWith('RH')||d.startsWith('T:')||d.startsWith('G:') ? 'delta-weather' : ''}">${d.replace(/->/g, '&rarr;')}</span>`).join(" ");
-            const baseTags = (t.deltasVsBase || []).map(d => `<span class="delta-tag">${d.replace(/->/g, '&rarr;')}</span>`).join(" ");
+            const formatTag = (d) => {
+                let cls = '';
+                if (d.startsWith('RH:') || d.startsWith('T:') || d.startsWith('G:')) cls = 'delta-weather';
+                else if (d.startsWith('MOF') || d.startsWith('w_max') || d.startsWith('RH_step') || d.startsWith('rho') || d.startsWith('dH') || d.startsWith('D_eff') || d.startsWith('k_bed')) cls = 'delta-mof';
+                return `<span class="delta-tag ${cls}">${d.replace(/->/g, '&rarr;')}</span>`;
+            };
+
+            const prevTags = (t.deltasVsPrev || []).map(formatTag).join(" ");
+            const baseTags = (t.deltasVsBase || []).map(formatTag).join(" ");
 
             html += `
                 <tr>
                     <td><strong style="color:var(--text);">Iter #${t.testNumber}</strong><br><span style="font-size:10px;">${t.timestamp}</span></td>
-                    <td style="max-width:180px;">${badgeHTML}<br><span style="font-size:10.5px; display:block; margin-top:4px;">${t.failureDiagnosis}</span></td>
+                    <td style="max-width:170px;">${badgeHTML}<br><span style="font-size:10px; display:block; margin-top:4px;">${t.failureDiagnosis}</span></td>
+                    <td>
+                        <strong style="color:var(--cyan);">${t.mof_name || 'MOF-303'}</strong><br>
+                        <span style="font-size:10px;"><span class="math-var">w<sub>max</sub></span>: ${t.w_max} g/g | <span class="math-var">RH<sub>step</sub></span>: ${t.rh_step_pct ?? 13}%<br><span class="math-var">&rho;<sub>b</sub></span>: ${t.rho ?? 600} kg/m&sup3; | <span class="math-var">&Delta;H</span>: ${t.dh_mj ?? 2.8} MJ/kg<br><span class="math-var">D<sub>eff</sub></span>: ${t.deff_e6 ?? 1.5}&times;10<sup>&minus;6</sup> | <span class="math-var">k<sub>bed</sub></span>: ${t.k_bed ?? 0.2}</span>
+                    </td>
                     <td>
                         <strong style="color:var(--purple);">RH: ${t.rh}% | <span class="math-var">T</span>: ${t.t_night}/${t.t_day}&deg;C | <span class="math-var">G<sub>max</sub></span>: ${t.g_max} W/m&sup2;</strong><br>
                         <strong style="color:var(--text);">Box: ${t.lx}&times;${t.ly} mm (${t.aperture_m2} m&sup2;)</strong><br>
-                        <span style="font-size:10.5px;">Tray: ${t.th_mm}mm | <span class="math-var">U</span>: ${t.u_val} | Conc: ${t.conc}&times; | <span class="math-var">m<sub>s</sub></span>: ${t.mofMass_kg}kg</span>
+                        <span style="font-size:10px;">Tray: ${t.th_mm}mm | <span class="math-var">U</span>: ${t.u_val} | Conc: ${t.conc}&times; | <span class="math-var">m<sub>s</sub></span>: ${t.mofMass_kg}kg</span>
                     </td>
-                    <td style="max-width:210px;">
+                    <td style="max-width:200px;">
                         <div style="margin-bottom:4px;"><strong style="font-size:10px; color:var(--text);">vs Prev:</strong> ${prevTags}</div>
                         <div><strong style="font-size:10px; color:var(--text-muted);">vs Iter #1:</strong> ${baseTags}</div>
                     </td>
                     <td>
-                        <strong style="font-size:13.5px; color:${isPass ? 'var(--secondary)' : 'var(--danger)'};">${t.yield_L} L/day</strong><br>
-                        <span style="font-size:10.5px;"><span class="math-var">w</span>: ${t.w_start} &rarr; ${t.w_end} g/g<br><span class="math-var">T<sub>peak</sub></span>: ${t.t_peak}&deg;C (<span class="math-var">RH<sub>eff</sub></span>: ${t.min_rh_eff_pct}%)<br>Sol: ${t.solar_MJ} MJ | Loss: ${t.loss_MJ} MJ</span>
+                        <strong style="font-size:13px; color:${isPass ? 'var(--secondary)' : 'var(--danger)'};">${t.yield_L} L/day</strong><br>
+                        <span style="font-size:10px;"><span class="math-var">w</span>: ${t.w_start} &rarr; ${t.w_end} g/g | <span class="math-var">&tau;</span>: ${t.tau_s}s<br><span class="math-var">T<sub>peak</sub></span>: ${t.t_peak}&deg;C (<span class="math-var">RH<sub>eff</sub></span>: ${t.min_rh_eff_pct}%)<br>Sol: ${t.solar_MJ} MJ | Loss: ${t.loss_MJ} MJ</span>
                     </td>
-                    <td style="max-width:200px; font-size:10.5px; color:var(--primary); line-height:1.4;">
-                        ${t.optimumForSet}
-                    </td>
-                    <td style="max-width:300px; font-size:11px; line-height:1.4; color:#e2c5ff;">
-                        ${t.causalImpact}
+                    <td style="max-width:280px; font-size:10.5px; line-height:1.4;">
+                        <div style="color:var(--primary); margin-bottom:4px;"><strong>Optimums:</strong> ${t.optimumForSet}</div>
+                        <div style="color:#e2c5ff;"><strong>Causal Impact:</strong> ${t.causalImpact}</div>
                     </td>
                 </tr>
             `;
@@ -857,11 +1003,12 @@
 
     function clearTestHistory() {
         testHistory = [];
+        localStorage.removeItem('mof_manual_sim_v5');
         localStorage.removeItem('mof_manual_sim_v4');
         renderTestTable();
     }
 
-    // --- 6. BINARY BLOB CSV REPORT GENERATOR (IMMUNE TO '#' HASH TRUNCATION) ---
+    // --- 6. BINARY BLOB CSV REPORT GENERATOR (WITH FULL CUSTOM MOF COLUMNS) ---
     function csvEscape(val) {
         if (val === null || val === undefined) return '""';
         const str = String(val).replace(/"/g, '""');
@@ -875,24 +1022,35 @@
         }
 
         const headers = [
-            "Iteration", "Timestamp", "Status", "Night_RH_pct", "Night_Temp_C", "Day_Peak_Temp_C",
-            "Peak_Irradiance_Wm2", "MOF_Max_Capacity_gg", "Envelope_Lx_mm", "Envelope_Ly_mm",
-            "Aperture_Area_m2", "Tray_Thickness_mm", "Envelope_U_Value_Wm2K", "Solar_Concentrator_x",
-            "Sorbent_Mass_kg", "Diffusion_Time_Constant_s", "Initial_Uptake_w0_gg", "Final_Uptake_wend_gg",
-            "Peak_Chamber_Temp_C", "Min_Effective_RH_pct", "Solar_Gain_MJ", "Conductive_Loss_MJ", "Required_Desorption_MJ",
-            "Simulated_Water_Yield_L_day", "Deltas_vs_Previous_Iteration", "Deltas_vs_Iteration_1_Baseline",
-            "Failure_Bottleneck_Diagnosis", "Optimum_Parameters_For_This_Iteration", "Causal_Impact_Analysis"
+            "Iteration", "Timestamp", "Status", "Sorbent_Name", "MOF_w_max_gg", "MOF_RH_step_pct",
+            "MOF_Steepness_k", "MOF_Bulk_Density_kgm3", "MOF_Desorption_Heat_MJkg", "MOF_Specific_Heat_JkgK",
+            "MOF_Diffusivity_e6_m2s", "MOF_Bed_Conductivity_WmK", "Night_RH_pct", "Night_Temp_C",
+            "Day_Peak_Temp_C", "Peak_Irradiance_Wm2", "Envelope_Lx_mm", "Envelope_Ly_mm", "Aperture_Area_m2",
+            "Tray_Thickness_mm", "Envelope_U_Value_Wm2K", "Solar_Concentrator_x", "Sorbent_Mass_kg",
+            "Diffusion_Time_Constant_s", "Initial_Uptake_w0_gg", "Final_Uptake_wend_gg", "Peak_Chamber_Temp_C",
+            "Min_Effective_RH_pct", "Solar_Gain_MJ", "Conductive_Loss_MJ", "Required_Desorption_MJ",
+            "Energy_Balance_Residual_MJ", "Simulated_Water_Yield_L_day", "Deltas_vs_Previous_Iteration",
+            "Deltas_vs_Iteration_1_Baseline", "Failure_Bottleneck_Diagnosis",
+            "Optimum_Parameters_For_This_Iteration", "Causal_Impact_Analysis"
         ];
 
         const rows = testHistory.map(t => [
             csvEscape(`Iteration #${t.testNumber}`),
             csvEscape(t.timestamp),
             csvEscape(t.status),
+            csvEscape(t.mof_name || "MOF-303"),
+            t.w_max,
+            t.rh_step_pct ?? 13.0,
+            t.k_iso ?? 60,
+            t.rho ?? 600,
+            t.dh_mj ?? 2.80,
+            t.cp_s ?? 1000,
+            t.deff_e6 ?? 1.50,
+            t.k_bed ?? 0.20,
             t.rh,
             t.t_night,
             t.t_day,
             t.g_max,
-            t.w_max,
             t.lx,
             t.ly,
             t.aperture_m2,
@@ -908,6 +1066,7 @@
             t.solar_MJ,
             t.loss_MJ,
             t.req_MJ,
+            t.energy_res_MJ ?? "0.0000",
             t.yield_L,
             csvEscape((t.deltasVsPrev || []).join('; ')),
             csvEscape((t.deltasVsBase || []).join('; ')),
@@ -916,14 +1075,13 @@
             csvEscape(t.causalImpact)
         ]);
 
-        // Prepend UTF-8 BOM (\uFEFF) and use a binary Blob so '#' characters never truncate the download
         const csvString = "\uFEFF" + headers.join(",") + "\r\n" + rows.map(r => r.join(",")).join("\r\n");
         const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
         const url = URL.createObjectURL(blob);
 
         const link = document.createElement("a");
         link.setAttribute("href", url);
-        link.setAttribute("download", `MOF_Harvester_Full_Iteration_Report_${new Date().toISOString().slice(0,10)}.csv`);
+        link.setAttribute("download", `MOF_Harvester_Material_Agnostic_Report_${new Date().toISOString().slice(0,10)}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
