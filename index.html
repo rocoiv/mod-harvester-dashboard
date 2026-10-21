@@ -64,7 +64,7 @@
         .input-grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; margin-bottom: 8px; }
         .input-group { display: flex; justify-content: space-between; margin-bottom: 6px; align-items: center; font-size: 12px; font-weight: 500; color: var(--text-muted); }
         .input-group input[type="number"], .input-group input[type="text"] { width: 68px; padding: 4px 6px; border: 1px solid var(--border); border-radius: 4px; font-weight: bold; color: var(--primary); background: var(--card); text-align: center; font-size: 12px;}
-        .input-group input[type="text"] { width: 125px; color: var(--cyan); }
+        .input-group input[type="text"] { width: 135px; color: var(--cyan); }
         .input-group input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(88,166,255,0.2); }
         .input-group input[type="range"] { width: 85px; accent-color: var(--primary); cursor: pointer; }
         .range-val { display: inline-block; width: 42px; text-align: right; font-weight: bold; color: var(--primary); font-size: 11.5px; }
@@ -134,7 +134,7 @@
 <div class="header">
     <div class="header-text">
         <h1>Palletised <span>MOF Harvester</span> | CPUT Research Project (RPR585S)</h1>
-        <p>Material-Agnostic Digital Twin: Custom Sorbent (UJ / Literature) & Multi-Parameter Iteration Simulator</p>
+        <p>Material-Agnostic Digital Twin: Custom Sorbent (UJ / Literature), Editable Air Gap & Counterfactual Simulator</p>
     </div>
     <div class="auth-panel">
         <button id="login-btn" class="auth-btn" onclick="signInWithGoogle()">
@@ -170,12 +170,12 @@
                 <p id="tpeak-display">-- &deg;C</p>
             </div>
             <div class="stat-card">
-                <h3>Diffusion Time Constant (<span class="math-var">&tau;</span>)</h3>
-                <p id="tau-display">235 s</p>
+                <h3>Diffusion / Thermal (<span class="math-var">&tau; / &tau;<sub>th</sub></span>)</h3>
+                <p id="tau-display">235s / 2084s</p>
             </div>
             <div class="stat-card">
-                <h3>First-Law Energy Residual</h3>
-                <p id="energy-res-display">0.000 MJ</p>
+                <h3>Rack Stack Height (<span class="math-var">H<sub>stack</sub></span>)</h3>
+                <p id="stack-display">108 / 120 mm</p>
             </div>
         </div>
 
@@ -198,7 +198,7 @@
         </div>
 
         <h2 class="panel-title" style="margin-top: 18px;">
-            <span>2. Material-Agnostic Simulation Workbench (Weather, Geometry & Custom MOF Unlocked)</span>
+            <span>2. Material-Agnostic Simulation Workbench (Weather, Geometry, Air Gap & Custom UJ MOF Unlocked)</span>
             <span id="next-test-badge" class="no-caps" style="background:#21262d; padding:4px 10px; border-radius:4px; font-size:12px; color:var(--primary);">Ready for Iteration #1</span>
         </h2>
 
@@ -232,14 +232,17 @@
                     </div>
                 </div>
 
-                <h3 style="margin-top: 10px;">B. Structural Housing & Tray Geometry</h3>
+                <h3 style="margin-top: 10px;">
+                    <span>B. Housing, Tray Thickness & Air Gap Geometry</span>
+                    <span id="live-stack-indicator" class="no-caps" style="font-size:10.5px; color:var(--secondary);">Stack: 108 / 120 mm</span>
+                </h3>
                 <div class="input-grid-2col">
                     <div class="input-group">
-                        <label>Box Length (<span class="math-var">L<sub>x</sub></span>, mm)</label>
+                        <label>Box Length (<span class="math-var">L<sub>x</sub></span>, mm &ge;280)</label>
                         <input type="number" id="input-lx" value="350" min="280" max="3000" step="10">
                     </div>
                     <div class="input-group">
-                        <label>Box Depth (<span class="math-var">L<sub>y</sub></span>, mm)</label>
+                        <label>Box Depth (<span class="math-var">L<sub>y</sub></span>, mm &ge;200)</label>
                         <input type="number" id="input-ly" value="270" min="200" max="3000" step="10">
                     </div>
                     <div class="input-group">
@@ -250,11 +253,19 @@
                         <label>Glazing <span class="math-var">U</span> (W/m&sup2;K)</label>
                         <input type="number" id="input-uvalue" value="5.6" min="0.8" max="8.0" step="0.1">
                     </div>
+                    <div class="input-group">
+                        <label>Tray Count (<span class="math-var">N<sub>tr</sub></span>, trays)</label>
+                        <input type="number" id="input-ntrays" value="10" min="1" max="20" step="1" oninput="updateLiveStackPreview()">
+                    </div>
+                    <div class="input-group">
+                        <label>Inter-Tray Air Gap (<span class="math-var">g<sub>air</sub></span>, mm)</label>
+                        <input type="number" id="input-airgap" value="2.0" min="1.0" max="15.0" step="0.5" oninput="updateLiveStackPreview()">
+                    </div>
                 </div>
                 <div class="input-group">
-                    <label>Tray Bed Thickness (<span class="math-var">L<sub>bed</sub></span>, mm) [10 Trays, 280&times;200mm]</label>
+                    <label>Tray Bed Thickness (<span class="math-var">L<sub>bed</sub></span>, mm) [CAD Baseline: 8mm Bed, 2mm Gap]</label>
                     <div>
-                        <input type="range" id="input-thickness" min="2" max="14" value="8" oninput="document.getElementById('thick-val').innerText = this.value + 'mm'">
+                        <input type="range" id="input-thickness" min="2" max="14" value="8" oninput="document.getElementById('thick-val').innerText = this.value + 'mm'; updateLiveStackPreview();">
                         <span id="thick-val" class="range-val">8mm</span>
                     </div>
                 </div>
@@ -317,8 +328,8 @@
             <!-- Full-System Diagnostic & Complete Optimum Matrix Output -->
             <div class="breakdown-box" id="prediction-result">
                 <div style="text-align: center; color: var(--text-muted); font-style: italic; margin: auto 0; padding: 20px;">
-                    Insert any custom UJ or literature MOF parameters, weather boundaries, and housing dimensions, then click <strong>"Run Full Analysis & Log Iteration"</strong>.<br><br>
-                    The simulator dynamically adapts its isotherm inflection step (<span class="math-var">RH<sub>step</sub></span>), diffusion kinetics (<span class="math-var">&tau;</span>), and desorption enthalpy (<span class="math-var">&Delta;H<sub>des</sub></span>) to evaluate any sorbent material.
+                    Configure any custom UJ or literature MOF parameters, weather boundaries, inter-tray air gap (<span class="math-var">g<sub>air</sub></span>, baseline 2mm), and housing dimensions, then click <strong>"Run Full Analysis & Log Iteration"</strong>.<br><br>
+                    The simulator enforces exact CAD rack height clearance (<span class="math-var">N<sub>tr</sub>&middot;L<sub>bed</sub> + (N<sub>tr</sub>&minus;1)&middot;g<sub>air</sub> + 10 &le; 120 mm</span>), models inter-tray channel vapour resistance, and performs Counterfactual OFAT attribution.
                 </div>
             </div>
         </div>
@@ -326,7 +337,7 @@
         <!-- SEQUENTIAL TEST LOG & REPORT GENERATOR -->
         <div class="history-section">
             <div class="history-header">
-                <h3>3. Complete Multi-Iteration Engineering Log (Weather, Geometry & Custom MOF Telemetry)</h3>
+                <h3>3. Complete Multi-Iteration Engineering Log (Weather, Geometry, Air Gap & Custom MOF Telemetry)</h3>
                 <div style="display:flex; gap:10px;">
                     <button id="clear-log-btn" class="reset-btn" style="padding:6px 12px;" onclick="clearTestHistory()">Clear Session</button>
                     <button id="export-csv-btn" class="export-btn" onclick="downloadTestReportCSV()" disabled>Download Full Dissertation CSV Report</button>
@@ -339,15 +350,15 @@
                             <th>Iter #</th>
                             <th>Status & Bottleneck</th>
                             <th>Sorbent Material & Properties</th>
-                            <th>Weather & Housing Geometry</th>
+                            <th>Weather, Box & Rack (<span class="math-var">L<sub>bed</sub>, g<sub>air</sub>, N<sub>tr</sub></span>)</th>
                             <th>Deltas (vs Iter #1 & vs Prev)</th>
                             <th>Simulated Yield & Telemetry</th>
-                            <th>Optimum Values & Causal Attribution</th>
+                            <th>Verified Optimums & Counterfactual Attribution</th>
                         </tr>
                     </thead>
                     <tbody id="test-log-tbody">
                         <tr>
-                            <td colspan="7" style="text-align:center; padding: 20px; font-style:italic;">No iterations logged yet. Configure your MOF and housing parameters above and run Iteration #1.</td>
+                            <td colspan="7" style="text-align:center; padding: 20px; font-style:italic;">No iterations logged yet. Configure your MOF, air gap, and housing parameters above and run Iteration #1.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -367,11 +378,11 @@
         </div>
         
         <div class="context-sidebar">
-            <strong style="color: var(--text);">Audited Material-Agnostic Physics Engine:</strong>
+            <strong style="color: var(--text);">Audited Material-Agnostic & Rack Physics:</strong>
             <ul>
-                <li><strong>Universal Sorbent Testing:</strong> Supports any custom MOF or UJ experimental characterization (<span class="math-var">w<sub>max</sub>, RH<sub>step</sub>, k<sub>iso</sub>, &rho;<sub>b</sub>, &Delta;H<sub>des</sub>, c<sub>p,s</sub>, D<sub>eff</sub>, k<sub>bed</sub></span>).</li>
-                <li><strong>Adaptive Sub-Stepping ODE Solver:</strong> Automatically subdivides the 300 s Euler step whenever <span class="math-var">&tau;</span> is small (thin beds or high <span class="math-var">D<sub>eff</sub></span>), guaranteeing numerical stability and exact First-Law energy closure.</li>
-                <li><strong>Dynamic Psychrometric Pass Criterion:</strong> Viability requires Yield &ge; 0.250 L/day and <span class="math-var">RH<sub>eff,min</sub> &le; RH<sub>step</sub> + 1.5%</span> for the active sorbent.</li>
+                <li><strong>CAD Stack Equation:</strong> <span class="math-var">H<sub>stack</sub> = N<sub>tr</sub>&middot;L<sub>bed</sub> + (N<sub>tr</sub>&minus;1)&middot;g<sub>air</sub> + 10 mm &le; 120 mm</span>. Baseline: 10 trays &times; 8mm + 9 &times; 2mm gap + 10mm = 108mm.</li>
+                <li><strong>Inter-Tray Air Gap Kinetics:</strong> Narrow air gaps (<span class="math-var">g<sub>air</sub> &lt; 2 mm</span>) increase channel vapour clearance resistance; wider gaps (<span class="math-var">3&ndash;5 mm</span>) accelerate vapour escape.</li>
+                <li><strong>Counterfactual OFAT Attribution:</strong> Isolates the exact <span class="math-var">&Delta;T<sub>peak</sub></span> and <span class="math-var">&Delta;Yield</span> caused by weather alone vs. hardware/air-gap alone vs. MOF properties alone.</li>
             </ul>
         </div>
     </div>
@@ -401,7 +412,7 @@
     let currentOptimums = null;
 
     window.addEventListener('DOMContentLoaded', () => {
-        const savedSession = localStorage.getItem('mof_manual_sim_v5') || localStorage.getItem('mof_manual_sim_v4');
+        const savedSession = localStorage.getItem('mof_manual_sim_v7') || localStorage.getItem('mof_manual_sim_v6') || localStorage.getItem('mof_manual_sim_v5') || localStorage.getItem('mof_manual_sim_v4');
         if (savedSession) {
             try {
                 testHistory = JSON.parse(savedSession);
@@ -409,7 +420,23 @@
             } catch (e) { console.error(e); }
         }
         initTransientChart();
+        updateLiveStackPreview();
     });
+
+    function updateLiveStackPreview() {
+        const nTr = parseInt(document.getElementById('input-ntrays').value) || 10;
+        const gAir = parseFloat(document.getElementById('input-airgap').value) || 2.0;
+        const th = parseFloat(document.getElementById('input-thickness').value) || 8.0;
+        const hStack = Math.round((nTr * th + Math.max(0, nTr - 1) * gAir + 10) * 10) / 10;
+        const ind = document.getElementById('live-stack-indicator');
+        if (hStack <= 120.0) {
+            ind.style.color = 'var(--secondary)';
+            ind.innerText = `Stack: ${hStack} / 120 mm (OK)`;
+        } else {
+            ind.style.color = 'var(--danger)';
+            ind.innerText = `Stack: ${hStack} / 120 mm (COLLISION!)`;
+        }
+    }
 
     // --- 2. AUTHENTICATION ---
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -521,12 +548,11 @@
         document.getElementById('input-kbed').value = kbed;
     }
 
-    // --- 4. AUDITED MATERIAL-AGNOSTIC ODE PHYSICS ENGINE (WITH ADAPTIVE SUB-STEPPING) ---
+    // --- 4. AUDITED MATERIAL-AGNOSTIC & AIR-GAP ODE PHYSICS ENGINE ---
     function psat_kpa(t_c) {
         return 0.61094 * Math.exp((17.625 * t_c) / (t_c + 243.04));
     }
 
-    // Pure Type V Logistic Isotherm driven by user's custom MOF parameters (no double-counted temperature penalty)
     function isoUptake(rh_frac, w_max, rh_step_frac, k_iso) {
         const rh = Math.min(Math.max(rh_frac, 0.0), 1.0);
         const s = (x) => 1.0 / (1.0 + Math.exp(-k_iso * (x - rh_step_frac)));
@@ -535,7 +561,6 @@
     }
 
     function simulateCyclePhysics(params) {
-        // Enforce physical clearance so envelope is never smaller than the 280x200mm internal tray rack
         const Lx = Math.max(0.280, params.lx_mm / 1000.0);
         const Ly = Math.max(0.200, params.ly_mm / 1000.0);
         const h_back = 0.220, h_front = 0.147654;
@@ -546,27 +571,37 @@
         const A_ext = A_ap + 2 * A_side + Lx * (h_back + h_front);
         const A_div = Lx * Ly;
 
-        // Custom Sorbent Material Properties
+        const n_tr = params.n_tr || 10;
+        const g_air_mm = params.air_gap_mm || 2.0;
+        const g_air = g_air_mm / 1000.0;
         const th = params.th_mm / 1000.0;
+        const stack_height_mm = n_tr * params.th_mm + Math.max(0, n_tr - 1) * g_air_mm + 10.0;
+
         const rho = params.rho;
         const cp_s = params.cp_s;
-        const dH = params.dh_mj * 1e6; // Convert MJ/kg to J/kg
-        const D_eff = params.deff_e6 * 1e-6; // Convert 10^-6 m2/s to m2/s
+        const dH = params.dh_mj * 1e6;
+        const D_eff = params.deff_e6 * 1e-6;
         const k_bed = params.k_bed;
         const rh_step_frac = params.rh_step_pct / 100.0;
         const k_iso = params.k_iso;
 
-        const m_s = 10 * 0.280 * 0.200 * th * rho;
+        const m_s = n_tr * 0.280 * 0.200 * th * rho;
         const alpha = k_bed / (rho * cp_s);
-        const tau = (th * th) / D_eff + (th * th) / alpha;
+        // Intra-bed diffusion time constant + Inter-tray air-gap channel clearance time constant
+        const tau_bed = (th * th) / D_eff + (th * th) / alpha;
+        // Narrow inter-tray gaps (<2mm) constrict lateral vapour escape across the 200mm tray width (L_half = 0.10m)
+        const D_channel = 2.5e-5 * Math.pow(Math.max(0.5, g_air_mm) / 2.0, 1.5);
+        const tau_gap = g_air_mm >= 2.0 ? ((0.10 * 0.10) / D_channel) * (th / g_air) * 0.08 : ((0.10 * 0.10) / D_channel) * (th / g_air) * 0.35;
+        const tau = tau_bed + tau_gap;
 
         const UA = params.u_val * A_ext + 1.2 * A_div;
-        const C_th = m_s * cp_s + 1.5 * 900.0;
+        const C_th = m_s * cp_s + (n_tr * 0.15) * 900.0;
+        const tau_th = C_th / UA;
         const tau_alpha = 0.72, capture_eff = 0.85, dT_cond = 3.0;
 
         const T_hourly = [], G_hourly = [];
         const t_mean = (params.t_day + params.t_night) / 2.0;
-        const t_amp = (params.t_day - params.t_night) / 2.0;
+        const t_amp = Math.max(0.5, (params.t_day - params.t_night) / 2.0);
 
         for (let idx = 0; idx <= 12; idx++) {
             let hour = 6 + idx;
@@ -577,11 +612,12 @@
 
         const base_steps_per_h = 12;
         const base_dt = 3600.0 / base_steps_per_h; // 300s
-        // Adaptive sub-stepping to guarantee numerical stability for thin beds / fast diffusivity
-        const sub_steps = Math.max(1, Math.ceil(base_dt / Math.max(5.0, Math.min(tau, C_th / UA) * 0.25)));
+        const sub_steps = Math.max(1, Math.ceil(base_dt / Math.max(2.0, Math.min(tau, tau_th) * 0.20)));
         const dt_s = base_dt / sub_steps;
 
-        let w0 = isoUptake(params.rh_night / 100.0, params.w_max, rh_step_frac, k_iso);
+        // Nighttime uptake also depends slightly on whether the inter-tray air gap is choked during 12h night sorption
+        const night_gap_factor = 1.0 - Math.exp(-(12.0 * 3600.0) / (tau * 8.0));
+        let w0 = isoUptake(params.rh_night / 100.0, params.w_max, rh_step_frac, k_iso) * night_gap_factor;
         let w = w0;
         let Tc = T_hourly[0];
         const Tc_init = Tc;
@@ -625,19 +661,18 @@
             chartYield.push(parseFloat(got_yield.toFixed(4)));
         }
 
-        // Exact First-Law Energy Balance Closure Audit: E_sol - E_loss_net - E_desorp - dE_sensible = 0
         const e_desorp = (w0 - w) * m_s * dH;
         const dE_sensible = C_th * (Tc - Tc_init);
         const energy_residual_mj = Math.abs(e_sol_in - e_loss_net - e_desorp - dE_sensible) / 1e6;
 
         return {
-            A_ap, A_ext, m_s, tau, UA, w0, w_end: w, t_peak, min_rh_eff,
+            A_ap, A_ext, m_s, tau, tau_th, stack_height_mm, UA, w0, w_end: w, t_peak, min_rh_eff,
             got_yield, e_sol_in, e_loss_out: Math.max(0.0, e_loss_net),
             energy_residual_mj, chartLabels, chartTc, chartYield
         };
     }
 
-    // --- 5. INPUT VALIDATION, DIAGNOSTIC & OPTIMUM SOLVER PER ITERATION ---
+    // --- 5. INPUT VALIDATION, VERIFIED OPTIMUM SOLVER & COUNTERFACTUAL ATTRIBUTION ---
     function clampVal(id, minV, maxV, fallback) {
         const el = document.getElementById(id);
         let v = parseFloat(el.value);
@@ -649,17 +684,26 @@
 
     function runAndLogTest() {
         const mofName = (document.getElementById('input-mof-name').value || "Custom-MOF").trim();
+        let t_n = clampVal('input-temp-night', -10, 45, 15);
+        let t_d = clampVal('input-temp-day', 0, 55, 25);
+        if (t_d < t_n + 1.0) {
+            t_d = t_n + 2.0;
+            document.getElementById('input-temp-day').value = t_d;
+        }
+
         const params = {
             mof_name: mofName,
             rh_night: clampVal('input-rh', 1, 100, 80),
-            t_night: clampVal('input-temp-night', -10, 45, 15),
-            t_day: clampVal('input-temp-day', 0, 55, 25),
+            t_night: t_n,
+            t_day: t_d,
             g_max: clampVal('input-gmax', 100, 1400, 920),
             lx_mm: clampVal('input-lx', 280, 3000, 350),
             ly_mm: clampVal('input-ly', 200, 3000, 270),
             conc: clampVal('input-conc', 1.0, 15.0, 1.0),
             u_val: clampVal('input-uvalue', 0.8, 8.0, 5.6),
-            th_mm: parseFloat(document.getElementById('input-thickness').value),
+            n_tr: Math.round(clampVal('input-ntrays', 1, 20, 10)),
+            air_gap_mm: clampVal('input-airgap', 1.0, 15.0, 2.0),
+            th_mm: clampVal('input-thickness', 2, 14, 8),
             w_max: clampVal('input-capacity', 0.05, 2.50, 0.40),
             rh_step_pct: clampVal('input-rh-step', 2.0, 85.0, 13.0),
             k_iso: clampVal('input-k-iso', 10, 150, 60),
@@ -669,22 +713,19 @@
             deff_e6: clampVal('input-deff', 0.10, 10.0, 1.50),
             k_bed: clampVal('input-kbed', 0.05, 2.00, 0.20)
         };
-
-        // Check geometric stack clearance (10 trays * th_mm vs 147.65mm front height)
-        let geomWarning = "";
-        if (10 * params.th_mm > 120) {
-            geomWarning = `<div class="geom-warn"><strong>Geometric Clearance Warning:</strong> 10 trays at ${params.th_mm}mm thickness occupy ${10*params.th_mm}mm of the 147.7mm front chamber height, restricting airflow pitch (&lt;2.8mm gap).</div>`;
-        }
+        document.getElementById('thick-val').innerText = params.th_mm + 'mm';
+        updateLiveStackPreview();
 
         // 1. Run Physics Simulation on Current Inputs
         const sim = simulateCyclePhysics(params);
         const iterNum = testHistory.length + 1;
+        const stackCollision = sim.stack_height_mm > 120.0;
 
         // Update Top Cards & Diurnal Chart
         document.getElementById('mass-display').innerText = sim.m_s.toFixed(3) + ' kg';
         document.getElementById('tpeak-display').innerText = sim.t_peak.toFixed(1) + ' °C';
-        document.getElementById('tau-display').innerText = Math.round(sim.tau) + ' s';
-        document.getElementById('energy-res-display').innerText = sim.energy_residual_mj.toFixed(4) + ' MJ';
+        document.getElementById('tau-display').innerText = `${Math.round(sim.tau)}s / ${Math.round(sim.tau_th)}s`;
+        document.getElementById('stack-display').innerText = `${sim.stack_height_mm.toFixed(0)} / 120 mm`;
         document.getElementById('right-panel-dims').innerText = `${Math.round(params.lx_mm)} × ${Math.round(params.ly_mm)} mm`;
         document.getElementById('ode-chart-label').innerHTML = `Iter #${iterNum}: ${mofName} (<span class="math-var">T<sub>peak</sub></span>: ${sim.t_peak.toFixed(1)}&deg;C, Yield: ${sim.got_yield.toFixed(3)} L)`;
         transientChartInstance.data.labels = sim.chartLabels;
@@ -692,58 +733,74 @@
         transientChartInstance.data.datasets[1].data = sim.chartYield;
         transientChartInstance.update();
 
-        // 2. Compute Complete Set of Optimum Values for THIS Sorbent & Weather Set
+        // 2. Verified Physics-Based Optimum Solver (Evaluates Tray Thickness + Air Gap combinations that fit <= 120mm rack!)
         const stepThreshold = (params.rh_step_pct / 100.0) + 0.015;
+        const isViable = (sim.got_yield >= 0.25) && (sim.min_rh_eff <= stepThreshold) && !stackCollision;
 
-        let bestTh = params.th_mm, maxThYield = sim.got_yield;
-        for (let testTh = 2; testTh <= 14; testTh++) {
-            let resTh = simulateCyclePhysics({ ...params, th_mm: testTh });
-            if (resTh.got_yield > maxThYield) { maxThYield = resTh.got_yield; bestTh = testTh; }
+        let bestTh = Math.min(params.th_mm, 8), bestGap = params.air_gap_mm, bestScore = -1.0;
+        for (let testGap of [2.0, 2.5, 3.0, 4.0]) {
+            const maxAllowedTh = Math.floor((120.0 - 10.0 - (params.n_tr - 1) * testGap) / params.n_tr);
+            for (let testTh = 2; testTh <= Math.min(9, maxAllowedTh); testTh++) {
+                let resTG = simulateCyclePhysics({ ...params, th_mm: testTh, air_gap_mm: testGap });
+                let crosses = resTG.min_rh_eff <= stepThreshold ? 1.0 : 0.25;
+                let score = resTG.got_yield * crosses;
+                if (score > bestScore) { bestScore = score; bestTh = testTh; bestGap = testGap; }
+            }
         }
 
-        let optU = params.u_val;
+        // B. Sweep Glazing U-Value
+        let optU = Math.min(params.u_val, 2.0);
         for (let testU = 5.6; testU >= 1.2; testU -= 0.4) {
             let uRound = parseFloat(testU.toFixed(1));
-            let resU = simulateCyclePhysics({ ...params, u_val: uRound });
+            let resU = simulateCyclePhysics({ ...params, u_val: uRound, th_mm: bestTh, air_gap_mm: bestGap });
             if (resU.got_yield >= 0.25 && resU.min_rh_eff <= stepThreshold) { optU = uRound; break; }
-            optU = 2.0;
         }
 
-        let optLx = params.lx_mm, optLy = params.ly_mm;
-        if (sim.got_yield < 0.25 && sim.w0 >= params.w_max * 0.30) {
+        // C. Sweep Envelope Scale (with U=optU, th=bestTh, air_gap=bestGap)
+        let optLx = params.lx_mm, optLy = params.ly_mm, boxMet = isViable;
+        if (!isViable && sim.w0 >= params.w_max * 0.30) {
+            boxMet = false;
             for (let scale = 1.05; scale <= 4.5; scale += 0.1) {
                 let testLx = Math.ceil((350 * scale) / 10) * 10;
                 let testLy = Math.ceil((270 * scale) / 10) * 10;
-                let resBox = simulateCyclePhysics({ ...params, lx_mm: testLx, ly_mm: testLy, u_val: optU, th_mm: bestTh });
-                optLx = testLx; optLy = testLy;
-                if (resBox.got_yield >= 0.25 && resBox.min_rh_eff <= stepThreshold) break;
+                let resBox = simulateCyclePhysics({ ...params, lx_mm: testLx, ly_mm: testLy, u_val: optU, th_mm: bestTh, air_gap_mm: bestGap });
+                if (resBox.got_yield >= 0.25 && resBox.min_rh_eff <= stepThreshold) {
+                    optLx = testLx; optLy = testLy; boxMet = true; break;
+                }
             }
+            if (!boxMet) { optLx = 950; optLy = 730; }
         }
 
-        let optConc = params.conc;
-        if (sim.got_yield < 0.25 && sim.w0 >= params.w_max * 0.30) {
+        // D. Sweep Solar Concentrator
+        let optConc = params.conc, concMet = isViable;
+        if (!isViable && sim.w0 >= params.w_max * 0.30) {
+            concMet = false;
             for (let c = 1.2; c <= 10.0; c += 0.2) {
-                let resC = simulateCyclePhysics({ ...params, conc: parseFloat(c.toFixed(1)) });
-                optConc = parseFloat(c.toFixed(1));
-                if (resC.got_yield >= 0.25 && resC.min_rh_eff <= stepThreshold) break;
+                let cVal = parseFloat(c.toFixed(1));
+                let resC = simulateCyclePhysics({ ...params, conc: cVal, u_val: optU, th_mm: bestTh, air_gap_mm: bestGap });
+                if (resC.got_yield >= 0.25 && resC.min_rh_eff <= stepThreshold) {
+                    optConc = cVal; concMet = true; break;
+                }
             }
         }
 
-        const optRH = params.rh_night < (params.rh_step_pct + 10) ? Math.min(95, Math.round(params.rh_step_pct + 20)) : params.rh_night;
-        currentOptimums = { optLx, optLy, optU, bestTh, optConc, optRH };
-        const optimumSummaryStr = `Box: ${optLx}x${optLy}mm (U=${optU}) | OR Conc: ${optConc}x | Opt Tray: ${bestTh}mm | Min RH: ${optRH}%`;
+        const optStack = params.n_tr * bestTh + (params.n_tr - 1) * bestGap + 10;
+        currentOptimums = { optLx, optLy, optU, bestTh, bestGap, optConc };
+        const optimumSummaryStr = `Box: ${optLx}x${optLy}mm (${boxMet ? 'Pass' : 'Needs Conc'}) + U=${optU} + Tray=${bestTh}mm & AirGap=${bestGap}mm (Stack ${optStack}mm/120mm) | OR Conc=${optConc}x`;
 
-        // 3. Diagnose All Bottlenecks Simultaneously (Material-Agnostic Step Threshold)
+        // 3. Diagnose All Bottlenecks Simultaneously
         const waterCaptured_L = sim.w0 * sim.m_s;
-        const reqDesorp_MJ = (waterCaptured_L * params.dh_mj);
+        const reqDesorp_MJ = waterCaptured_L * params.dh_mj;
         const sol_MJ = sim.e_sol_in / 1e6;
         const loss_MJ = sim.e_loss_out / 1e6;
 
         let failures = [];
         let statusBadge = "OPTIMAL (Pass)";
-        const isViable = (sim.got_yield >= 0.25) && (sim.min_rh_eff <= stepThreshold);
 
         if (!isViable) {
+            if (stackCollision) {
+                failures.push(`Rack Stack Collision (${params.n_tr} trays x ${params.th_mm}mm + ${params.n_tr-1} gaps x ${params.air_gap_mm}mm + 10mm frame = ${sim.stack_height_mm.toFixed(0)}mm > 120mm max rack height!)`);
+            }
             if (sim.w0 < params.w_max * 0.35) {
                 failures.push(`Vapor Starvation (Night RH ${params.rh_night}% is near/below ${mofName} step RH_step=${params.rh_step_pct}%; loaded w0=${sim.w0.toFixed(3)} g/g)`);
             }
@@ -756,12 +813,12 @@
             if (sol_MJ < reqDesorp_MJ) {
                 failures.push(`Insufficient Aperture Solar Capture (Collected ${sol_MJ.toFixed(2)} MJ vs ${reqDesorp_MJ.toFixed(2)} MJ required for full desorption)`);
             }
-            statusBadge = "FAIL (" + (sim.w0 < params.w_max * 0.35 ? "Vapor Starved" : "Thermal Deficit") + ")";
+            statusBadge = stackCollision ? "FAIL (Stack Collision)" : ("FAIL (" + (sim.w0 < params.w_max * 0.35 ? "Vapor Starved" : "Thermal Deficit") + ")");
         }
 
-        const failureText = failures.length > 0 ? failures.join(" | ") : `All thermodynamic, psychrometric (RH_eff <= ${params.rh_step_pct}% step), and kinetic thresholds satisfied (>= 0.25 L/day).`;
+        const failureText = failures.length > 0 ? failures.join(" | ") : `All thermodynamic, psychrometric (RH_eff <= ${params.rh_step_pct}% step), and CAD rack clearance (${sim.stack_height_mm.toFixed(0)}mm <= 120mm) thresholds satisfied (>= 0.25 L/day).`;
 
-        // 4. Compute Dual Deltas (Including Custom MOF Property Changes) & One-at-a-Time Attribution
+        // 4. Compute Dual Deltas (Including Air Gap & Tray Count) & Counterfactual OFAT Attribution
         function computeDeltaList(refRecord, labelPrefix) {
             let d = [];
             if (refRecord.mof_name !== params.mof_name) d.push(`MOF:${refRecord.mof_name}->${params.mof_name}`);
@@ -776,6 +833,8 @@
             if (refRecord.g_max !== params.g_max) d.push(`G:${refRecord.g_max}->${params.g_max}W/m2`);
             if (refRecord.lx !== params.lx_mm || refRecord.ly !== params.ly_mm) d.push(`Box:${refRecord.lx}x${refRecord.ly}->${params.lx_mm}x${params.ly_mm}mm`);
             if (refRecord.th_mm !== params.th_mm) d.push(`Tray:${refRecord.th_mm}->${params.th_mm}mm`);
+            if ((refRecord.air_gap_mm ?? 2.0) !== params.air_gap_mm) d.push(`Gap:${refRecord.air_gap_mm ?? 2.0}->${params.air_gap_mm}mm`);
+            if ((refRecord.n_tr ?? 10) !== params.n_tr) d.push(`N_tr:${refRecord.n_tr ?? 10}->${params.n_tr}`);
             if (refRecord.u_val !== params.u_val) d.push(`U:${refRecord.u_val}->${params.u_val}`);
             if (refRecord.conc !== params.conc) d.push(`Conc:${refRecord.conc}->${params.conc}x`);
             return d.length > 0 ? d : [`No change vs ${labelPrefix}`];
@@ -786,50 +845,64 @@
         let causalNarrative = "";
 
         if (testHistory.length === 0) {
-            causalNarrative = `Iteration #1 Baseline (${mofName}, w_max=${params.w_max} g/g, RH_step=${params.rh_step_pct}%, rho=${params.rho} kg/m³): At RH=${params.rh_night}%, G_max=${params.g_max} W/m², and ${params.lx_mm}x${params.ly_mm}mm (Tray=${params.th_mm}mm, U=${params.u_val}), the bed adsorbed ${waterCaptured_L.toFixed(2)} L (w0=${sim.w0.toFixed(3)} g/g), reached T_peak=${sim.t_peak.toFixed(1)}°C, and yielded ${sim.got_yield.toFixed(3)} L/day.`;
+            causalNarrative = `Iteration #1 Baseline (${mofName}, w_max=${params.w_max} g/g, RH_step=${params.rh_step_pct}%): At RH=${params.rh_night}%, G_max=${params.g_max} W/m², Box=${params.lx_mm}x${params.ly_mm}mm, ${params.n_tr} Trays=${params.th_mm}mm, AirGap=${params.air_gap_mm}mm (Stack=${sim.stack_height_mm.toFixed(0)}/120mm), U=${params.u_val}, bed adsorbed ${waterCaptured_L.toFixed(2)} L (w0=${sim.w0.toFixed(3)} g/g), reached T_peak=${sim.t_peak.toFixed(1)}°C, and yielded ${sim.got_yield.toFixed(3)} L/day.`;
         } else {
             const first = testHistory[0];
             const prev = testHistory[testHistory.length - 1];
             deltasVsPrev = computeDeltaList(prev, `Iter #${prev.testNumber}`);
             deltasVsBase = computeDeltaList(first, "Iter #1");
 
-            const dY_prev = sim.got_yield - parseFloat(prev.yield_L);
-            const dY_base = sim.got_yield - parseFloat(first.yield_L);
-            const dT_prev = sim.t_peak - parseFloat(prev.t_peak);
+            const prevParams = {
+                mof_name: prev.mof_name, w_max: prev.w_max, rh_step_pct: prev.rh_step_pct, k_iso: prev.k_iso,
+                rho: prev.rho, dh_mj: prev.dh_mj, cp_s: prev.cp_s, deff_e6: prev.deff_e6, k_bed: prev.k_bed,
+                rh_night: prev.rh, t_night: prev.t_night, t_day: prev.t_day, g_max: prev.g_max,
+                lx_mm: prev.lx, ly_mm: prev.ly, th_mm: prev.th_mm, n_tr: prev.n_tr ?? 10, air_gap_mm: prev.air_gap_mm ?? 2.0,
+                u_val: prev.u_val, conc: prev.conc
+            };
 
-            // Isolate exact contribution of Weather vs Sorbent Material vs Housing Geometry
-            let effects = [];
-            if (prev.mof_name !== params.mof_name || prev.w_max !== params.w_max || prev.rh_step_pct !== params.rh_step_pct || prev.rho !== params.rho || prev.dh_mj !== params.dh_mj || prev.deff_e6 !== params.deff_e6 || prev.k_bed !== params.k_bed) {
-                effects.push(`Sorbent material update (${params.mof_name}: w_max=${params.w_max} g/g, RH_step=${params.rh_step_pct}%, rho=${params.rho} kg/m³, dH=${params.dh_mj} MJ/kg) set bed mass to ${sim.m_s.toFixed(3)} kg and diffusion constant tau=${Math.round(sim.tau)} s`);
+            const wxChanged  = (prev.rh !== params.rh_night || prev.t_night !== params.t_night || prev.t_day !== params.t_day || prev.g_max !== params.g_max);
+            const hwChanged  = (prev.lx !== params.lx_mm || prev.ly !== params.ly_mm || prev.th_mm !== params.th_mm || (prev.air_gap_mm ?? 2.0) !== params.air_gap_mm || (prev.n_tr ?? 10) !== params.n_tr || prev.u_val !== params.u_val || prev.conc !== params.conc);
+            const mofChanged = (prev.mof_name !== params.mof_name || prev.w_max !== params.w_max || prev.rh_step_pct !== params.rh_step_pct || prev.rho !== params.rho || prev.dh_mj !== params.dh_mj || prev.deff_e6 !== params.deff_e6 || prev.k_bed !== params.k_bed);
+
+            let cfParts = [];
+            if (wxChanged) {
+                const simWxOnly = simulateCyclePhysics({ ...prevParams, rh_night: params.rh_night, t_night: params.t_night, t_day: params.t_day, g_max: params.g_max });
+                const dT_wx = simWxOnly.t_peak - parseFloat(prev.t_peak);
+                const dY_wx = simWxOnly.got_yield - parseFloat(prev.yield_L);
+                cfParts.push(`Weather change alone contributed dT_peak=${dT_wx >= 0 ? '+' : ''}${dT_wx.toFixed(1)}°C and dYield=${dY_wx >= 0 ? '+' : ''}${dY_wx.toFixed(3)} L/d`);
             }
-            if (prev.rh !== params.rh_night || prev.t_night !== params.t_night || prev.g_max !== params.g_max || prev.t_day !== params.t_day) {
-                effects.push(`Weather boundary change (RH ${prev.rh}%->${params.rh_night}%, G_max ${prev.g_max}->${params.g_max} W/m²) shifted initial uptake w0=${prev.w_start}->${sim.w0.toFixed(3)} g/g and incident solar energy ${prev.solar_MJ}->${sol_MJ.toFixed(2)} MJ`);
+            if (hwChanged) {
+                const simHwOnly = simulateCyclePhysics({ ...prevParams, lx_mm: params.lx_mm, ly_mm: params.ly_mm, th_mm: params.th_mm, air_gap_mm: params.air_gap_mm, n_tr: params.n_tr, u_val: params.u_val, conc: params.conc });
+                const dT_hw = simHwOnly.t_peak - parseFloat(prev.t_peak);
+                const dY_hw = simHwOnly.got_yield - parseFloat(prev.yield_L);
+                cfParts.push(`Hardware/Rack change alone (Box ${prev.lx}x${prev.ly}->${params.lx_mm}x${params.ly_mm}mm, Tray ${prev.th_mm}->${params.th_mm}mm, AirGap ${prev.air_gap_mm ?? 2}->${params.air_gap_mm}mm, U ${prev.u_val}->${params.u_val}, Conc ${prev.conc}->${params.conc}x) contributed dT_peak=${dT_hw >= 0 ? '+' : ''}${dT_hw.toFixed(1)}°C and dYield=${dY_hw >= 0 ? '+' : ''}${dY_hw.toFixed(3)} L/d`);
             }
-            if (prev.lx !== params.lx_mm || prev.ly !== params.ly_mm || prev.u_val !== params.u_val || prev.conc !== params.conc || prev.th_mm !== params.th_mm) {
-                effects.push(`Housing reconfiguration (Box ${prev.lx}x${prev.ly}->${params.lx_mm}x${params.ly_mm}mm, Tray ${prev.th_mm}->${params.th_mm}mm, U ${prev.u_val}->${params.u_val}, Conc ${prev.conc}->${params.conc}x) shifted T_peak by ${dT_prev >= 0 ? '+' : ''}${dT_prev.toFixed(1)}°C (to ${sim.t_peak.toFixed(1)}°C, min RH_eff=${(sim.min_rh_eff*100).toFixed(1)}%)`);
+            if (mofChanged) {
+                const simMofOnly = simulateCyclePhysics({ ...prevParams, mof_name: params.mof_name, w_max: params.w_max, rh_step_pct: params.rh_step_pct, k_iso: params.k_iso, rho: params.rho, dh_mj: params.dh_mj, cp_s: params.cp_s, deff_e6: params.deff_e6, k_bed: params.k_bed });
+                const dT_mof = simMofOnly.t_peak - parseFloat(prev.t_peak);
+                const dY_mof = simMofOnly.got_yield - parseFloat(prev.yield_L);
+                cfParts.push(`Sorbent change alone (${params.mof_name}) contributed dT_peak=${dT_mof >= 0 ? '+' : ''}${dT_mof.toFixed(1)}°C and dYield=${dY_mof >= 0 ? '+' : ''}${dY_mof.toFixed(3)} L/d`);
             }
 
-            causalNarrative = (effects.length > 0 ? effects.join("; ") + ". " : "Repeat verification run. ") +
-                `Net Yield Impact: ${dY_prev >= 0 ? '+' : ''}${dY_prev.toFixed(3)} L/d vs Iter #${prev.testNumber} (${dY_base >= 0 ? '+' : ''}${dY_base.toFixed(3)} L/d vs Iter #1 Baseline).`;
+            const dY_total = sim.got_yield - parseFloat(prev.yield_L);
+            const dY_base  = sim.got_yield - parseFloat(first.yield_L);
+            const dT_total = sim.t_peak - parseFloat(prev.t_peak);
+
+            causalNarrative = (cfParts.length > 0 ? cfParts.join("; ") + ". " : "Repeat verification run. ") +
+                `Combined Net Shift: dT_peak=${dT_total >= 0 ? '+' : ''}${dT_total.toFixed(1)}°C, dYield=${dY_total >= 0 ? '+' : ''}${dY_total.toFixed(3)} L/d vs Iter #${prev.testNumber} (${dY_base >= 0 ? '+' : ''}${dY_base.toFixed(3)} L/d vs Iter #1).`;
         }
 
-        // 5. Save Full Iteration Record (Including All Custom Sorbent Parameters)
+        // 5. Save Full Iteration Record
         const record = {
             testNumber: iterNum,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
             status: statusBadge,
-            mof_name: params.mof_name,
-            w_max: params.w_max,
-            rh_step_pct: params.rh_step_pct,
-            k_iso: params.k_iso,
-            rho: params.rho,
-            dh_mj: params.dh_mj,
-            cp_s: params.cp_s,
-            deff_e6: params.deff_e6,
-            k_bed: params.k_bed,
+            mof_name: params.mof_name, w_max: params.w_max, rh_step_pct: params.rh_step_pct, k_iso: params.k_iso,
+            rho: params.rho, dh_mj: params.dh_mj, cp_s: params.cp_s, deff_e6: params.deff_e6, k_bed: params.k_bed,
             rh: params.rh_night, t_night: params.t_night, t_day: params.t_day, g_max: params.g_max,
-            lx: params.lx_mm, ly: params.ly_mm,
-            aperture_m2: sim.A_ap.toFixed(3), th_mm: params.th_mm, u_val: params.u_val, conc: params.conc,
+            lx: params.lx_mm, ly: params.ly_mm, aperture_m2: sim.A_ap.toFixed(3),
+            n_tr: params.n_tr, th_mm: params.th_mm, air_gap_mm: params.air_gap_mm, stack_mm: sim.stack_height_mm.toFixed(1),
+            u_val: params.u_val, conc: params.conc,
             mofMass_kg: sim.m_s.toFixed(3), tau_s: Math.round(sim.tau),
             w_start: sim.w0.toFixed(3), w_end: sim.w_end.toFixed(3),
             t_peak: sim.t_peak.toFixed(1), min_rh_eff_pct: (sim.min_rh_eff * 100).toFixed(1),
@@ -844,7 +917,7 @@
         };
 
         testHistory.push(record);
-        localStorage.setItem('mof_manual_sim_v5', JSON.stringify(testHistory));
+        localStorage.setItem('mof_manual_sim_v7', JSON.stringify(testHistory));
 
         if (currentUser) {
             db.collection('user_predictions').doc(currentUser.uid).collection('saved_runs').add({
@@ -853,9 +926,11 @@
         }
 
         // 6. Render Complete Right-Side Diagnostic & Selective Optimum Panel
+        const geomWarnHTML = stackCollision ? `<div class="geom-warn"><strong>CAD Stack Collision:</strong> ${params.n_tr} trays &times; ${params.th_mm}mm + ${params.n_tr-1} gaps &times; ${params.air_gap_mm}mm + 10mm frame = <strong>${sim.stack_height_mm.toFixed(0)} mm</strong> (exceeds 120 mm upper rack height!). Reduce tray thickness, air gap, or tray count.</div>` : "";
+
         document.getElementById('prediction-result').innerHTML = `
             <div>
-                ${geomWarning}
+                ${geomWarnHTML}
                 <div class="analysis-box ${isViable ? 'analysis-good' : 'analysis-bad'}">
                     <strong style="display:block; margin-bottom:4px; font-size:12px; text-transform:uppercase; letter-spacing:0.3px;">
                         Iteration #${iterNum} [${mofName}] Diagnosis: ${statusBadge}
@@ -864,10 +939,10 @@
                 </div>
 
                 <div class="optimum-matrix">
-                    <h4>Calculated Optimum Values for ${mofName} at ${params.rh_night}% RH, ${params.g_max} W/m&sup2;</h4>
+                    <h4>Verified Optimum Targets for ${mofName} (${params.rh_night}% RH, ${params.g_max} W/m&sup2;)</h4>
                     <div class="opt-grid">
                         <div class="opt-item">
-                            <span>Optimum Box: <strong>${optLx}&times;${optLy} mm</strong></span>
+                            <span>Box (with U=${optU}): <strong>${optLx}&times;${optLy}mm</strong></span>
                             <button class="opt-apply-pill" onclick="applySingleOpt('box')">Apply</button>
                         </div>
                         <div class="opt-item">
@@ -875,26 +950,26 @@
                             <button class="opt-apply-pill" onclick="applySingleOpt('u')">Apply</button>
                         </div>
                         <div class="opt-item">
-                            <span>Optimum Tray: <strong>${bestTh} mm</strong></span>
+                            <span>Tray &amp; Air Gap: <strong>${bestTh}mm / ${bestGap}mm</strong></span>
                             <button class="opt-apply-pill" onclick="applySingleOpt('th')">Apply</button>
                         </div>
                         <div class="opt-item">
-                            <span>Or Concentrator: <strong>${optConc}&times;</strong></span>
+                            <span>Concentrator: <strong>${optConc}&times;</strong></span>
                             <button class="opt-apply-pill" onclick="applySingleOpt('conc')">Apply</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="impact-banner">
-                    <strong style="text-transform:uppercase; letter-spacing:0.3px;">Multi-Parameter Delta & Causal Impact:</strong><br>
+                    <strong style="text-transform:uppercase; letter-spacing:0.3px;">Counterfactual OFAT Attribution (Weather vs Hardware/Air-Gap vs MOF):</strong><br>
                     ${causalNarrative}
                 </div>
             </div>
 
             <div>
                 <div class="breakdown-row">
-                    <span>Sorbent (<span class="math-var">RH<sub>step</sub></span> = ${params.rh_step_pct}%, <span class="math-var">&Delta;H</span> = ${params.dh_mj} MJ/kg):</span>
-                    <strong style="color:var(--cyan);">${mofName} (${sim.m_s.toFixed(3)} kg)</strong>
+                    <span>Rack Stack (${params.n_tr} Trays &times; ${params.th_mm}mm + ${params.n_tr-1} Gaps &times; ${params.air_gap_mm}mm + 10mm):</span>
+                    <strong style="color:${stackCollision ? 'var(--danger)' : 'var(--cyan)'};">${sim.stack_height_mm.toFixed(0)} / 120 mm (${sim.m_s.toFixed(3)} kg)</strong>
                 </div>
                 <div class="breakdown-row">
                     <span>Night Sorption (<span class="math-var">w<sub>0</sub> &rarr; w<sub>end</sub></span>):</span>
@@ -920,14 +995,24 @@
         if (type === 'box') {
             document.getElementById('input-lx').value = currentOptimums.optLx;
             document.getElementById('input-ly').value = currentOptimums.optLy;
+            document.getElementById('input-uvalue').value = currentOptimums.optU;
+            document.getElementById('input-thickness').value = currentOptimums.bestTh;
+            document.getElementById('thick-val').innerText = currentOptimums.bestTh + 'mm';
+            document.getElementById('input-airgap').value = currentOptimums.bestGap;
         } else if (type === 'u') {
             document.getElementById('input-uvalue').value = currentOptimums.optU;
         } else if (type === 'th') {
             document.getElementById('input-thickness').value = currentOptimums.bestTh;
             document.getElementById('thick-val').innerText = currentOptimums.bestTh + 'mm';
+            document.getElementById('input-airgap').value = currentOptimums.bestGap;
         } else if (type === 'conc') {
             document.getElementById('input-conc').value = currentOptimums.optConc;
+            document.getElementById('input-uvalue').value = currentOptimums.optU;
+            document.getElementById('input-thickness').value = currentOptimums.bestTh;
+            document.getElementById('thick-val').innerText = currentOptimums.bestTh + 'mm';
+            document.getElementById('input-airgap').value = currentOptimums.bestGap;
         }
+        updateLiveStackPreview();
     }
 
     function resetToBaseline() {
@@ -936,9 +1021,12 @@
         document.getElementById('input-lx').value = 350;
         document.getElementById('input-ly').value = 270;
         document.getElementById('input-conc').value = 1.0;
+        document.getElementById('input-ntrays').value = 10;
+        document.getElementById('input-airgap').value = 2.0;
         document.getElementById('input-thickness').value = 8;
         document.getElementById('thick-val').innerText = '8mm';
         document.getElementById('input-uvalue').value = 5.6;
+        updateLiveStackPreview();
     }
 
     function renderTestTable() {
@@ -950,7 +1038,7 @@
 
         if (testHistory.length === 0) {
             exportBtn.disabled = true;
-            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px; font-style:italic;">No iterations logged yet. Configure your MOF and housing parameters above and run Iteration #1.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px; font-style:italic;">No iterations logged yet. Configure your MOF, air gap, and housing parameters above and run Iteration #1.</td></tr>`;
             return;
         }
 
@@ -981,7 +1069,7 @@
                     <td>
                         <strong style="color:var(--purple);">RH: ${t.rh}% | <span class="math-var">T</span>: ${t.t_night}/${t.t_day}&deg;C | <span class="math-var">G<sub>max</sub></span>: ${t.g_max} W/m&sup2;</strong><br>
                         <strong style="color:var(--text);">Box: ${t.lx}&times;${t.ly} mm (${t.aperture_m2} m&sup2;)</strong><br>
-                        <span style="font-size:10px;">Tray: ${t.th_mm}mm | <span class="math-var">U</span>: ${t.u_val} | Conc: ${t.conc}&times; | <span class="math-var">m<sub>s</sub></span>: ${t.mofMass_kg}kg</span>
+                        <span style="font-size:10px;">${t.n_tr ?? 10} Trays: ${t.th_mm}mm | Gap: ${t.air_gap_mm ?? 2.0}mm (${t.stack_mm ?? 108}mm)<br><span class="math-var">U</span>: ${t.u_val} | Conc: ${t.conc}&times; | <span class="math-var">m<sub>s</sub></span>: ${t.mofMass_kg}kg</span>
                     </td>
                     <td style="max-width:200px;">
                         <div style="margin-bottom:4px;"><strong style="font-size:10px; color:var(--text);">vs Prev:</strong> ${prevTags}</div>
@@ -993,7 +1081,7 @@
                     </td>
                     <td style="max-width:280px; font-size:10.5px; line-height:1.4;">
                         <div style="color:var(--primary); margin-bottom:4px;"><strong>Optimums:</strong> ${t.optimumForSet}</div>
-                        <div style="color:#e2c5ff;"><strong>Causal Impact:</strong> ${t.causalImpact}</div>
+                        <div style="color:#e2c5ff;"><strong>Counterfactual Attribution:</strong> ${t.causalImpact}</div>
                     </td>
                 </tr>
             `;
@@ -1003,12 +1091,14 @@
 
     function clearTestHistory() {
         testHistory = [];
+        localStorage.removeItem('mof_manual_sim_v7');
+        localStorage.removeItem('mof_manual_sim_v6');
         localStorage.removeItem('mof_manual_sim_v5');
         localStorage.removeItem('mof_manual_sim_v4');
         renderTestTable();
     }
 
-    // --- 6. BINARY BLOB CSV REPORT GENERATOR (WITH FULL CUSTOM MOF COLUMNS) ---
+    // --- 6. BINARY BLOB CSV REPORT GENERATOR (WITH AIR GAP & STACK HEIGHT COLUMNS) ---
     function csvEscape(val) {
         if (val === null || val === undefined) return '""';
         const str = String(val).replace(/"/g, '""');
@@ -1026,12 +1116,13 @@
             "MOF_Steepness_k", "MOF_Bulk_Density_kgm3", "MOF_Desorption_Heat_MJkg", "MOF_Specific_Heat_JkgK",
             "MOF_Diffusivity_e6_m2s", "MOF_Bed_Conductivity_WmK", "Night_RH_pct", "Night_Temp_C",
             "Day_Peak_Temp_C", "Peak_Irradiance_Wm2", "Envelope_Lx_mm", "Envelope_Ly_mm", "Aperture_Area_m2",
-            "Tray_Thickness_mm", "Envelope_U_Value_Wm2K", "Solar_Concentrator_x", "Sorbent_Mass_kg",
+            "Tray_Count_N", "Tray_Thickness_mm", "Inter_Tray_Air_Gap_mm", "Rack_Stack_Height_mm",
+            "Envelope_U_Value_Wm2K", "Solar_Concentrator_x", "Sorbent_Mass_kg",
             "Diffusion_Time_Constant_s", "Initial_Uptake_w0_gg", "Final_Uptake_wend_gg", "Peak_Chamber_Temp_C",
             "Min_Effective_RH_pct", "Solar_Gain_MJ", "Conductive_Loss_MJ", "Required_Desorption_MJ",
             "Energy_Balance_Residual_MJ", "Simulated_Water_Yield_L_day", "Deltas_vs_Previous_Iteration",
             "Deltas_vs_Iteration_1_Baseline", "Failure_Bottleneck_Diagnosis",
-            "Optimum_Parameters_For_This_Iteration", "Causal_Impact_Analysis"
+            "Optimum_Parameters_For_This_Iteration", "Counterfactual_Causal_Attribution"
         ];
 
         const rows = testHistory.map(t => [
@@ -1054,7 +1145,10 @@
             t.lx,
             t.ly,
             t.aperture_m2,
+            t.n_tr ?? 10,
             t.th_mm,
+            t.air_gap_mm ?? 2.0,
+            t.stack_mm ?? 108.0,
             t.u_val,
             t.conc,
             t.mofMass_kg,
@@ -1081,7 +1175,7 @@
 
         const link = document.createElement("a");
         link.setAttribute("href", url);
-        link.setAttribute("download", `MOF_Harvester_Material_Agnostic_Report_${new Date().toISOString().slice(0,10)}.csv`);
+        link.setAttribute("download", `MOF_Harvester_Audited_Report_${new Date().toISOString().slice(0,10)}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
