@@ -470,7 +470,8 @@
         const k = 60.0, rh_step = 0.13;
         const s = (x) => 1.0 / (1.0 + Math.exp(-k * (x - rh_step)));
         let uptake = w_max * (s(rh) - s(0.0)) / (s(1.0) - s(0.0));
-        if (t_c > 30.0) uptake *= Math.exp(-0.015 * (t_c - 30.0));
+        // Thermal limit: uptake degrades exponentially only if external/bed temp > 65C
+        if (t_c > 65.0) uptake *= Math.exp(-0.08 * (t_c - 65.0));
         return Math.max(0.0, uptake);
     }
 
@@ -600,9 +601,9 @@
             for (let scale = 1.05; scale <= 4.5; scale += 0.1) {
                 let testLx = Math.ceil((350 * scale) / 10) * 10;
                 let testLy = Math.ceil((270 * scale) / 10) * 10;
-                let resBox = simulateCyclePhysics({ ...params, lx_mm: testLx, ly_mm: testLy, u_val: optU });
+                let resBox = simulateCyclePhysics({ ...params, lx_mm: testLx, ly_mm: testLy, u_val: optU, th_mm: bestTh });
                 optLx = testLx; optLy = testLy;
-                if (resBox.got_yield >= 0.25) break;
+                if (resBox.got_yield >= 0.25 && resBox.min_rh_eff <= 0.145) break;
             }
         }
 
@@ -611,7 +612,7 @@
             for (let c = 1.2; c <= 10.0; c += 0.2) {
                 let resC = simulateCyclePhysics({ ...params, conc: parseFloat(c.toFixed(1)) });
                 optConc = parseFloat(c.toFixed(1));
-                if (resC.got_yield >= 0.25) break;
+                if (resC.got_yield >= 0.25 && resC.min_rh_eff <= 0.145) break;
             }
         }
 
@@ -628,15 +629,17 @@
 
         let failures = [];
         let statusBadge = "OPTIMAL (Pass)";
-        if (sim.got_yield < 0.25) {
+        const isViable = (sim.got_yield >= 0.25) && (sim.min_rh_eff <= 0.145);
+
+        if (!isViable) {
             if (sim.w0 < 0.15) failures.push(`Vapor Starvation (Night RH ${params.rh_night}% near/below 13% isotherm step; only adsorbed ${waterCaptured_L.toFixed(2)} L)`);
-            if (sim.min_rh_eff > 0.14) failures.push(`Chamber Thermal Deficit (T_peak=${sim.t_peak.toFixed(1)}°C left min RH_eff=${(sim.min_rh_eff*100).toFixed(1)}% above 13% desorption step)`);
+            if (sim.min_rh_eff > 0.145) failures.push(`Chamber Psychrometric Deficit (T_peak=${sim.t_peak.toFixed(1)}°C left min RH_eff=${(sim.min_rh_eff*100).toFixed(1)}% above 13% desorption step)`);
             if (loss_MJ > sol_MJ * 0.45) failures.push(`Excessive Wall Heat Loss (U=${params.u_val} W/m²K lost ${loss_MJ.toFixed(2)} MJ of ${sol_MJ.toFixed(2)} MJ solar gain)`);
             if (sol_MJ < reqDesorp_MJ) failures.push(`Insufficient Aperture Solar Capture (Collected ${sol_MJ.toFixed(2)} MJ vs ${reqDesorp_MJ.toFixed(2)} MJ required for full bed desorption)`);
             statusBadge = "FAIL (" + (sim.w0 < 0.15 ? "Vapor Starved" : "Thermal Deficit") + ")";
         }
 
-        const failureText = failures.length > 0 ? failures.join(" | ") : "All thermodynamic, psychrometric, and kinetic thresholds satisfied (>= 0.25 L/day).";
+        const failureText = failures.length > 0 ? failures.join(" | ") : "All thermodynamic, psychrometric (RH_eff <= 13% step), and kinetic thresholds satisfied (>= 0.25 L/day).";
 
         // 4. Compute Dual Deltas (vs Iteration #1 Baseline AND vs Previous Iteration N-1)
         function computeDeltaList(refRecord, labelPrefix) {
@@ -712,11 +715,10 @@
             }).catch(e => console.error("Firebase Sync Error:", e));
         }
 
-        // 6. Render Complete Right-Side Diagnostic & Selective Optimum Panel (Clean HTML Math, Zero Emojis)
-        const isPass = sim.got_yield >= 0.25;
+        // 6. Render Complete Right-Side Diagnostic & Selective Optimum Panel
         document.getElementById('prediction-result').innerHTML = `
             <div>
-                <div class="analysis-box ${isPass ? 'analysis-good' : 'analysis-bad'}">
+                <div class="analysis-box ${isViable ? 'analysis-good' : 'analysis-bad'}">
                     <strong style="display:block; margin-bottom:4px; font-size:12.5px; text-transform:uppercase; letter-spacing:0.3px;">
                         Iteration #${iterNum} Full System Diagnosis: ${statusBadge}
                     </strong>
@@ -821,8 +823,8 @@
             const isPass = t.status.includes("OPTIMAL");
             const badgeHTML = isPass ? `<span class="badge-pass">PASS</span>` : `<span class="badge-fail">${t.status}</span>`;
             
-            const prevTags = t.deltasVsPrev.map(d => `<span class="delta-tag ${d.startsWith('RH')||d.startsWith('T:')||d.startsWith('G:') ? 'delta-weather' : ''}">${d.replace(/->/g, '&rarr;')}</span>`).join(" ");
-            const baseTags = t.deltasVsBase.map(d => `<span class="delta-tag">${d.replace(/->/g, '&rarr;')}</span>`).join(" ");
+            const prevTags = (t.deltasVsPrev || []).map(d => `<span class="delta-tag ${d.startsWith('RH')||d.startsWith('T:')||d.startsWith('G:') ? 'delta-weather' : ''}">${d.replace(/->/g, '&rarr;')}</span>`).join(" ");
+            const baseTags = (t.deltasVsBase || []).map(d => `<span class="delta-tag">${d.replace(/->/g, '&rarr;')}</span>`).join(" ");
 
             html += `
                 <tr>
@@ -859,9 +861,18 @@
         renderTestTable();
     }
 
-    // --- 6. CSV REPORT GENERATOR WITH FULL ITERATION DIAGNOSTICS ---
+    // --- 6. BINARY BLOB CSV REPORT GENERATOR (IMMUNE TO '#' HASH TRUNCATION) ---
+    function csvEscape(val) {
+        if (val === null || val === undefined) return '""';
+        const str = String(val).replace(/"/g, '""');
+        return `"${str}"`;
+    }
+
     function downloadTestReportCSV() {
-        if (testHistory.length === 0) return;
+        if (!testHistory || testHistory.length === 0) {
+            alert("No iterations recorded yet. Run at least one iteration first.");
+            return;
+        }
 
         const headers = [
             "Iteration", "Timestamp", "Status", "Night_RH_pct", "Night_Temp_C", "Day_Peak_Temp_C",
@@ -874,28 +885,49 @@
         ];
 
         const rows = testHistory.map(t => [
-            `Iteration #${t.testNumber}`, t.timestamp, `"${t.status}"`, t.rh, t.t_night, t.t_day,
-            t.g_max, t.w_max, t.lx, t.ly, t.aperture_m2, t.th_mm, t.u_val, t.conc,
-            t.mofMass_kg, t.tau_s, t.w_start, t.w_end, t.t_peak, t.min_rh_eff_pct,
-            t.solar_MJ, t.loss_MJ, t.req_MJ, t.yield_L,
-            `"${t.deltasVsPrev.join('; ')}"`,
-            `"${t.deltasVsBase.join('; ')}"`,
-            `"${t.failureDiagnosis.replace(/"/g, '""')}"`,
-            `"${t.optimumForSet.replace(/"/g, '""')}"`,
-            `"${t.causalImpact.replace(/"/g, '""')}"`
+            csvEscape(`Iteration #${t.testNumber}`),
+            csvEscape(t.timestamp),
+            csvEscape(t.status),
+            t.rh,
+            t.t_night,
+            t.t_day,
+            t.g_max,
+            t.w_max,
+            t.lx,
+            t.ly,
+            t.aperture_m2,
+            t.th_mm,
+            t.u_val,
+            t.conc,
+            t.mofMass_kg,
+            t.tau_s,
+            t.w_start,
+            t.w_end,
+            t.t_peak,
+            t.min_rh_eff_pct,
+            t.solar_MJ,
+            t.loss_MJ,
+            t.req_MJ,
+            t.yield_L,
+            csvEscape((t.deltasVsPrev || []).join('; ')),
+            csvEscape((t.deltasVsBase || []).join('; ')),
+            csvEscape(t.failureDiagnosis),
+            csvEscape(t.optimumForSet),
+            csvEscape(t.causalImpact)
         ]);
 
-        const csvContent = "data:text/csv;charset=utf-8," 
-            + headers.join(",") + "\n" 
-            + rows.map(r => r.join(",")).join("\n");
+        // Prepend UTF-8 BOM (\uFEFF) and use a binary Blob so '#' characters never truncate the download
+        const csvString = "\uFEFF" + headers.join(",") + "\r\n" + rows.map(r => r.join(",")).join("\r\n");
+        const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
 
-        const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
+        link.setAttribute("href", url);
         link.setAttribute("download", `MOF_Harvester_Full_Iteration_Report_${new Date().toISOString().slice(0,10)}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
 
     // --- 7. PSEUDO-3D IMAGE TILT EFFECT ---
