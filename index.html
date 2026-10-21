@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palletised MOF Digital Twin</title>
+    <title>Palletised MOF Digital Twin & Manual Engineering Simulator</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -11,81 +11,125 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     
     <style>
-        :root { --primary: #0a4275; --secondary: #17a2b8; --bg: #f0f2f5; --card: #ffffff; --text: #333; --border: #e0e4e8; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); margin: 0; padding: 20px; color: var(--text); }
-        .header { max-width: 1500px; margin: 0 auto 20px auto; border-bottom: 3px solid var(--primary); padding-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .header-text h1 { color: var(--primary); margin: 0; font-size: 28px; text-transform: uppercase; letter-spacing: 1px;}
-        .header-text p { font-size: 15px; color: #6c757d; margin: 5px 0 0 0; font-weight: 500;}
+        :root { 
+            --primary: #58a6ff;
+            --secondary: #3fb950;
+            --warning: #d29922;
+            --danger: #f85149;
+            --purple: #bc8cff;
+            --bg: #0d1117;
+            --card: #161b22;
+            --card-inner: #0d1117;
+            --text: #c9d1d9;
+            --text-muted: #8b949e;
+            --border: #30363d;
+        }
         
-        /* Auth UI */
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: var(--bg); margin: 0; padding: 20px; color: var(--text); }
+        .header { max-width: 1620px; margin: 0 auto 20px auto; border-bottom: 2px solid var(--border); padding-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .header-text h1 { color: var(--text); margin: 0; font-size: 25px; text-transform: uppercase; letter-spacing: 1px;}
+        .header-text h1 span { color: var(--primary); }
+        .header-text p { font-size: 14px; color: var(--primary); margin: 5px 0 0 0; font-weight: 500;}
+        
         .auth-panel { display: flex; align-items: center; gap: 15px; }
-        .auth-btn { background: var(--card); border: 1px solid #ced4da; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; color: #495057; display: flex; align-items: center; gap: 8px; transition: 0.2s;}
-        .auth-btn:hover { background: #e9ecef; }
+        .auth-btn { background: #21262d; border: 1px solid var(--border); padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; color: var(--text); display: flex; align-items: center; gap: 8px; transition: 0.2s;}
+        .auth-btn:hover { background: #30363d; border-color: var(--text-muted); }
         .user-info { display: none; align-items: center; gap: 10px; font-size: 14px; font-weight: bold; }
         .user-info img { width: 32px; height: 32px; border-radius: 50%; }
 
-        .dashboard-wrapper { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; max-width: 1500px; margin: 0 auto; }
-        .panel { background: var(--card); padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid var(--border); }
-        .panel-title { margin-top: 0; font-size: 16px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;}
+        .dashboard-wrapper { display: grid; grid-template-columns: 2.25fr 1fr; gap: 25px; max-width: 1620px; margin: 0 auto; }
+        .panel { background: var(--card); padding: 24px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+        .panel-title { margin-top: 0; font-size: 14px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;}
         
-        .site-selector { padding: 6px 12px; border-radius: 4px; border: 1px solid #ccc; font-weight: bold; color: var(--primary); background: #f8f9fa; cursor: pointer; }
+        .site-selector { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); font-weight: bold; color: var(--primary); background: var(--card-inner); cursor: pointer; }
         
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: #f8f9fa; padding: 15px; border-radius: 6px; border-left: 4px solid var(--secondary); }
-        .stat-card h3 { margin: 0 0 5px 0; font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; }
-        .stat-card p { margin: 0; font-size: 22px; font-weight: 800; color: var(--primary); }
-        .chart-container { position: relative; height: 300px; width: 100%; margin-bottom: 30px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+        .stat-card { background: var(--card-inner); padding: 14px; border-radius: 8px; border-left: 4px solid var(--primary); border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .stat-card h3 { margin: 0 0 5px 0; font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-card p { margin: 0; font-size: 20px; font-weight: 800; color: var(--text); }
         
-        /* Interactive Predictor */
-        .predictor-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid var(--border); }
-        .input-section h3 { margin-top: 0; color: var(--primary); font-size: 15px; margin-bottom: 15px; border-bottom: 1px solid #dee2e6; padding-bottom: 8px;}
-        .input-group { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; font-size: 13px; font-weight: 500;}
-        .input-group input[type="number"] { width: 70px; padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-weight: bold; color: var(--primary); text-align: center;}
-        .input-group input[type="range"] { width: 100px; }
-        .range-val { display: inline-block; width: 45px; text-align: right; font-weight: bold; color: var(--primary); }
+        .charts-dual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .chart-box { background: var(--card-inner); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+        .chart-box h4 { margin: 0 0 10px 0; font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; }
+        .chart-container { position: relative; height: 210px; width: 100%; }
+        
+        /* Manual Simulator Workbench */
+        .predictor-wrapper { display: grid; grid-template-columns: 1fr 1.15fr; gap: 20px; background: var(--card-inner); padding: 20px; border-radius: 8px; border: 1px solid var(--border); }
+        .input-section h3 { margin-top: 0; color: var(--text); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center;}
+        .input-group { display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center; font-size: 12.5px; font-weight: 500; color: var(--text-muted); }
+        .input-group input[type="number"] { width: 75px; padding: 4px 6px; border: 1px solid var(--border); border-radius: 4px; font-weight: bold; color: var(--primary); background: var(--card); text-align: center;}
+        .input-group input[type="number"]:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(88,166,255,0.2); }
+        .input-group input[type="range"] { width: 90px; accent-color: var(--primary); cursor: pointer; }
+        .range-val { display: inline-block; width: 45px; text-align: right; font-weight: bold; color: var(--primary); font-size: 12px; }
 
-        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
-        .calc-btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; flex: 1; transition: 0.2s;}
-        .calc-btn:hover { background: #073056; }
-        .save-btn { background: #198754; color: white; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; flex: 1; display: none; }
-        .save-btn:hover { background: #157347; }
-        .save-btn:disabled { background: #6c757d; cursor: not-allowed; }
+        .preset-bar { display: flex; gap: 6px; margin-bottom: 12px; }
+        .preset-btn { flex: 1; background: #21262d; border: 1px solid var(--border); color: var(--text-muted); padding: 5px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        .preset-btn:hover { color: var(--primary); border-color: var(--primary); }
 
-        /* Engineering Breakdown Box */
-        .breakdown-box { background: var(--card); border: 1px dashed #adb5bd; border-radius: 6px; padding: 15px; font-size: 13px; color: #495057; display: flex; flex-direction: column; justify-content: center;}
-        .breakdown-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #f1f3f5; padding-bottom: 4px;}
-        .final-yield { font-size: 22px; font-weight: 900; color: #198754; text-align: center; margin-top: 10px; padding-top: 15px; border-top: 2px solid #e9ecef; }
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        .calc-btn { background: var(--primary); color: #0d1117; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 800; flex: 1.6; transition: 0.2s; font-size: 13px;}
+        .calc-btn:hover { background: #79c0ff; }
+        .reset-btn { background: #21262d; color: var(--text-muted); border: 1px solid var(--border); padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 600; flex: 0.7; transition: 0.2s; font-size: 12px;}
+        .reset-btn:hover { color: var(--text); border-color: var(--text-muted); }
+
+        /* Full-System Diagnostic & Optimum Panel */
+        .breakdown-box { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; font-size: 12px; color: var(--text); display: flex; flex-direction: column; justify-content: space-between;}
+        .breakdown-row { display: flex; justify-content: space-between; margin-bottom: 5px; border-bottom: 1px dashed var(--border); padding-bottom: 4px;}
+        .final-yield { font-size: 19px; font-weight: 900; color: var(--secondary); text-align: center; margin-top: 8px; padding-top: 10px; border-top: 2px solid var(--border); }
         
-        /* Analysis Recommendation Box */
-        .analysis-box { margin-top: 15px; padding: 12px; border-radius: 6px; font-size: 12px; line-height: 1.5; font-weight: 500; }
-        .analysis-bad { background: #fff3cd; border: 1px solid #ffecb5; color: #664d03; }
-        .analysis-good { background: #d1e7dd; border: 1px solid #badbcc; color: #0f5132; }
+        .analysis-box { padding: 12px; border-radius: 6px; font-size: 11.5px; line-height: 1.45; font-weight: 500; margin-bottom: 10px; }
+        .analysis-bad { background: rgba(248, 81, 73, 0.1); border: 1px solid var(--danger); color: #ffaba8; }
+        .analysis-good { background: rgba(63, 185, 80, 0.12); border: 1px solid var(--secondary); color: #6affb3; }
 
-        /* Engineering Context Sidebar */
-        .context-sidebar { background: #e9ecef; padding: 15px; border-radius: 6px; margin-bottom: 20px; font-size: 13px; color: #495057;}
-        .context-sidebar ul { margin: 10px 0 0 0; padding-left: 20px; }
+        .optimum-matrix { background: var(--card-inner); border: 1px solid var(--border); border-radius: 6px; padding: 10px; margin-bottom: 10px; }
+        .optimum-matrix h4 { margin: 0 0 8px 0; font-size: 11px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .opt-item { background: #161b22; border: 1px solid var(--border); padding: 6px 8px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
+        .opt-apply-pill { background: rgba(88, 166, 255, 0.15); border: 1px solid var(--primary); color: var(--primary); padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: bold; }
+        .opt-apply-pill:hover { background: var(--primary); color: #0d1117; }
+
+        .impact-banner { padding: 10px; border-radius: 6px; background: rgba(188, 140, 255, 0.08); border: 1px solid var(--purple); color: #e2c5ff; font-size: 11px; line-height: 1.45; margin-bottom: 10px; }
+
+        /* Iterative Test History Table */
+        .history-section { margin-top: 25px; border-top: 1px solid var(--border); padding-top: 20px; }
+        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .history-header h3 { margin: 0; font-size: 14px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .export-btn { background: var(--secondary); color: #0d1117; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 12px; transition: 0.2s; }
+        .export-btn:hover { background: #56d364; }
+        .export-btn:disabled { background: #21262d; color: var(--text-muted); cursor: not-allowed; }
+        
+        .table-responsive { overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; }
+        .test-table { width: 100%; border-collapse: collapse; font-size: 11.5px; text-align: left; background: var(--card-inner); }
+        .test-table th { background: #21262d; color: var(--text); padding: 10px; position: sticky; top: 0; border-bottom: 1px solid var(--border); text-transform: uppercase; font-size: 10.5px; }
+        .test-table td { padding: 10px; border-bottom: 1px solid var(--border); color: var(--text-muted); vertical-align: top; }
+        .test-table tr:hover td { background: rgba(88, 166, 255, 0.04); color: var(--text); }
+        .badge-fail { background: rgba(248, 81, 73, 0.15); color: var(--danger); border: 1px solid var(--danger); padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; display: inline-block; }
+        .badge-pass { background: rgba(63, 185, 80, 0.15); color: var(--secondary); border: 1px solid var(--secondary); padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; display: inline-block; }
+        .delta-tag { display: inline-block; background: #21262d; color: var(--primary); border: 1px solid var(--border); padding: 2px 5px; border-radius: 3px; font-size: 10px; margin: 1px; font-family: monospace; }
+        .delta-weather { border-color: var(--purple); color: #e2c5ff; }
+
+        .context-sidebar { background: var(--card-inner); padding: 16px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; font-size: 12.5px; color: var(--text-muted); line-height: 1.5;}
+        .context-sidebar ul { margin: 8px 0 0 0; padding-left: 18px; }
         .context-sidebar li { margin-bottom: 6px; }
 
-        .viewer-container { width: 100%; height: 350px; background-color: #e9ecef; border-radius: 6px; position: relative; border: 1px solid var(--border); margin-bottom: 20px;}
-        .viewer-label { position: absolute; bottom: 15px; left: 15px; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; border: 1px solid #ccc; pointer-events: none;}
+        .viewer-container { width: 100%; height: 320px; background-color: var(--card-inner); border-radius: 8px; position: relative; border: 1px solid var(--border); margin-bottom: 20px;}
+        #pseudo-3d-image { filter: invert(1) hue-rotate(180deg) brightness(1.2); }
+        .viewer-label { position: absolute; bottom: 12px; left: 12px; background: rgba(22, 27, 34, 0.9); color: var(--primary); padding: 6px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; border: 1px solid var(--border); pointer-events: none;}
         
-        .saved-runs-container { margin-top: 20px; }
-        .saved-run-item { background: #f8f9fa; border: 1px solid var(--border); padding: 12px; border-radius: 4px; margin-bottom: 8px; font-size: 13px; display: flex; justify-content: space-between; align-items: center;}
-        
-        @media (max-width: 1100px) { .dashboard-wrapper { grid-template-columns: 1fr; } .predictor-wrapper { grid-template-columns: 1fr; } }
+        @media (max-width: 1200px) { .dashboard-wrapper { grid-template-columns: 1fr; } .predictor-wrapper { grid-template-columns: 1fr; } .charts-dual-grid { grid-template-columns: 1fr; } .stats-grid { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
 
 <div class="header">
     <div class="header-text">
-        <h1>Palletised MOF Harvester|CPUT Research Project (RPR585S)</h1>
-        <p>Live Digital Twin & Thermodynamic Yield Predictor</p>
+        <h1>Palletised <span>MOF Harvester</span> | CPUT Research Project (RPR585S)</h1>
+        <p>Full-Control Manual Digital Twin: Simultaneous Multi-Parameter Analysis & Iteration Logger</p>
     </div>
     <div class="auth-panel">
         <button id="login-btn" class="auth-btn" onclick="signInWithGoogle()">
             <svg style="width:18px;height:18px;" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-            Sign in to Save
+            Sign in for Cloud Sync
         </button>
         <div id="user-profile" class="user-info">
             <img id="user-photo" src="" alt="Profile">
@@ -96,53 +140,99 @@
 </div>
 
 <div class="dashboard-wrapper">
-    <!-- LEFT PANEL: Historical Data & Analytics -->
+    <!-- LEFT PANEL -->
     <div class="panel">
         <h2 class="panel-title">
-            Geographic Simulation Analytics
+            <span>1. Geographic & Transient Diurnal Telemetry</span>
             <select id="site-selector" class="site-selector" onchange="loadSimulationData()">
-                <option value="cape_town">Cape Town</option>
-                <option value="upington">Upington (Arid Test)</option>
+                <option value="cape_town">Cape Town (Coastal Mediterranean)</option>
+                <option value="upington">Upington (Arid Northern Cape)</option>
             </select>
         </h2>
         
         <div class="stats-grid">
-            <div class="stat-card"><h3>Structural Sorbent Mass</h3><p id="mass-display">2.688 kg</p></div>
-            <div class="stat-card"><h3>Target Yield</h3><p>0.250 L/day</p></div>
-            <div class="stat-card"><h3>Simulated Avg Yield</h3><p id="avg-yield-display">-- L</p></div>
+            <div class="stat-card"><h3>Active Sorbent Mass</h3><p id="mass-display">2.688 kg</p></div>
+            <div class="stat-card"><h3>Peak Chamber Temp ($T_{\text{peak}}$)</h3><p id="tpeak-display">-- °C</p></div>
+            <div class="stat-card"><h3>Diffusion Time Constant ($\tau$)</h3><p id="tau-display">235 s</p></div>
+            <div class="stat-card"><h3>Historical DB Mean Yield</h3><p id="avg-yield-display">-- L</p></div>
         </div>
 
-        <div class="chart-container">
-            <canvas id="yieldChart"></canvas>
+        <div class="charts-dual-grid">
+            <div class="chart-box">
+                <h4><span>Historical Monthly Database Yield</span> <span>Target: 0.25 L/d</span></h4>
+                <div class="chart-container">
+                    <canvas id="yieldChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-box">
+                <h4><span>Live 144-Step Diurnal ODE Simulation (06:00–18:00)</span> <span id="ode-chart-label" style="color:var(--primary);">Awaiting Run</span></h4>
+                <div class="chart-container">
+                    <canvas id="transientChart"></canvas>
+                </div>
+            </div>
         </div>
 
-        <h2 class="panel-title" style="margin-top: 40px;">Scenario Analytics & Optimization</h2>
+        <h2 class="panel-title" style="margin-top: 20px;">
+            <span>2. Manual Simulation Workbench (All Weather & Geometry Unlocked at Every Iteration)</span>
+            <span id="next-test-badge" style="background:#21262d; padding:4px 10px; border-radius:4px; font-size:12px; color:var(--primary);">Ready for Iteration #1</span>
+        </h2>
+
         <div class="predictor-wrapper">
             <div class="input-section">
-                <h3>Environmental Variables</h3>
-                <div class="input-group">
-                    <label>Nighttime Humidity (%)</label>
-                    <input type="number" id="input-rh" value="80" max="100" min="0">
+                <h3>
+                    <span>A. Weather Boundary Conditions (Editable Anytime)</span>
+                    <span style="font-size:10px; color:var(--purple);">Quick Presets:</span>
+                </h3>
+                <div class="preset-bar">
+                    <button class="preset-btn" onclick="applyWeatherPreset(80, 15, 25, 920)">🌊 CT Summer</button>
+                    <button class="preset-btn" onclick="applyWeatherPreset(85, 9, 16, 480)">🌧️ CT Winter</button>
+                    <button class="preset-btn" onclick="applyWeatherPreset(32, 18, 38, 1080)">🏜️ Upington Arid</button>
                 </div>
                 <div class="input-group">
-                    <label>Nighttime Temp (°C)</label>
-                    <input type="number" id="input-temp" value="16">
+                    <label>Nighttime Relative Humidity (%)</label>
+                    <input type="number" id="input-rh" value="80" max="100" min="1" step="1">
                 </div>
                 <div class="input-group">
-                    <label>MOF Capacity (g/g)</label>
-                    <input type="number" id="input-capacity" value="0.40" step="0.05">
+                    <label>Nighttime Ambient Temp (°C)</label>
+                    <input type="number" id="input-temp-night" value="15" step="0.5">
+                </div>
+                <div class="input-group">
+                    <label>Daytime Peak Ambient Temp (°C)</label>
+                    <input type="number" id="input-temp-day" value="25" step="0.5">
+                </div>
+                <div class="input-group">
+                    <label>Peak Solar Irradiance $G_{\max}$ (W/m²)</label>
+                    <input type="number" id="input-gmax" value="920" min="100" max="1400" step="10">
                 </div>
 
-                <h3 style="margin-top: 20px;">Design Sensitivities</h3>
+                <h3 style="margin-top: 14px;">B. Structural Envelope & Optics (Editable Anytime)</h3>
                 <div class="input-group">
-                    <label>Tray Thickness (mm)</label>
+                    <label>Envelope Length $L_x$ (mm)</label>
+                    <input type="number" id="input-lx" value="350" min="200" max="3000" step="10">
+                </div>
+                <div class="input-group">
+                    <label>Envelope Depth $L_y$ (mm)</label>
+                    <input type="number" id="input-ly" value="270" min="150" max="3000" step="10">
+                </div>
+                <div class="input-group">
+                    <label>Solar Concentrator $C_{\text{conc}}$ (x)</label>
+                    <input type="number" id="input-conc" value="1.0" min="1.0" max="15.0" step="0.1">
+                </div>
+
+                <h3 style="margin-top: 14px;">C. Sorbent Bed & Glazing Properties (Editable Anytime)</h3>
+                <div class="input-group">
+                    <label>MOF Max Capacity $w_{\max}$ (g/g)</label>
+                    <input type="number" id="input-capacity" value="0.40" step="0.02">
+                </div>
+                <div class="input-group">
+                    <label>Tray Bed Thickness (mm)</label>
                     <div>
                         <input type="range" id="input-thickness" min="2" max="15" value="8" oninput="document.getElementById('thick-val').innerText = this.value + 'mm'">
                         <span id="thick-val" class="range-val">8mm</span>
                     </div>
                 </div>
                 <div class="input-group">
-                    <label>Envelope U-Value</label>
+                    <label>Envelope $U$-Value (W/m²K)</label>
                     <div>
                         <input type="range" id="input-uvalue" min="1.0" max="8.0" step="0.1" value="5.6" oninput="document.getElementById('u-val').innerText = this.value">
                         <span id="u-val" class="range-val">5.6</span>
@@ -150,46 +240,78 @@
                 </div>
                 
                 <div class="btn-group">
-                    <button class="calc-btn" onclick="calculateManualYield()">Analyze Design Viability</button>
-                    <button id="save-btn" class="save-btn" onclick="savePrediction()" disabled>Save Log</button>
+                    <button class="calc-btn" onclick="runAndLogTest()">▶ Run Full Analysis & Log Iteration</button>
+                    <button class="reset-btn" onclick="resetToBaseline()">Reset to CAD Default</button>
                 </div>
             </div>
 
-            <!-- Visible Math Breakdown & Analysis Output -->
+            <!-- Full-System Diagnostic & Complete Optimum Matrix Output -->
             <div class="breakdown-box" id="prediction-result">
-                <div style="text-align: center; color: #888; font-style: italic; margin: 30px 0;">
-                    Adjust parameters and click Analyze to generate actionable design recommendations.
+                <div style="text-align: center; color: var(--text-muted); font-style: italic; margin: auto 0; padding: 20px;">
+                    Configure any combination of weather and geometry, then click <strong>"Run Full Analysis & Log Iteration"</strong>.<br><br>
+                    Every single iteration performs a complete multi-parameter analysis: water yield, failure bottlenecks, exact optimum target values for that specific configuration, and a dual comparison against Iteration #1 and the previous iteration.
                 </div>
+            </div>
+        </div>
+
+        <!-- SEQUENTIAL TEST LOG & REPORT GENERATOR -->
+        <div class="history-section">
+            <div class="history-header">
+                <h3>3. Complete Multi-Iteration Engineering Log (Full Analysis per Iteration)</h3>
+                <div style="display:flex; gap:10px;">
+                    <button id="clear-log-btn" class="reset-btn" style="padding:6px 12px;" onclick="clearTestHistory()">Clear Session</button>
+                    <button id="export-csv-btn" class="export-btn" onclick="downloadTestReportCSV()" disabled>⬇ Download Full Dissertation CSV Report</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th>Iter #</th>
+                            <th>Status & Bottleneck</th>
+                            <th>Configured Weather & Geometry</th>
+                            <th>Deltas (vs Iter #1 & vs Prev)</th>
+                            <th>Simulated Yield & Telemetry</th>
+                            <th>Optimum Values Calculated for This Set</th>
+                            <th>Causal Analysis (How Changes Affected Outcome)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="test-log-tbody">
+                        <tr>
+                            <td colspan="7" style="text-align:center; padding: 20px; font-style:italic;">No iterations logged yet. You have full manual control—run Iteration #1 to start recording.</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    <!-- RIGHT PANEL: Pseudo-3D Visualization & Context -->
+    <!-- RIGHT PANEL: Pseudo-3D Visualization & Physics Equations -->
     <div class="panel">
-        <h2 class="panel-title">Physical Envelope (350x270mm)</h2>
-        <div class="viewer-container" id="pseudo-3d-container" style="perspective: 1000px; overflow: hidden; display: flex; justify-content: center; align-items: center; background: #ffffff;">
+        <h2 class="panel-title">
+            <span>Physical Envelope Schematic</span>
+            <span id="right-panel-dims" style="color:var(--text);">350 × 270 mm</span>
+        </h2>
+        <div class="viewer-container" id="pseudo-3d-container" style="perspective: 1000px; overflow: hidden; display: flex; justify-content: center; align-items: center;">
             <img id="pseudo-3d-image" src="MOF Design-SCHEMATIC PLAN (2)-page-00001.jpg" alt="MOF Schematic Diagram" style="width: 90%; height: 90%; object-fit: contain; transform-style: preserve-3d; will-change: transform;">
             <div class="viewer-label" style="pointer-events: none;">Interactive Hover: Move Mouse</div>
         </div>
         
         <div class="context-sidebar">
-            <strong>Thermodynamic Rules:</strong>
+            <strong style="color: var(--text);">Simultaneous Multi-Parameter Analysis:</strong>
             <ul>
-                <li><strong>Sorption Model:</strong> Type V Logistic Isotherm.</li>
-                <li><strong>Thermal Limit:</strong> Uptake degrades exponentially if external temp > 65°C.</li>
-                <li><strong>Energy Constraint:</strong> Net solar gain through the 350x270mm aperture must overcome the specific heat capacity and heat of desorption of the sorbent bed mass.</li>
-                <li><strong>Condenser Loss:</strong> Assumes fixed 85% mechanical condensation efficiency.</li>
+                <li><strong>100% User-Controlled:</strong> No locked steps. Change weather, dimensions, tray thickness, or insulation in any combination at any iteration.</li>
+                <li><strong>Complete Iteration Diagnostics:</strong> Each run simultaneously computes water yield, thermal/vapor bottlenecks, and the exact optimum parameter targets for your active weather conditions.</li>
+                <li><strong>Dual-Reference Delta Tracking:</strong> Tracks parameter shifts relative to both <strong>Iteration #1 (Baseline)</strong> and <strong>Iteration $N-1$ (Previous Run)</strong> for rigorous thesis tables.</li>
             </ul>
-        </div>
-
-        <div id="saved-runs-section" class="saved-runs-container" style="display: none;">
-            <h2 class="panel-title">Saved Execution Logs</h2>
-            <div id="saved-runs-list"></div>
         </div>
     </div>
 </div>
 
 <script>
+    Chart.defaults.color = '#8b949e';
+    Chart.defaults.borderColor = '#30363d';
+
     // --- 1. FIREBASE SETUP ---
     const firebaseConfig = {
        apiKey: "AIzaSyCkzGGq1ZjgaNmFZH1lNJ-jR795IibHuLY",
@@ -203,10 +325,22 @@
     const db = firebase.firestore();
     const auth = firebase.auth();
 
-    let historicalYields = [];
     let currentUser = null;
-    let lastCalculatedResult = null;
     let yieldChartInstance = null;
+    let transientChartInstance = null;
+    let testHistory = [];
+    let currentOptimums = null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedSession = localStorage.getItem('mof_manual_sim_v3');
+        if (savedSession) {
+            try {
+                testHistory = JSON.parse(savedSession);
+                renderTestTable();
+            } catch (e) { console.error(e); }
+        }
+        initTransientChart();
+    });
 
     // --- 2. AUTHENTICATION ---
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -220,45 +354,33 @@
             document.getElementById('user-profile').style.display = 'flex';
             document.getElementById('user-photo').src = user.photoURL;
             document.getElementById('user-name').innerText = user.displayName;
-            document.getElementById('save-btn').style.display = 'block';
-            document.getElementById('saved-runs-section').style.display = 'block';
-            loadUserSavedRuns();
         } else {
             currentUser = null;
             document.getElementById('login-btn').style.display = 'flex';
             document.getElementById('user-profile').style.display = 'none';
-            document.getElementById('save-btn').style.display = 'none';
-            document.getElementById('saved-runs-section').style.display = 'none';
         }
     });
 
     // --- 3. HISTORICAL DATA (MONTHLY AGGREGATION) ---
     async function loadSimulationData() {
         const selectedSite = document.getElementById('site-selector').value;
-        historicalYields = [];
-        
         try {
             const snapshot = await db.collection('simulation_results').orderBy('date', 'asc').get();
-            
             if(snapshot.empty) {
                 document.getElementById('avg-yield-display').innerText = "Empty DB";
                 return;
             }
 
             const monthlyData = {};
-            let totalYield = 0;
-            let count = 0;
+            let totalYield = 0, count = 0;
 
             snapshot.forEach(doc => {
                 const data = doc.data();
                 if (data.site === selectedSite) {
                     const monthKey = data.date.substring(0, 7);
                     if (!monthlyData[monthKey]) monthlyData[monthKey] = { sum: 0, count: 0 };
-                    
                     monthlyData[monthKey].sum += data.yield_liters;
                     monthlyData[monthKey].count += 1;
-                    
-                    historicalYields.push(data.yield_liters);
                     totalYield += data.yield_liters;
                     count++;
                 }
@@ -271,137 +393,489 @@
             }
 
             document.getElementById('avg-yield-display').innerText = (totalYield / count).toFixed(3) + ' L';
-
             const labels = Object.keys(monthlyData).sort();
             const monthlyAverages = labels.map(m => monthlyData[m].sum / monthlyData[m].count);
 
             if(yieldChartInstance) yieldChartInstance.destroy();
-
             yieldChartInstance = new Chart(document.getElementById('yieldChart').getContext('2d'), {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'Monthly Average Yield (Liters)', data: monthlyAverages, backgroundColor: '#17a2b8', borderRadius: 4 },
-                        { label: 'Target Yield (0.25 L)', data: Array(labels.length).fill(0.25), type: 'line', borderColor: '#dc3545', borderWidth: 2, borderDash: [5, 5], fill: false, pointRadius: 0 }
+                        { label: 'Monthly Avg Yield (L)', data: monthlyAverages, backgroundColor: '#58a6ff', borderRadius: 4 },
+                        { label: 'Target (0.25 L)', data: Array(labels.length).fill(0.25), type: 'line', borderColor: '#f85149', borderWidth: 2, borderDash: [5, 5], fill: false, pointRadius: 0 }
                     ]
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { tooltip: { mode: 'index', intersect: false } } }
             });
-            
-        } catch(error) { 
-            console.error("Firestore Error:", error); 
-        }
+        } catch(error) { console.error("Firestore Error:", error); }
     }
     loadSimulationData();
 
-    // --- 4. PREDICTION ENGINE WITH ACTIONABLE ENGINEERING ANALYSIS ---
-    function calculateManualYield() {
-        // Read Inputs
-        const rh = parseFloat(document.getElementById('input-rh').value);
-        const tempC = parseFloat(document.getElementById('input-temp').value);
-        const maxCapacity = parseFloat(document.getElementById('input-capacity').value);
-        const th_mm = parseFloat(document.getElementById('input-thickness').value);
-        const u_val = parseFloat(document.getElementById('input-uvalue').value);
-        
-        // Sorbent Mass: 10 trays * 0.28m * 0.2m * thickness * 600 kg/m3 density
-        const mofMass = 10 * 0.28 * 0.20 * (th_mm / 1000.0) * 600.0; 
-        
-        function getUptake(targetRh, currentTemp) {
-            const steepness = 60.0, rhStep = 0.13;
-            let s = (x) => 1.0 / (1.0 + Math.exp(-steepness * (x - rhStep)));
-            let uptake = maxCapacity * (s(targetRh) - s(0.0)) / (s(1.0) - s(0.0));
-            if (currentTemp > 65.0) uptake *= Math.exp(-0.08 * (currentTemp - 65.0));
-            return Math.max(0.0, uptake);
+    function initTransientChart() {
+        const ctx = document.getElementById('transientChart').getContext('2d');
+        transientChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['06:00','08:00','10:00','12:00','14:00','16:00','18:00'],
+                datasets: [
+                    { label: 'Chamber Temp Tc (°C)', data: [], borderColor: '#f85149', yAxisID: 'y', tension: 0.3, pointRadius: 2 },
+                    { label: 'Cumulative Yield (L)', data: [], borderColor: '#3fb950', backgroundColor: 'rgba(63,185,80,0.15)', fill: true, yAxisID: 'y1', tension: 0.3, pointRadius: 2 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                scales: {
+                    y: { type: 'linear', position: 'left', title: { display: true, text: 'Temp (°C)' } },
+                    y1: { type: 'linear', position: 'right', title: { display: true, text: 'Yield (L)' }, grid: { drawOnChartArea: false } }
+                }
+            }
+        });
+    }
+
+    function applyWeatherPreset(rh, tn, td, gmax) {
+        document.getElementById('input-rh').value = rh;
+        document.getElementById('input-temp-night').value = tn;
+        document.getElementById('input-temp-day').value = td;
+        document.getElementById('input-gmax').value = gmax;
+    }
+
+    // --- 4. CORE 144-STEP EULER ODE PHYSICS ENGINE ---
+    function psat_kpa(t_c) {
+        return 0.61094 * Math.exp((17.625 * t_c) / (t_c + 243.04));
+    }
+
+    function isoUptake(rh_frac, t_c, w_max) {
+        const rh = Math.min(Math.max(rh_frac, 0.0), 1.0);
+        const k = 60.0, rh_step = 0.13;
+        const s = (x) => 1.0 / (1.0 + Math.exp(-k * (x - rh_step)));
+        let uptake = w_max * (s(rh) - s(0.0)) / (s(1.0) - s(0.0));
+        if (t_c > 30.0) uptake *= Math.exp(-0.015 * (t_c - 30.0));
+        return Math.max(0.0, uptake);
+    }
+
+    function simulateCyclePhysics(params) {
+        const Lx = params.lx_mm / 1000.0;
+        const Ly = params.ly_mm / 1000.0;
+        const h_back = 0.220, h_front = 0.147654;
+        const drop = h_back - h_front;
+        const slant = Math.hypot(Ly, drop);
+        const A_ap = Lx * slant;
+        const A_side = Ly * (h_back + h_front) / 2.0;
+        const A_ext = A_ap + 2 * A_side + Lx * (h_back + h_front);
+        const A_div = Lx * Ly;
+
+        const th = params.th_mm / 1000.0;
+        const rho = 600.0, cp_s = 1000.0, dH = 2.8e6;
+        const m_s = 10 * 0.280 * 0.200 * th * rho;
+        const D_eff = 1.5e-6, k_bed = 0.2;
+        const alpha = k_bed / (rho * cp_s);
+        const tau = (th * th) / D_eff + (th * th) / alpha;
+
+        const UA = params.u_val * A_ext + 1.2 * A_div;
+        const C_th = m_s * cp_s + 1.5 * 900.0;
+        const tau_alpha = 0.72, capture_eff = 0.85, dT_cond = 3.0;
+
+        const T_hourly = [], G_hourly = [];
+        const t_mean = (params.t_day + params.t_night) / 2.0;
+        const t_amp = (params.t_day - params.t_night) / 2.0;
+
+        for (let idx = 0; idx <= 12; idx++) {
+            let hour = 6 + idx;
+            let ph = Math.cos(2 * Math.PI * (hour - 15) / 24.0);
+            T_hourly.push(t_mean + t_amp * ph);
+            G_hourly.push(params.g_max * Math.max(0.0, Math.sin(Math.PI * (hour - 6) / 12.0)));
         }
 
-        const waterCaptured = getUptake(rh / 100.0, tempC) * mofMass;
-        const waterRetained = getUptake(0.05, 75.0) * mofMass;
-        let theoreticalYield = waterCaptured - waterRetained;
-        
-        // --- THERMAL BOTTLENECK & ANALYSIS LOGIC ---
-        // A generic clear sunny day brings ~18 MJ/m² of solar energy
-        const dailySolarJoules_per_m2 = 18000000; 
-        const A_ap = 0.350 * Math.hypot(0.270, 0.220 - 0.147654); // Aperture ~0.098 m2
-        const solarGain = dailySolarJoules_per_m2 * A_ap * 0.72; // ~1.27 MJ collected
-        
-        const A_ext = A_ap + 2*(0.270*(0.220+0.147654)/2) + 0.350*(0.220+0.147654); 
-        const UA = u_val * A_ext + 1.2 * (0.350*0.270);
-        const heatLoss = UA * 40 * 8 * 3600; // Est loss: 40C diff over 8 hours
-        
-        const netEnergy = Math.max(0, solarGain - heatLoss);
-        const requiredEnergy = mofMass * 2800000; // 2.8 MJ/kg Heat of desorption
-        
-        let analysisHTML = "";
-        let finalYield = 0;
+        const steps_per_h = 12;
+        const dt_s = 3600.0 / steps_per_h;
+        let w0 = isoUptake(params.rh_night / 100.0, params.t_night, params.w_max);
+        let w = w0;
+        let Tc = T_hourly[0];
+        let t_peak = Tc;
+        let min_rh_eff = 1.0;
+        let got_yield = 0.0, e_sol_in = 0.0, e_loss_out = 0.0;
+        const chartLabels = [], chartTc = [], chartYield = [];
 
-        if (netEnergy < requiredEnergy) {
-            const thermallyLimitedYield = (netEnergy / 2800000) * 0.85; 
-            finalYield = Math.max(0, Math.min(theoreticalYield * 0.85, thermallyLimitedYield));
-            
-            // Generate Actionable Engineering Directives
-            let requiredAperture = (requiredEnergy + heatLoss) / (dailySolarJoules_per_m2 * 0.72);
-            let requiredMultiplier = requiredAperture / A_ap;
-            
-            analysisHTML = `
-                <div class="analysis-box analysis-bad">
-                    <strong style="display:block; margin-bottom:6px; font-size:14px;">⚠️ Design Failure: Thermal Deficit</strong>
-                    The current 350x270mm aperture captures a maximum of <strong>${(solarGain/1e6).toFixed(2)} MJ</strong> of usable solar energy per day, but you require <strong>${(requiredEnergy/1e6).toFixed(2)} MJ</strong> to fully desorb ${mofMass.toFixed(2)} kg of sorbent.<br><br>
-                    <strong>ACTION REQUIRED (Choose One):</strong><br>
-                    1. <strong>Add Solar Concentrators:</strong> Attach reflective CPC mirrors to multiply sunlight capture by <strong>${requiredMultiplier.toFixed(1)}x</strong>.<br>
-                    2. <strong>Scale CAD Footprint:</strong> Increase the structural aperture area from ${(A_ap).toFixed(2)} m² to <strong>${requiredAperture.toFixed(2)} m²</strong>.
-                </div>`;
+        for (let h = 0; h < 12; h++) {
+            for (let s = 0; s < steps_per_h; s++) {
+                let f = s / steps_per_h;
+                let Ta = T_hourly[h] * (1 - f) + T_hourly[h + 1] * f;
+                let g = G_hourly[h] * (1 - f) + G_hourly[h + 1] * f;
+
+                let q_sol = g * A_ap * tau_alpha * params.conc;
+                let q_loss = UA * (Tc - Ta);
+                let rh_eff = Math.min(1.0, psat_kpa(Ta + dT_cond) / psat_kpa(Tc));
+                min_rh_eff = Math.min(min_rh_eff, rh_eff);
+                let w_eq = isoUptake(rh_eff, Tc, params.w_max);
+
+                let dm = 0.0;
+                if (w > w_eq) {
+                    let dm_kin = (w - w_eq) * (1.0 - Math.exp(-dt_s / tau)) * m_s;
+                    let net_heat_j = (q_sol - q_loss) * dt_s;
+                    let dm_therm = Math.max(0.0, net_heat_j) / dH;
+                    dm = Math.min(dm_kin, dm_therm);
+                    w -= dm / m_s;
+                }
+
+                Tc += (((q_sol - q_loss) * dt_s) - (dm * dH)) / C_th;
+                got_yield += dm * capture_eff;
+                e_sol_in += q_sol * dt_s;
+                e_loss_out += Math.max(0.0, q_loss) * dt_s;
+                t_peak = Math.max(t_peak, Tc);
+            }
+            let currentHour = 7 + h;
+            chartLabels.push((currentHour < 10 ? '0' : '') + currentHour + ':00');
+            chartTc.push(parseFloat(Tc.toFixed(1)));
+            chartYield.push(parseFloat(got_yield.toFixed(4)));
+        }
+
+        return {
+            A_ap, A_ext, m_s, tau, UA, w0, w_end: w, t_peak, min_rh_eff,
+            got_yield, e_sol_in, e_loss_out, chartLabels, chartTc, chartYield
+        };
+    }
+
+    // --- 5. FULL-SYSTEM DIAGNOSTIC & OPTIMUM SOLVER PER ITERATION ---
+    function runAndLogTest() {
+        const params = {
+            rh_night: parseFloat(document.getElementById('input-rh').value),
+            t_night: parseFloat(document.getElementById('input-temp-night').value),
+            t_day: parseFloat(document.getElementById('input-temp-day').value),
+            g_max: parseFloat(document.getElementById('input-gmax').value),
+            lx_mm: parseFloat(document.getElementById('input-lx').value),
+            ly_mm: parseFloat(document.getElementById('input-ly').value),
+            conc: parseFloat(document.getElementById('input-conc').value),
+            w_max: parseFloat(document.getElementById('input-capacity').value),
+            th_mm: parseFloat(document.getElementById('input-thickness').value),
+            u_val: parseFloat(document.getElementById('input-uvalue').value)
+        };
+
+        // 1. Run 144-Step Physics Simulation on Current Inputs
+        const sim = simulateCyclePhysics(params);
+        const iterNum = testHistory.length + 1;
+
+        // Update Top Cards & Diurnal Chart
+        document.getElementById('mass-display').innerText = sim.m_s.toFixed(3) + ' kg';
+        document.getElementById('tpeak-display').innerText = sim.t_peak.toFixed(1) + ' °C';
+        document.getElementById('tau-display').innerText = Math.round(sim.tau) + ' s';
+        document.getElementById('right-panel-dims').innerText = `${Math.round(params.lx_mm)} × ${Math.round(params.ly_mm)} mm`;
+        document.getElementById('ode-chart-label').innerText = `Iter #${iterNum} (T_peak: ${sim.t_peak.toFixed(1)}°C, Yield: ${sim.got_yield.toFixed(3)}L)`;
+        transientChartInstance.data.labels = sim.chartLabels;
+        transientChartInstance.data.datasets[0].data = sim.chartTc;
+        transientChartInstance.data.datasets[1].data = sim.chartYield;
+        transientChartInstance.update();
+
+        // 2. Compute Complete Set of Optimum Values for THIS Exact Configuration
+        // A. Optimum Tray Thickness (Sweep 2mm to 15mm holding everything else at current values)
+        let bestTh = params.th_mm, maxThYield = sim.got_yield;
+        for (let testTh = 2; testTh <= 15; testTh++) {
+            let resTh = simulateCyclePhysics({ ...params, th_mm: testTh });
+            if (resTh.got_yield > maxThYield) { maxThYield = resTh.got_yield; bestTh = testTh; }
+        }
+
+        // B. Optimum U-Value (Twin-wall insulation benchmark = 2.0 W/m2K)
+        const optU = Math.min(params.u_val, 2.0);
+
+        // C. Optimum Envelope Dimensions (Lx x Ly) to hit >= 0.25 L/day under current weather & U=optU
+        let optLx = params.lx_mm, optLy = params.ly_mm;
+        if (sim.got_yield < 0.25 && sim.w0 >= 0.12) {
+            for (let scale = 1.05; scale <= 4.5; scale += 0.1) {
+                let testLx = Math.ceil((350 * scale) / 10) * 10;
+                let testLy = Math.ceil((270 * scale) / 10) * 10;
+                let resBox = simulateCyclePhysics({ ...params, lx_mm: testLx, ly_mm: testLy, u_val: optU });
+                optLx = testLx; optLy = testLy;
+                if (resBox.got_yield >= 0.25) break;
+            }
+        }
+
+        // D. Optimum Solar Concentrator Factor (holding current box size fixed)
+        let optConc = params.conc;
+        if (sim.got_yield < 0.25 && sim.w0 >= 0.12) {
+            for (let c = 1.2; c <= 10.0; c += 0.2) {
+                let resC = simulateCyclePhysics({ ...params, conc: parseFloat(c.toFixed(1)) });
+                optConc = parseFloat(c.toFixed(1));
+                if (resC.got_yield >= 0.25) break;
+            }
+        }
+
+        // E. Minimum Required Night RH if vapor starved
+        const optRH = params.rh_night < 25 ? 45 : params.rh_night;
+
+        currentOptimums = { optLx, optLy, optU, bestTh, optConc, optRH };
+        const optimumSummaryStr = `Box: ${optLx}x${optLy}mm (at U=${optU}) | OR Conc: ${optConc}x on ${params.lx_mm}x${params.ly_mm}mm | Opt Tray: ${bestTh}mm | Min RH: ${optRH}%`;
+
+        // 3. Diagnose All Bottlenecks Simultaneously
+        const waterCaptured_L = sim.w0 * sim.m_s;
+        const reqDesorp_MJ = (waterCaptured_L * 2.8e6) / 1e6;
+        const sol_MJ = sim.e_sol_in / 1e6;
+        const loss_MJ = sim.e_loss_out / 1e6;
+
+        let failures = [];
+        let statusBadge = "OPTIMAL (Pass)";
+        if (sim.got_yield < 0.25) {
+            if (sim.w0 < 0.15) failures.push(`Vapor Starvation (Night RH ${params.rh_night}% near/below 13% isotherm step; only adsorbed ${waterCaptured_L.toFixed(2)} L)`);
+            if (sim.min_rh_eff > 0.14) failures.push(`Chamber Thermal Deficit (T_peak=${sim.t_peak.toFixed(1)}°C left min RH_eff=${(sim.min_rh_eff*100).toFixed(1)}% above 13% desorption step)`);
+            if (loss_MJ > sol_MJ * 0.45) failures.push(`Excessive Wall Heat Loss (U=${params.u_val} W/m²K lost ${loss_MJ.toFixed(2)} MJ of ${sol_MJ.toFixed(2)} MJ solar gain)`);
+            if (sol_MJ < reqDesorp_MJ) failures.push(`Insufficient Aperture Solar Capture (Collected ${sol_MJ.toFixed(2)} MJ vs ${reqDesorp_MJ.toFixed(2)} MJ required for full bed desorption)`);
+            statusBadge = "FAIL (" + (sim.w0 < 0.15 ? "Vapor Starved" : "Thermal Deficit") + ")";
+        }
+
+        const failureText = failures.length > 0 ? failures.join(" | ") : "All thermodynamic, psychrometric, and kinetic thresholds satisfied (>= 0.25 L/day).";
+
+        // 4. Compute Dual Deltas (vs Iteration #1 Baseline AND vs Previous Iteration N-1)
+        function computeDeltaList(refRecord, labelPrefix) {
+            let d = [];
+            if (refRecord.rh !== params.rh_night) d.push(`RH:${refRecord.rh}→${params.rh_night}%`);
+            if (refRecord.t_night !== params.t_night || refRecord.t_day !== params.t_day) d.push(`T:${refRecord.t_night}/${refRecord.t_day}→${params.t_night}/${params.t_day}°C`);
+            if (refRecord.g_max !== params.g_max) d.push(`G:${refRecord.g_max}→${params.g_max}W/m²`);
+            if (refRecord.lx !== params.lx_mm || refRecord.ly !== params.ly_mm) d.push(`Box:${refRecord.lx}x${refRecord.ly}→${params.lx_mm}x${params.ly_mm}mm`);
+            if (refRecord.th_mm !== params.th_mm) d.push(`Tray:${refRecord.th_mm}→${params.th_mm}mm`);
+            if (refRecord.u_val !== params.u_val) d.push(`U:${refRecord.u_val}→${params.u_val}`);
+            if (refRecord.conc !== params.conc) d.push(`Conc:${refRecord.conc}→${params.conc}x`);
+            if (refRecord.w_max !== params.w_max) d.push(`Cap:${refRecord.w_max}→${params.w_max}`);
+            return d.length > 0 ? d : [`No change vs ${labelPrefix}`];
+        }
+
+        let deltasVsPrev = ["Iteration #1 (Initial Baseline)"];
+        let deltasVsBase = ["Baseline Reference"];
+        let causalNarrative = "";
+
+        if (testHistory.length === 0) {
+            causalNarrative = `Iteration #1 Baseline: At RH=${params.rh_night}%, T=${params.t_night}/${params.t_day}°C, G_max=${params.g_max} W/m², and ${params.lx_mm}×${params.ly_mm}mm (Tray=${params.th_mm}mm, U=${params.u_val}), the bed adsorbed ${waterCaptured_L.toFixed(2)} L (w0=${sim.w0.toFixed(3)} g/g), reached T_peak=${sim.t_peak.toFixed(1)}°C, and yielded ${sim.got_yield.toFixed(3)} L/day.`;
         } else {
-            finalYield = Math.max(0, theoreticalYield * 0.85);
-            analysisHTML = `
-                <div class="analysis-box analysis-good">
-                    <strong style="display:block; margin-bottom:6px; font-size:14px;">✅ Design Verified: Thermally Viable</strong>
-                    The 350x270mm aperture collects sufficient solar energy (${(solarGain/1e6).toFixed(2)} MJ) to fully overcome the heat of desorption (${(requiredEnergy/1e6).toFixed(2)} MJ) for this sorbent mass.
-                </div>`;
+            const first = testHistory[0];
+            const prev = testHistory[testHistory.length - 1];
+            deltasVsPrev = computeDeltaList(prev, `Iter #${prev.testNumber}`);
+            deltasVsBase = computeDeltaList(first, "Iter #1");
+
+            const dY_prev = sim.got_yield - parseFloat(prev.yield_L);
+            const dY_base = sim.got_yield - parseFloat(first.yield_L);
+            const dT_prev = sim.t_peak - parseFloat(prev.t_peak);
+
+            let effects = [];
+            if (prev.rh !== params.rh_night || prev.t_night !== params.t_night) {
+                effects.push(`Weather shift (RH ${prev.rh}%→${params.rh_night}%, T_n ${prev.t_night}→${params.t_night}°C) changed nighttime pore uptake w0 from ${prev.w_start} to ${sim.w0.toFixed(3)} g/g (${waterCaptured_L.toFixed(2)} L adsorbed)`);
+            }
+            if (prev.g_max !== params.g_max || prev.t_day !== params.t_day) {
+                effects.push(`Daytime climate shift (G_max ${prev.g_max}→${params.g_max} W/m², T_d ${prev.t_day}→${params.t_day}°C) altered incident solar energy (${prev.solar_MJ}→${sol_MJ.toFixed(2)} MJ)`);
+            }
+            if (prev.lx !== params.lx_mm || prev.ly !== params.ly_mm || prev.u_val !== params.u_val || prev.conc !== params.conc || prev.th_mm !== params.th_mm) {
+                effects.push(`Hardware reconfiguration (${deltasVsPrev.filter(x => !x.startsWith('RH') && !x.startsWith('T:') && !x.startsWith('G:')).join(', ')}) shifted chamber peak temperature by ${dT_prev >= 0 ? '+' : ''}${dT_prev.toFixed(1)}°C (to ${sim.t_peak.toFixed(1)}°C, min RH_eff=${(sim.min_rh_eff*100).toFixed(1)}%)`);
+            }
+
+            causalNarrative = (effects.length > 0 ? effects.join("; ") + ". " : "Repeat run. ") +
+                `Resulting Yield Impact: ${dY_prev >= 0 ? '+' : ''}${dY_prev.toFixed(3)} L/d vs Iter #${prev.testNumber} (${dY_base >= 0 ? '+' : ''}${dY_base.toFixed(3)} L/d vs Iter #1 Baseline).`;
         }
 
-        lastCalculatedResult = { yield: finalYield.toFixed(3), rh: rh, temp: tempC, thickness: th_mm, uval: u_val, timestamp: firebase.firestore.FieldValue.serverTimestamp() };
+        // 5. Save Full Iteration Record
+        const record = {
+            testNumber: iterNum,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+            status: statusBadge,
+            rh: params.rh_night, t_night: params.t_night, t_day: params.t_day, g_max: params.g_max,
+            w_max: params.w_max, lx: params.lx_mm, ly: params.ly_mm,
+            aperture_m2: sim.A_ap.toFixed(3), th_mm: params.th_mm, u_val: params.u_val, conc: params.conc,
+            mofMass_kg: sim.m_s.toFixed(3), tau_s: Math.round(sim.tau),
+            w_start: sim.w0.toFixed(3), w_end: sim.w_end.toFixed(3),
+            t_peak: sim.t_peak.toFixed(1), min_rh_eff_pct: (sim.min_rh_eff * 100).toFixed(1),
+            solar_MJ: sol_MJ.toFixed(2), loss_MJ: loss_MJ.toFixed(2), req_MJ: reqDesorp_MJ.toFixed(2),
+            yield_L: sim.got_yield.toFixed(3),
+            deltasVsPrev: deltasVsPrev,
+            deltasVsBase: deltasVsBase,
+            failureDiagnosis: failureText,
+            optimumForSet: optimumSummaryStr,
+            causalImpact: causalNarrative
+        };
 
+        testHistory.push(record);
+        localStorage.setItem('mof_manual_sim_v3', JSON.stringify(testHistory));
+
+        if (currentUser) {
+            db.collection('user_predictions').doc(currentUser.uid).collection('saved_runs').add({
+                ...record, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).catch(e => console.error("Firebase Sync Error:", e));
+        }
+
+        // 6. Render Complete Right-Side Diagnostic & Selective Optimum Panel
+        const isPass = sim.got_yield >= 0.25;
         document.getElementById('prediction-result').innerHTML = `
-            ${analysisHTML}
-            <div style="margin-top: 15px;">
-                <div class="breakdown-row"><span>Sorbent Mass (Calculated):</span> <strong>${mofMass.toFixed(3)} kg</strong></div>
-                <div class="breakdown-row"><span>Total Mass Adsorbed:</span> <strong>${waterCaptured.toFixed(3)} L</strong></div>
-                <div class="breakdown-row"><span>Desorption Retention Loss:</span> <strong style="color:#dc3545;">-${waterRetained.toFixed(3)} L</strong></div>
-                <div class="final-yield">${finalYield.toFixed(3)} L/day Net Yield</div>
+            <div>
+                <div class="analysis-box ${isPass ? 'analysis-good' : 'analysis-bad'}">
+                    <strong style="display:block; margin-bottom:4px; font-size:12.5px;">
+                        ${isPass ? '✅' : '⚠️'} Iteration #${iterNum} Full System Diagnosis: ${statusBadge}
+                    </strong>
+                    <strong>Bottleneck Analysis:</strong> ${failureText}
+                </div>
+
+                <div class="optimum-matrix">
+                    <h4>🎯 Calculated Optimum Values for Current Weather (${params.rh_night}% RH, ${params.g_max} W/m²)</h4>
+                    <div class="opt-grid">
+                        <div class="opt-item">
+                            <span>Optimum Box: <strong>${optLx}×${optLy}mm</strong></span>
+                            <button class="opt-apply-pill" onclick="applySingleOpt('box')">Apply</button>
+                        </div>
+                        <div class="opt-item">
+                            <span>Optimum Glazing: <strong>U = ${optU}</strong></span>
+                            <button class="opt-apply-pill" onclick="applySingleOpt('u')">Apply</button>
+                        </div>
+                        <div class="opt-item">
+                            <span>Optimum Tray: <strong>${bestTh} mm</strong></span>
+                            <button class="opt-apply-pill" onclick="applySingleOpt('th')">Apply</button>
+                        </div>
+                        <div class="opt-item">
+                            <span>Or Concentrator: <strong>${optConc}x</strong></span>
+                            <button class="opt-apply-pill" onclick="applySingleOpt('conc')">Apply</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="impact-banner">
+                    <strong>📊 Multi-Parameter Delta & Causal Impact:</strong><br>
+                    ${causalNarrative}
+                </div>
+            </div>
+
+            <div>
+                <div class="breakdown-row"><span>Night Sorption ($w_0 \rightarrow w_{\text{end}}$):</span> <strong style="color:var(--primary);">${sim.w0.toFixed(3)} → ${sim.w_end.toFixed(3)} g/g (${waterCaptured_L.toFixed(2)} L adsorbed)</strong></div>
+                <div class="breakdown-row"><span>Peak Chamber Temp / Min $\text{RH}_{\text{eff}}$:</span> <strong style="color:var(--text);">${sim.t_peak.toFixed(1)} °C / ${(sim.min_rh_eff*100).toFixed(1)}% (Step: 13%)</strong></div>
+                <div class="breakdown-row"><span>Solar Gain / Wall Loss / Req Desorp:</span> <strong style="color:var(--text);">${sol_MJ.toFixed(2)} MJ / -${loss_MJ.toFixed(2)} MJ / ${reqDesorp_MJ.toFixed(2)} MJ</strong></div>
+                <div class="final-yield">Iteration #${iterNum} Yield: ${sim.got_yield.toFixed(3)} L/day</div>
             </div>
         `;
-        
-        if(currentUser) document.getElementById('save-btn').disabled = false;
+
+        renderTestTable();
     }
 
-    async function savePrediction() {
-        if (!currentUser || !lastCalculatedResult) return;
-        try {
-            await db.collection('user_predictions').doc(currentUser.uid).collection('saved_runs').add(lastCalculatedResult);
-            document.getElementById('save-btn').disabled = true;
-            document.getElementById('save-btn').innerText = "Saved!";
-            setTimeout(() => { document.getElementById('save-btn').innerText = "Save Log"; }, 2000);
-            loadUserSavedRuns();
-        } catch (error) { console.error("Error saving: ", error); }
+    // Allows user to selectively apply a single optimum value without auto-running or locking other parameters
+    function applySingleOpt(type) {
+        if (!currentOptimums) return;
+        if (type === 'box') {
+            document.getElementById('input-lx').value = currentOptimums.optLx;
+            document.getElementById('input-ly').value = currentOptimums.optLy;
+        } else if (type === 'u') {
+            document.getElementById('input-uvalue').value = currentOptimums.optU;
+            document.getElementById('u-val').innerText = currentOptimums.optU;
+        } else if (type === 'th') {
+            document.getElementById('input-thickness').value = currentOptimums.bestTh;
+            document.getElementById('thick-val').innerText = currentOptimums.bestTh + 'mm';
+        } else if (type === 'conc') {
+            document.getElementById('input-conc').value = currentOptimums.optConc;
+        }
     }
 
-    async function loadUserSavedRuns() {
-        if (!currentUser) return;
-        const listDiv = document.getElementById('saved-runs-list');
-        try {
-            const snapshot = await db.collection('user_predictions').doc(currentUser.uid).collection('saved_runs').orderBy('timestamp', 'desc').limit(5).get();
-            if (snapshot.empty) { listDiv.innerHTML = "<em style='color:#888;'>No runs saved yet.</em>"; return; }
-            let html = "";
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                html += `<div class="saved-run-item"><div><strong>${data.yield} L</strong> <span style="color:#6c757d; margin-left:5px;">(${data.thickness}mm Tray | ${data.uval} U-Val)</span></div></div>`;
-            });
-            listDiv.innerHTML = html;
-        } catch (error) { listDiv.innerHTML = "<em style='color:red;'>Error loading history.</em>"; }
+    function resetToBaseline() {
+        document.getElementById('input-rh').value = 80;
+        document.getElementById('input-temp-night').value = 15;
+        document.getElementById('input-temp-day').value = 25;
+        document.getElementById('input-gmax').value = 920;
+        document.getElementById('input-capacity').value = 0.40;
+        document.getElementById('input-lx').value = 350;
+        document.getElementById('input-ly').value = 270;
+        document.getElementById('input-conc').value = 1.0;
+        document.getElementById('input-thickness').value = 8;
+        document.getElementById('thick-val').innerText = '8mm';
+        document.getElementById('input-uvalue').value = 5.6;
+        document.getElementById('u-val').innerText = '5.6';
     }
 
-    // --- 5. PSEUDO-3D IMAGE TILT EFFECT ---
+    function renderTestTable() {
+        const tbody = document.getElementById('test-log-tbody');
+        const exportBtn = document.getElementById('export-csv-btn');
+        const badge = document.getElementById('next-test-badge');
+
+        badge.innerText = `Ready for Iteration #${testHistory.length + 1}`;
+
+        if (testHistory.length === 0) {
+            exportBtn.disabled = true;
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px; font-style:italic;">No iterations logged yet. You have full manual control—run Iteration #1 to start recording.</td></tr>`;
+            return;
+        }
+
+        exportBtn.disabled = false;
+        let html = "";
+        testHistory.forEach(t => {
+            const isPass = t.status.includes("OPTIMAL");
+            const badgeHTML = isPass ? `<span class="badge-pass">PASS</span>` : `<span class="badge-fail">${t.status}</span>`;
+            
+            const prevTags = t.deltasVsPrev.map(d => `<span class="delta-tag ${d.startsWith('RH')||d.startsWith('T:')||d.startsWith('G:') ? 'delta-weather' : ''}">${d}</span>`).join(" ");
+            const baseTags = t.deltasVsBase.map(d => `<span class="delta-tag">${d}</span>`).join(" ");
+
+            html += `
+                <tr>
+                    <td><strong style="color:var(--text);">Iter #${t.testNumber}</strong><br><span style="font-size:10px;">${t.timestamp}</span></td>
+                    <td style="max-width:180px;">${badgeHTML}<br><span style="font-size:10.5px; display:block; margin-top:4px;">${t.failureDiagnosis}</span></td>
+                    <td>
+                        <strong style="color:var(--purple);">RH: ${t.rh}% | $T$: ${t.t_night}/${t.t_day}°C | $G$: ${t.g_max}W/m²</strong><br>
+                        <strong style="color:var(--text);">Box: ${t.lx}×${t.ly}mm (${t.aperture_m2}m²)</strong><br>
+                        <span style="font-size:10.5px;">Tray: ${t.th_mm}mm | U: ${t.u_val} | Conc: ${t.conc}x | $m_s$: ${t.mofMass_kg}kg</span>
+                    </td>
+                    <td style="max-width:210px;">
+                        <div style="margin-bottom:4px;"><strong style="font-size:10px; color:var(--text);">vs Prev:</strong> ${prevTags}</div>
+                        <div><strong style="font-size:10px; color:var(--text-muted);">vs Iter #1:</strong> ${baseTags}</div>
+                    </td>
+                    <td>
+                        <strong style="font-size:13.5px; color:${isPass ? 'var(--secondary)' : 'var(--danger)'};">${t.yield_L} L/day</strong><br>
+                        <span style="font-size:10.5px;">$w$: ${t.w_start}→${t.w_end} g/g<br>$T_{\\text{peak}}$: ${t.t_peak}°C ($\\text{RH}_{\\text{eff}}$: ${t.min_rh_eff_pct}%)<br>Sol: ${t.solar_MJ}MJ | Loss: ${t.loss_MJ}MJ</span>
+                    </td>
+                    <td style="max-width:200px; font-size:10.5px; color:var(--primary); line-height:1.4;">
+                        ${t.optimumForSet}
+                    </td>
+                    <td style="max-width:300px; font-size:11px; line-height:1.4; color:#e2c5ff;">
+                        ${t.causalImpact}
+                    </td>
+                </tr>
+            `;
+        });
+        tbody.innerHTML = html;
+    }
+
+    function clearTestHistory() {
+        testHistory = [];
+        localStorage.removeItem('mof_manual_sim_v3');
+        renderTestTable();
+    }
+
+    // --- 6. CSV REPORT GENERATOR WITH FULL ITERATION DIAGNOSTICS ---
+    function downloadTestReportCSV() {
+        if (testHistory.length === 0) return;
+
+        const headers = [
+            "Iteration", "Timestamp", "Status", "Night_RH_pct", "Night_Temp_C", "Day_Peak_Temp_C",
+            "Peak_Irradiance_Wm2", "MOF_Max_Capacity_gg", "Envelope_Lx_mm", "Envelope_Ly_mm",
+            "Aperture_Area_m2", "Tray_Thickness_mm", "Envelope_U_Value_Wm2K", "Solar_Concentrator_x",
+            "Sorbent_Mass_kg", "Diffusion_Time_Constant_s", "Initial_Uptake_w0_gg", "Final_Uptake_wend_gg",
+            "Peak_Chamber_Temp_C", "Min_Effective_RH_pct", "Solar_Gain_MJ", "Conductive_Loss_MJ", "Required_Desorption_MJ",
+            "Simulated_Water_Yield_L_day", "Deltas_vs_Previous_Iteration", "Deltas_vs_Iteration_1_Baseline",
+            "Failure_Bottleneck_Diagnosis", "Optimum_Parameters_For_This_Iteration", "Causal_Impact_Analysis"
+        ];
+
+        const rows = testHistory.map(t => [
+            `Iteration #${t.testNumber}`, t.timestamp, `"${t.status}"`, t.rh, t.t_night, t.t_day,
+            t.g_max, t.w_max, t.lx, t.ly, t.aperture_m2, t.th_mm, t.u_val, t.conc,
+            t.mofMass_kg, t.tau_s, t.w_start, t.w_end, t.t_peak, t.min_rh_eff_pct,
+            t.solar_MJ, t.loss_MJ, t.req_MJ, t.yield_L,
+            `"${t.deltasVsPrev.join('; ')}"`,
+            `"${t.deltasVsBase.join('; ')}"`,
+            `"${t.failureDiagnosis.replace(/"/g, '""')}"`,
+            `"${t.optimumForSet.replace(/"/g, '""')}"`,
+            `"${t.causalImpact.replace(/"/g, '""')}"`
+        ]);
+
+        const csvContent = "data:text/csv;charset=utf-8," 
+            + headers.join(",") + "\n" 
+            + rows.map(r => r.join(",")).join("\n");
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `MOF_Harvester_Full_Iteration_Report_${new Date().toISOString().slice(0,10)}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // --- 7. PSEUDO-3D IMAGE TILT EFFECT ---
     const tiltContainer = document.getElementById('pseudo-3d-container');
     const tiltImg = document.getElementById('pseudo-3d-image');
 
@@ -412,10 +886,8 @@
             const y = e.clientY - rect.top;
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
-            
             const rotateX = ((y - centerY) / centerY) * -15; 
             const rotateY = ((x - centerX) / centerX) * 15;
-            
             tiltImg.style.transition = 'transform 0.1s ease-out';
             tiltImg.style.transform = `scale(1.05) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         });
