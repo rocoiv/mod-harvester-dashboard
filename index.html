@@ -31,6 +31,11 @@
         .header-text h1 span { color: var(--primary); }
         .header-text p { font-size: 14px; color: var(--primary); margin: 5px 0 0 0; font-weight: 500;}
         
+        /* Clean Mathematical Variable Styling (Prevents Uppercase Distortion) */
+        .math-var { font-family: 'Cambria Math', 'Times New Roman', serif; font-style: italic; text-transform: none !important; font-weight: 600; letter-spacing: 0; }
+        .math-var sub, .math-var sup { font-style: normal; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 0.78em; }
+        .no-caps { text-transform: none !important; }
+
         .auth-panel { display: flex; align-items: center; gap: 15px; }
         .auth-btn { background: #21262d; border: 1px solid var(--border); padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; color: var(--text); display: flex; align-items: center; gap: 8px; transition: 0.2s;}
         .auth-btn:hover { background: #30363d; border-color: var(--text-muted); }
@@ -63,13 +68,13 @@
         .range-val { display: inline-block; width: 45px; text-align: right; font-weight: bold; color: var(--primary); font-size: 12px; }
 
         .preset-bar { display: flex; gap: 6px; margin-bottom: 12px; }
-        .preset-btn { flex: 1; background: #21262d; border: 1px solid var(--border); color: var(--text-muted); padding: 5px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        .preset-btn { flex: 1; background: #21262d; border: 1px solid var(--border); color: var(--text-muted); padding: 6px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: 600; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.3px; }
         .preset-btn:hover { color: var(--primary); border-color: var(--primary); }
 
         .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-        .calc-btn { background: var(--primary); color: #0d1117; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 800; flex: 1.6; transition: 0.2s; font-size: 13px;}
+        .calc-btn { background: var(--primary); color: #0d1117; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 800; flex: 1.6; transition: 0.2s; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.4px;}
         .calc-btn:hover { background: #79c0ff; }
-        .reset-btn { background: #21262d; color: var(--text-muted); border: 1px solid var(--border); padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 600; flex: 0.7; transition: 0.2s; font-size: 12px;}
+        .reset-btn { background: #21262d; color: var(--text-muted); border: 1px solid var(--border); padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 600; flex: 0.7; transition: 0.2s; font-size: 11.5px; text-transform: uppercase;}
         .reset-btn:hover { color: var(--text); border-color: var(--text-muted); }
 
         /* Full-System Diagnostic & Optimum Panel */
@@ -85,7 +90,7 @@
         .optimum-matrix h4 { margin: 0 0 8px 0; font-size: 11px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
         .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
         .opt-item { background: #161b22; border: 1px solid var(--border); padding: 6px 8px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
-        .opt-apply-pill { background: rgba(88, 166, 255, 0.15); border: 1px solid var(--primary); color: var(--primary); padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: bold; }
+        .opt-apply-pill { background: rgba(88, 166, 255, 0.15); border: 1px solid var(--primary); color: var(--primary); padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: bold; text-transform: uppercase; }
         .opt-apply-pill:hover { background: var(--primary); color: #0d1117; }
 
         .impact-banner { padding: 10px; border-radius: 6px; background: rgba(188, 140, 255, 0.08); border: 1px solid var(--purple); color: #e2c5ff; font-size: 11px; line-height: 1.45; margin-bottom: 10px; }
@@ -94,7 +99,7 @@
         .history-section { margin-top: 25px; border-top: 1px solid var(--border); padding-top: 20px; }
         .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .history-header h3 { margin: 0; font-size: 14px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
-        .export-btn { background: var(--secondary); color: #0d1117; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 12px; transition: 0.2s; }
+        .export-btn { background: var(--secondary); color: #0d1117; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 11.5px; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.4px;}
         .export-btn:hover { background: #56d364; }
         .export-btn:disabled { background: #21262d; color: var(--text-muted); cursor: not-allowed; }
         
@@ -151,10 +156,22 @@
         </h2>
         
         <div class="stats-grid">
-            <div class="stat-card"><h3>Active Sorbent Mass</h3><p id="mass-display">2.688 kg</p></div>
-            <div class="stat-card"><h3>Peak Chamber Temp ($T_{\text{peak}}$)</h3><p id="tpeak-display">-- °C</p></div>
-            <div class="stat-card"><h3>Diffusion Time Constant ($\tau$)</h3><p id="tau-display">235 s</p></div>
-            <div class="stat-card"><h3>Historical DB Mean Yield</h3><p id="avg-yield-display">-- L</p></div>
+            <div class="stat-card">
+                <h3>Active Sorbent Mass (<span class="math-var">m<sub>s</sub></span>)</h3>
+                <p id="mass-display">2.688 kg</p>
+            </div>
+            <div class="stat-card">
+                <h3>Peak Chamber Temp (<span class="math-var">T<sub>peak</sub></span>)</h3>
+                <p id="tpeak-display">-- &deg;C</p>
+            </div>
+            <div class="stat-card">
+                <h3>Diffusion Time Constant (<span class="math-var">&tau;</span>)</h3>
+                <p id="tau-display">235 s</p>
+            </div>
+            <div class="stat-card">
+                <h3>Historical DB Mean Yield</h3>
+                <p id="avg-yield-display">-- L</p>
+            </div>
         </div>
 
         <div class="charts-dual-grid">
@@ -165,7 +182,10 @@
                 </div>
             </div>
             <div class="chart-box">
-                <h4><span>Live 144-Step Diurnal ODE Simulation (06:00–18:00)</span> <span id="ode-chart-label" style="color:var(--primary);">Awaiting Run</span></h4>
+                <h4>
+                    <span>Live 144-Step Diurnal ODE Simulation (06:00&ndash;18:00)</span>
+                    <span id="ode-chart-label" class="no-caps" style="color:var(--primary);">Awaiting Run</span>
+                </h4>
                 <div class="chart-container">
                     <canvas id="transientChart"></canvas>
                 </div>
@@ -174,65 +194,65 @@
 
         <h2 class="panel-title" style="margin-top: 20px;">
             <span>2. Manual Simulation Workbench (All Weather & Geometry Unlocked at Every Iteration)</span>
-            <span id="next-test-badge" style="background:#21262d; padding:4px 10px; border-radius:4px; font-size:12px; color:var(--primary);">Ready for Iteration #1</span>
+            <span id="next-test-badge" class="no-caps" style="background:#21262d; padding:4px 10px; border-radius:4px; font-size:12px; color:var(--primary);">Ready for Iteration #1</span>
         </h2>
 
         <div class="predictor-wrapper">
             <div class="input-section">
                 <h3>
                     <span>A. Weather Boundary Conditions (Editable Anytime)</span>
-                    <span style="font-size:10px; color:var(--purple);">Quick Presets:</span>
+                    <span style="font-size:10px; color:var(--purple);">Presets:</span>
                 </h3>
                 <div class="preset-bar">
-                    <button class="preset-btn" onclick="applyWeatherPreset(80, 15, 25, 920)">🌊 CT Summer</button>
-                    <button class="preset-btn" onclick="applyWeatherPreset(85, 9, 16, 480)">🌧️ CT Winter</button>
-                    <button class="preset-btn" onclick="applyWeatherPreset(32, 18, 38, 1080)">🏜️ Upington Arid</button>
+                    <button class="preset-btn" onclick="applyWeatherPreset(80, 15, 25, 920)">CT Summer</button>
+                    <button class="preset-btn" onclick="applyWeatherPreset(85, 9, 16, 480)">CT Winter</button>
+                    <button class="preset-btn" onclick="applyWeatherPreset(32, 18, 38, 1080)">Upington Arid</button>
                 </div>
                 <div class="input-group">
-                    <label>Nighttime Relative Humidity (%)</label>
+                    <label>Nighttime Relative Humidity (<span class="math-var">RH<sub>night</sub></span>, %)</label>
                     <input type="number" id="input-rh" value="80" max="100" min="1" step="1">
                 </div>
                 <div class="input-group">
-                    <label>Nighttime Ambient Temp (°C)</label>
+                    <label>Nighttime Ambient Temp (<span class="math-var">T<sub>night</sub></span>, &deg;C)</label>
                     <input type="number" id="input-temp-night" value="15" step="0.5">
                 </div>
                 <div class="input-group">
-                    <label>Daytime Peak Ambient Temp (°C)</label>
+                    <label>Daytime Peak Ambient Temp (<span class="math-var">T<sub>day</sub></span>, &deg;C)</label>
                     <input type="number" id="input-temp-day" value="25" step="0.5">
                 </div>
                 <div class="input-group">
-                    <label>Peak Solar Irradiance $G_{\max}$ (W/m²)</label>
+                    <label>Peak Solar Irradiance (<span class="math-var">G<sub>max</sub></span>, W/m&sup2;)</label>
                     <input type="number" id="input-gmax" value="920" min="100" max="1400" step="10">
                 </div>
 
                 <h3 style="margin-top: 14px;">B. Structural Envelope & Optics (Editable Anytime)</h3>
                 <div class="input-group">
-                    <label>Envelope Length $L_x$ (mm)</label>
+                    <label>Envelope Length (<span class="math-var">L<sub>x</sub></span>, mm)</label>
                     <input type="number" id="input-lx" value="350" min="200" max="3000" step="10">
                 </div>
                 <div class="input-group">
-                    <label>Envelope Depth $L_y$ (mm)</label>
+                    <label>Envelope Depth (<span class="math-var">L<sub>y</sub></span>, mm)</label>
                     <input type="number" id="input-ly" value="270" min="150" max="3000" step="10">
                 </div>
                 <div class="input-group">
-                    <label>Solar Concentrator $C_{\text{conc}}$ (x)</label>
+                    <label>Solar Concentrator (<span class="math-var">C<sub>conc</sub></span>, &times;)</label>
                     <input type="number" id="input-conc" value="1.0" min="1.0" max="15.0" step="0.1">
                 </div>
 
                 <h3 style="margin-top: 14px;">C. Sorbent Bed & Glazing Properties (Editable Anytime)</h3>
                 <div class="input-group">
-                    <label>MOF Max Capacity $w_{\max}$ (g/g)</label>
+                    <label>MOF Max Capacity (<span class="math-var">w<sub>max</sub></span>, g/g)</label>
                     <input type="number" id="input-capacity" value="0.40" step="0.02">
                 </div>
                 <div class="input-group">
-                    <label>Tray Bed Thickness (mm)</label>
+                    <label>Tray Bed Thickness (<span class="math-var">L<sub>bed</sub></span>, mm)</label>
                     <div>
                         <input type="range" id="input-thickness" min="2" max="15" value="8" oninput="document.getElementById('thick-val').innerText = this.value + 'mm'">
                         <span id="thick-val" class="range-val">8mm</span>
                     </div>
                 </div>
                 <div class="input-group">
-                    <label>Envelope $U$-Value (W/m²K)</label>
+                    <label>Envelope <span class="math-var">U</span>-Value (W/m&sup2;K)</label>
                     <div>
                         <input type="range" id="input-uvalue" min="1.0" max="8.0" step="0.1" value="5.6" oninput="document.getElementById('u-val').innerText = this.value">
                         <span id="u-val" class="range-val">5.6</span>
@@ -240,7 +260,7 @@
                 </div>
                 
                 <div class="btn-group">
-                    <button class="calc-btn" onclick="runAndLogTest()">▶ Run Full Analysis & Log Iteration</button>
+                    <button class="calc-btn" onclick="runAndLogTest()">Run Full Analysis & Log Iteration</button>
                     <button class="reset-btn" onclick="resetToBaseline()">Reset to CAD Default</button>
                 </div>
             </div>
@@ -260,7 +280,7 @@
                 <h3>3. Complete Multi-Iteration Engineering Log (Full Analysis per Iteration)</h3>
                 <div style="display:flex; gap:10px;">
                     <button id="clear-log-btn" class="reset-btn" style="padding:6px 12px;" onclick="clearTestHistory()">Clear Session</button>
-                    <button id="export-csv-btn" class="export-btn" onclick="downloadTestReportCSV()" disabled>⬇ Download Full Dissertation CSV Report</button>
+                    <button id="export-csv-btn" class="export-btn" onclick="downloadTestReportCSV()" disabled>Download Full Dissertation CSV Report</button>
                 </div>
             </div>
             <div class="table-responsive">
@@ -278,7 +298,7 @@
                     </thead>
                     <tbody id="test-log-tbody">
                         <tr>
-                            <td colspan="7" style="text-align:center; padding: 20px; font-style:italic;">No iterations logged yet. You have full manual control—run Iteration #1 to start recording.</td>
+                            <td colspan="7" style="text-align:center; padding: 20px; font-style:italic;">No iterations logged yet. You have full manual control&mdash;run Iteration #1 to start recording.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -290,7 +310,7 @@
     <div class="panel">
         <h2 class="panel-title">
             <span>Physical Envelope Schematic</span>
-            <span id="right-panel-dims" style="color:var(--text);">350 × 270 mm</span>
+            <span id="right-panel-dims" class="no-caps" style="color:var(--text);">350 &times; 270 mm</span>
         </h2>
         <div class="viewer-container" id="pseudo-3d-container" style="perspective: 1000px; overflow: hidden; display: flex; justify-content: center; align-items: center;">
             <img id="pseudo-3d-image" src="MOF Design-SCHEMATIC PLAN (2)-page-00001.jpg" alt="MOF Schematic Diagram" style="width: 90%; height: 90%; object-fit: contain; transform-style: preserve-3d; will-change: transform;">
@@ -302,7 +322,7 @@
             <ul>
                 <li><strong>100% User-Controlled:</strong> No locked steps. Change weather, dimensions, tray thickness, or insulation in any combination at any iteration.</li>
                 <li><strong>Complete Iteration Diagnostics:</strong> Each run simultaneously computes water yield, thermal/vapor bottlenecks, and the exact optimum parameter targets for your active weather conditions.</li>
-                <li><strong>Dual-Reference Delta Tracking:</strong> Tracks parameter shifts relative to both <strong>Iteration #1 (Baseline)</strong> and <strong>Iteration $N-1$ (Previous Run)</strong> for rigorous thesis tables.</li>
+                <li><strong>Dual-Reference Delta Tracking:</strong> Tracks parameter shifts relative to both <strong>Iteration #1 (Baseline)</strong> and <strong>Iteration <span class="math-var">N</span>&minus;1 (Previous Run)</strong> for rigorous thesis tables.</li>
             </ul>
         </div>
     </div>
@@ -332,7 +352,7 @@
     let currentOptimums = null;
 
     window.addEventListener('DOMContentLoaded', () => {
-        const savedSession = localStorage.getItem('mof_manual_sim_v3');
+        const savedSession = localStorage.getItem('mof_manual_sim_v4');
         if (savedSession) {
             try {
                 testHistory = JSON.parse(savedSession);
@@ -560,24 +580,21 @@
         document.getElementById('tpeak-display').innerText = sim.t_peak.toFixed(1) + ' °C';
         document.getElementById('tau-display').innerText = Math.round(sim.tau) + ' s';
         document.getElementById('right-panel-dims').innerText = `${Math.round(params.lx_mm)} × ${Math.round(params.ly_mm)} mm`;
-        document.getElementById('ode-chart-label').innerText = `Iter #${iterNum} (T_peak: ${sim.t_peak.toFixed(1)}°C, Yield: ${sim.got_yield.toFixed(3)}L)`;
+        document.getElementById('ode-chart-label').innerHTML = `Iter #${iterNum} (<span class="math-var">T<sub>peak</sub></span>: ${sim.t_peak.toFixed(1)}&deg;C, Yield: ${sim.got_yield.toFixed(3)} L)`;
         transientChartInstance.data.labels = sim.chartLabels;
         transientChartInstance.data.datasets[0].data = sim.chartTc;
         transientChartInstance.data.datasets[1].data = sim.chartYield;
         transientChartInstance.update();
 
         // 2. Compute Complete Set of Optimum Values for THIS Exact Configuration
-        // A. Optimum Tray Thickness (Sweep 2mm to 15mm holding everything else at current values)
         let bestTh = params.th_mm, maxThYield = sim.got_yield;
         for (let testTh = 2; testTh <= 15; testTh++) {
             let resTh = simulateCyclePhysics({ ...params, th_mm: testTh });
             if (resTh.got_yield > maxThYield) { maxThYield = resTh.got_yield; bestTh = testTh; }
         }
 
-        // B. Optimum U-Value (Twin-wall insulation benchmark = 2.0 W/m2K)
         const optU = Math.min(params.u_val, 2.0);
 
-        // C. Optimum Envelope Dimensions (Lx x Ly) to hit >= 0.25 L/day under current weather & U=optU
         let optLx = params.lx_mm, optLy = params.ly_mm;
         if (sim.got_yield < 0.25 && sim.w0 >= 0.12) {
             for (let scale = 1.05; scale <= 4.5; scale += 0.1) {
@@ -589,7 +606,6 @@
             }
         }
 
-        // D. Optimum Solar Concentrator Factor (holding current box size fixed)
         let optConc = params.conc;
         if (sim.got_yield < 0.25 && sim.w0 >= 0.12) {
             for (let c = 1.2; c <= 10.0; c += 0.2) {
@@ -599,7 +615,6 @@
             }
         }
 
-        // E. Minimum Required Night RH if vapor starved
         const optRH = params.rh_night < 25 ? 45 : params.rh_night;
 
         currentOptimums = { optLx, optLy, optU, bestTh, optConc, optRH };
@@ -626,14 +641,14 @@
         // 4. Compute Dual Deltas (vs Iteration #1 Baseline AND vs Previous Iteration N-1)
         function computeDeltaList(refRecord, labelPrefix) {
             let d = [];
-            if (refRecord.rh !== params.rh_night) d.push(`RH:${refRecord.rh}→${params.rh_night}%`);
-            if (refRecord.t_night !== params.t_night || refRecord.t_day !== params.t_day) d.push(`T:${refRecord.t_night}/${refRecord.t_day}→${params.t_night}/${params.t_day}°C`);
-            if (refRecord.g_max !== params.g_max) d.push(`G:${refRecord.g_max}→${params.g_max}W/m²`);
-            if (refRecord.lx !== params.lx_mm || refRecord.ly !== params.ly_mm) d.push(`Box:${refRecord.lx}x${refRecord.ly}→${params.lx_mm}x${params.ly_mm}mm`);
-            if (refRecord.th_mm !== params.th_mm) d.push(`Tray:${refRecord.th_mm}→${params.th_mm}mm`);
-            if (refRecord.u_val !== params.u_val) d.push(`U:${refRecord.u_val}→${params.u_val}`);
-            if (refRecord.conc !== params.conc) d.push(`Conc:${refRecord.conc}→${params.conc}x`);
-            if (refRecord.w_max !== params.w_max) d.push(`Cap:${refRecord.w_max}→${params.w_max}`);
+            if (refRecord.rh !== params.rh_night) d.push(`RH:${refRecord.rh}->${params.rh_night}%`);
+            if (refRecord.t_night !== params.t_night || refRecord.t_day !== params.t_day) d.push(`T:${refRecord.t_night}/${refRecord.t_day}->${params.t_night}/${params.t_day}C`);
+            if (refRecord.g_max !== params.g_max) d.push(`G:${refRecord.g_max}->${params.g_max}W/m2`);
+            if (refRecord.lx !== params.lx_mm || refRecord.ly !== params.ly_mm) d.push(`Box:${refRecord.lx}x${refRecord.ly}->${params.lx_mm}x${params.ly_mm}mm`);
+            if (refRecord.th_mm !== params.th_mm) d.push(`Tray:${refRecord.th_mm}->${params.th_mm}mm`);
+            if (refRecord.u_val !== params.u_val) d.push(`U:${refRecord.u_val}->${params.u_val}`);
+            if (refRecord.conc !== params.conc) d.push(`Conc:${refRecord.conc}->${params.conc}x`);
+            if (refRecord.w_max !== params.w_max) d.push(`Cap:${refRecord.w_max}->${params.w_max}`);
             return d.length > 0 ? d : [`No change vs ${labelPrefix}`];
         }
 
@@ -642,7 +657,7 @@
         let causalNarrative = "";
 
         if (testHistory.length === 0) {
-            causalNarrative = `Iteration #1 Baseline: At RH=${params.rh_night}%, T=${params.t_night}/${params.t_day}°C, G_max=${params.g_max} W/m², and ${params.lx_mm}×${params.ly_mm}mm (Tray=${params.th_mm}mm, U=${params.u_val}), the bed adsorbed ${waterCaptured_L.toFixed(2)} L (w0=${sim.w0.toFixed(3)} g/g), reached T_peak=${sim.t_peak.toFixed(1)}°C, and yielded ${sim.got_yield.toFixed(3)} L/day.`;
+            causalNarrative = `Iteration #1 Baseline: At RH=${params.rh_night}%, T=${params.t_night}/${params.t_day}°C, G_max=${params.g_max} W/m², and ${params.lx_mm}x${params.ly_mm}mm (Tray=${params.th_mm}mm, U=${params.u_val}), the bed adsorbed ${waterCaptured_L.toFixed(2)} L (w0=${sim.w0.toFixed(3)} g/g), reached T_peak=${sim.t_peak.toFixed(1)}°C, and yielded ${sim.got_yield.toFixed(3)} L/day.`;
         } else {
             const first = testHistory[0];
             const prev = testHistory[testHistory.length - 1];
@@ -655,10 +670,10 @@
 
             let effects = [];
             if (prev.rh !== params.rh_night || prev.t_night !== params.t_night) {
-                effects.push(`Weather shift (RH ${prev.rh}%→${params.rh_night}%, T_n ${prev.t_night}→${params.t_night}°C) changed nighttime pore uptake w0 from ${prev.w_start} to ${sim.w0.toFixed(3)} g/g (${waterCaptured_L.toFixed(2)} L adsorbed)`);
+                effects.push(`Weather shift (RH ${prev.rh}%->${params.rh_night}%, T_night ${prev.t_night}->${params.t_night}°C) changed nighttime pore uptake w0 from ${prev.w_start} to ${sim.w0.toFixed(3)} g/g (${waterCaptured_L.toFixed(2)} L adsorbed)`);
             }
             if (prev.g_max !== params.g_max || prev.t_day !== params.t_day) {
-                effects.push(`Daytime climate shift (G_max ${prev.g_max}→${params.g_max} W/m², T_d ${prev.t_day}→${params.t_day}°C) altered incident solar energy (${prev.solar_MJ}→${sol_MJ.toFixed(2)} MJ)`);
+                effects.push(`Daytime climate shift (G_max ${prev.g_max}->${params.g_max} W/m², T_day ${prev.t_day}->${params.t_day}°C) altered incident solar energy (${prev.solar_MJ}->${sol_MJ.toFixed(2)} MJ)`);
             }
             if (prev.lx !== params.lx_mm || prev.ly !== params.ly_mm || prev.u_val !== params.u_val || prev.conc !== params.conc || prev.th_mm !== params.th_mm) {
                 effects.push(`Hardware reconfiguration (${deltasVsPrev.filter(x => !x.startsWith('RH') && !x.startsWith('T:') && !x.startsWith('G:')).join(', ')}) shifted chamber peak temperature by ${dT_prev >= 0 ? '+' : ''}${dT_prev.toFixed(1)}°C (to ${sim.t_peak.toFixed(1)}°C, min RH_eff=${(sim.min_rh_eff*100).toFixed(1)}%)`);
@@ -689,7 +704,7 @@
         };
 
         testHistory.push(record);
-        localStorage.setItem('mof_manual_sim_v3', JSON.stringify(testHistory));
+        localStorage.setItem('mof_manual_sim_v4', JSON.stringify(testHistory));
 
         if (currentUser) {
             db.collection('user_predictions').doc(currentUser.uid).collection('saved_runs').add({
@@ -697,26 +712,26 @@
             }).catch(e => console.error("Firebase Sync Error:", e));
         }
 
-        // 6. Render Complete Right-Side Diagnostic & Selective Optimum Panel
+        // 6. Render Complete Right-Side Diagnostic & Selective Optimum Panel (Clean HTML Math, Zero Emojis)
         const isPass = sim.got_yield >= 0.25;
         document.getElementById('prediction-result').innerHTML = `
             <div>
                 <div class="analysis-box ${isPass ? 'analysis-good' : 'analysis-bad'}">
-                    <strong style="display:block; margin-bottom:4px; font-size:12.5px;">
-                        ${isPass ? '✅' : '⚠️'} Iteration #${iterNum} Full System Diagnosis: ${statusBadge}
+                    <strong style="display:block; margin-bottom:4px; font-size:12.5px; text-transform:uppercase; letter-spacing:0.3px;">
+                        Iteration #${iterNum} Full System Diagnosis: ${statusBadge}
                     </strong>
                     <strong>Bottleneck Analysis:</strong> ${failureText}
                 </div>
 
                 <div class="optimum-matrix">
-                    <h4>🎯 Calculated Optimum Values for Current Weather (${params.rh_night}% RH, ${params.g_max} W/m²)</h4>
+                    <h4>Calculated Optimum Values for Current Weather (${params.rh_night}% RH, ${params.g_max} W/m&sup2;)</h4>
                     <div class="opt-grid">
                         <div class="opt-item">
-                            <span>Optimum Box: <strong>${optLx}×${optLy}mm</strong></span>
+                            <span>Optimum Box: <strong>${optLx}&times;${optLy} mm</strong></span>
                             <button class="opt-apply-pill" onclick="applySingleOpt('box')">Apply</button>
                         </div>
                         <div class="opt-item">
-                            <span>Optimum Glazing: <strong>U = ${optU}</strong></span>
+                            <span>Optimum Glazing: <strong><span class="math-var">U</span> = ${optU}</strong></span>
                             <button class="opt-apply-pill" onclick="applySingleOpt('u')">Apply</button>
                         </div>
                         <div class="opt-item">
@@ -724,22 +739,31 @@
                             <button class="opt-apply-pill" onclick="applySingleOpt('th')">Apply</button>
                         </div>
                         <div class="opt-item">
-                            <span>Or Concentrator: <strong>${optConc}x</strong></span>
+                            <span>Or Concentrator: <strong>${optConc}&times;</strong></span>
                             <button class="opt-apply-pill" onclick="applySingleOpt('conc')">Apply</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="impact-banner">
-                    <strong>📊 Multi-Parameter Delta & Causal Impact:</strong><br>
+                    <strong style="text-transform:uppercase; letter-spacing:0.3px;">Multi-Parameter Delta & Causal Impact:</strong><br>
                     ${causalNarrative}
                 </div>
             </div>
 
             <div>
-                <div class="breakdown-row"><span>Night Sorption ($w_0 \rightarrow w_{\text{end}}$):</span> <strong style="color:var(--primary);">${sim.w0.toFixed(3)} → ${sim.w_end.toFixed(3)} g/g (${waterCaptured_L.toFixed(2)} L adsorbed)</strong></div>
-                <div class="breakdown-row"><span>Peak Chamber Temp / Min $\text{RH}_{\text{eff}}$:</span> <strong style="color:var(--text);">${sim.t_peak.toFixed(1)} °C / ${(sim.min_rh_eff*100).toFixed(1)}% (Step: 13%)</strong></div>
-                <div class="breakdown-row"><span>Solar Gain / Wall Loss / Req Desorp:</span> <strong style="color:var(--text);">${sol_MJ.toFixed(2)} MJ / -${loss_MJ.toFixed(2)} MJ / ${reqDesorp_MJ.toFixed(2)} MJ</strong></div>
+                <div class="breakdown-row">
+                    <span>Night Sorption (<span class="math-var">w<sub>0</sub> &rarr; w<sub>end</sub></span>):</span>
+                    <strong style="color:var(--primary);">${sim.w0.toFixed(3)} &rarr; ${sim.w_end.toFixed(3)} g/g (${waterCaptured_L.toFixed(2)} L adsorbed)</strong>
+                </div>
+                <div class="breakdown-row">
+                    <span>Peak Chamber Temp (<span class="math-var">T<sub>peak</sub></span>) / Min <span class="math-var">RH<sub>eff</sub></span>:</span>
+                    <strong style="color:var(--text);">${sim.t_peak.toFixed(1)} &deg;C / ${(sim.min_rh_eff*100).toFixed(1)}% (Step: 13%)</strong>
+                </div>
+                <div class="breakdown-row">
+                    <span>Solar Gain / Wall Loss / Req Desorp:</span>
+                    <strong style="color:var(--text);">${sol_MJ.toFixed(2)} MJ / &minus;${loss_MJ.toFixed(2)} MJ / ${reqDesorp_MJ.toFixed(2)} MJ</strong>
+                </div>
                 <div class="final-yield">Iteration #${iterNum} Yield: ${sim.got_yield.toFixed(3)} L/day</div>
             </div>
         `;
@@ -747,7 +771,6 @@
         renderTestTable();
     }
 
-    // Allows user to selectively apply a single optimum value without auto-running or locking other parameters
     function applySingleOpt(type) {
         if (!currentOptimums) return;
         if (type === 'box') {
@@ -788,7 +811,7 @@
 
         if (testHistory.length === 0) {
             exportBtn.disabled = true;
-            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px; font-style:italic;">No iterations logged yet. You have full manual control—run Iteration #1 to start recording.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px; font-style:italic;">No iterations logged yet. You have full manual control&mdash;run Iteration #1 to start recording.</td></tr>`;
             return;
         }
 
@@ -798,17 +821,17 @@
             const isPass = t.status.includes("OPTIMAL");
             const badgeHTML = isPass ? `<span class="badge-pass">PASS</span>` : `<span class="badge-fail">${t.status}</span>`;
             
-            const prevTags = t.deltasVsPrev.map(d => `<span class="delta-tag ${d.startsWith('RH')||d.startsWith('T:')||d.startsWith('G:') ? 'delta-weather' : ''}">${d}</span>`).join(" ");
-            const baseTags = t.deltasVsBase.map(d => `<span class="delta-tag">${d}</span>`).join(" ");
+            const prevTags = t.deltasVsPrev.map(d => `<span class="delta-tag ${d.startsWith('RH')||d.startsWith('T:')||d.startsWith('G:') ? 'delta-weather' : ''}">${d.replace(/->/g, '&rarr;')}</span>`).join(" ");
+            const baseTags = t.deltasVsBase.map(d => `<span class="delta-tag">${d.replace(/->/g, '&rarr;')}</span>`).join(" ");
 
             html += `
                 <tr>
                     <td><strong style="color:var(--text);">Iter #${t.testNumber}</strong><br><span style="font-size:10px;">${t.timestamp}</span></td>
                     <td style="max-width:180px;">${badgeHTML}<br><span style="font-size:10.5px; display:block; margin-top:4px;">${t.failureDiagnosis}</span></td>
                     <td>
-                        <strong style="color:var(--purple);">RH: ${t.rh}% | $T$: ${t.t_night}/${t.t_day}°C | $G$: ${t.g_max}W/m²</strong><br>
-                        <strong style="color:var(--text);">Box: ${t.lx}×${t.ly}mm (${t.aperture_m2}m²)</strong><br>
-                        <span style="font-size:10.5px;">Tray: ${t.th_mm}mm | U: ${t.u_val} | Conc: ${t.conc}x | $m_s$: ${t.mofMass_kg}kg</span>
+                        <strong style="color:var(--purple);">RH: ${t.rh}% | <span class="math-var">T</span>: ${t.t_night}/${t.t_day}&deg;C | <span class="math-var">G<sub>max</sub></span>: ${t.g_max} W/m&sup2;</strong><br>
+                        <strong style="color:var(--text);">Box: ${t.lx}&times;${t.ly} mm (${t.aperture_m2} m&sup2;)</strong><br>
+                        <span style="font-size:10.5px;">Tray: ${t.th_mm}mm | <span class="math-var">U</span>: ${t.u_val} | Conc: ${t.conc}&times; | <span class="math-var">m<sub>s</sub></span>: ${t.mofMass_kg}kg</span>
                     </td>
                     <td style="max-width:210px;">
                         <div style="margin-bottom:4px;"><strong style="font-size:10px; color:var(--text);">vs Prev:</strong> ${prevTags}</div>
@@ -816,7 +839,7 @@
                     </td>
                     <td>
                         <strong style="font-size:13.5px; color:${isPass ? 'var(--secondary)' : 'var(--danger)'};">${t.yield_L} L/day</strong><br>
-                        <span style="font-size:10.5px;">$w$: ${t.w_start}→${t.w_end} g/g<br>$T_{\\text{peak}}$: ${t.t_peak}°C ($\\text{RH}_{\\text{eff}}$: ${t.min_rh_eff_pct}%)<br>Sol: ${t.solar_MJ}MJ | Loss: ${t.loss_MJ}MJ</span>
+                        <span style="font-size:10.5px;"><span class="math-var">w</span>: ${t.w_start} &rarr; ${t.w_end} g/g<br><span class="math-var">T<sub>peak</sub></span>: ${t.t_peak}&deg;C (<span class="math-var">RH<sub>eff</sub></span>: ${t.min_rh_eff_pct}%)<br>Sol: ${t.solar_MJ} MJ | Loss: ${t.loss_MJ} MJ</span>
                     </td>
                     <td style="max-width:200px; font-size:10.5px; color:var(--primary); line-height:1.4;">
                         ${t.optimumForSet}
@@ -832,7 +855,7 @@
 
     function clearTestHistory() {
         testHistory = [];
-        localStorage.removeItem('mof_manual_sim_v3');
+        localStorage.removeItem('mof_manual_sim_v4');
         renderTestTable();
     }
 
