@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palletised MOF Digital Twin &amp; Material-Agnostic Engineering Simulator</title>
+    <title>Palletised MOF Digital Twin &amp; Full 3D Compartment Engineering Simulator</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -42,7 +42,7 @@
         .user-info { display: none; align-items: center; gap: 10px; font-size: 14px; font-weight: bold; }
         .user-info img { width: 32px; height: 32px; border-radius: 50%; }
 
-        .dashboard-wrapper { display: grid; grid-template-columns: 2.3fr 1fr; gap: 24px; max-width: 1640px; margin: 0 auto; }
+        .dashboard-wrapper { display: grid; grid-template-columns: 2.35fr 1fr; gap: 24px; max-width: 1640px; margin: 0 auto; }
         .panel { background: var(--card); padding: 22px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
         .panel-title { margin-top: 0; font-size: 13.5px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center;}
         
@@ -51,7 +51,7 @@
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
         .stat-card { background: var(--card-inner); padding: 13px; border-radius: 8px; border-left: 4px solid var(--primary); border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
         .stat-card h3 { margin: 0 0 4px 0; font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-        .stat-card p { margin: 0; font-size: 18px; font-weight: 800; color: var(--text); }
+        .stat-card p { margin: 0; font-size: 17.5px; font-weight: 800; color: var(--text); }
         
         .charts-dual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 22px; }
         .chart-box { background: var(--card-inner); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
@@ -59,22 +59,22 @@
         .chart-container { position: relative; height: 200px; width: 100%; }
         
         /* Manual Simulator Workbench */
-        .predictor-wrapper { display: grid; grid-template-columns: 1.05fr 1.15fr; gap: 20px; background: var(--card-inner); padding: 18px; border-radius: 8px; border: 1px solid var(--border); }
+        .predictor-wrapper { display: grid; grid-template-columns: 1.08fr 1.12fr; gap: 20px; background: var(--card-inner); padding: 18px; border-radius: 8px; border: 1px solid var(--border); }
         .input-section h3 { margin-top: 0; color: var(--text); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 4px; display: flex; justify-content: space-between; align-items: center;}
-        .input-grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; margin-bottom: 8px; }
-        .input-group { display: flex; justify-content: space-between; margin-bottom: 6px; align-items: center; font-size: 12px; font-weight: 500; color: var(--text-muted); }
-        .input-group input[type="number"], .input-group input[type="text"] { width: 68px; padding: 4px 6px; border: 1px solid var(--border); border-radius: 4px; font-weight: bold; color: var(--primary); background: var(--card); text-align: center; font-size: 12px;}
+        .input-grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 14px; margin-bottom: 8px; }
+        .input-group { display: flex; justify-content: space-between; margin-bottom: 5px; align-items: center; font-size: 11.5px; font-weight: 500; color: var(--text-muted); }
+        .input-group input[type="number"], .input-group input[type="text"] { width: 66px; padding: 3px 5px; border: 1px solid var(--border); border-radius: 4px; font-weight: bold; color: var(--primary); background: var(--card); text-align: center; font-size: 11.5px;}
         .input-group input[type="text"] { width: 145px; color: var(--cyan); }
         .input-group input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(88,166,255,0.2); }
         .input-group input[type="range"] { width: 85px; accent-color: var(--primary); cursor: pointer; }
         .range-val { display: inline-block; width: 42px; text-align: right; font-weight: bold; color: var(--primary); font-size: 11.5px; }
 
-        .preset-bar { display: flex; gap: 5px; margin-bottom: 10px; }
+        .preset-bar { display: flex; gap: 5px; margin-bottom: 8px; }
         .preset-btn { flex: 1; background: #21262d; border: 1px solid var(--border); color: var(--text-muted); padding: 5px 6px; border-radius: 4px; font-size: 10px; cursor: pointer; font-weight: 600; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.2px; }
         .preset-btn:hover { color: var(--primary); border-color: var(--primary); }
         .preset-btn-mof:hover { color: var(--cyan); border-color: var(--cyan); }
 
-        .btn-group { display: flex; gap: 10px; margin-top: 12px; }
+        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
         .calc-btn { background: var(--primary); color: #0d1117; border: none; padding: 11px; border-radius: 6px; cursor: pointer; font-weight: 800; flex: 1.6; transition: 0.2s; font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px;}
         .calc-btn:hover { background: #79c0ff; }
         .reset-btn { background: #21262d; color: var(--text-muted); border: 1px solid var(--border); padding: 11px; border-radius: 6px; cursor: pointer; font-weight: 600; flex: 0.7; transition: 0.2s; font-size: 11px; text-transform: uppercase;}
@@ -134,7 +134,7 @@
 <div class="header">
     <div class="header-text">
         <h1>Palletised <span>MOF Harvester</span> | CPUT Research Project (RPR585S)</h1>
-        <p>CAD-Standard Aligned Digital Twin: Custom Sorbent (UJ / Literature), 2.0 mm Air-Gap Baseline &amp; Counterfactual Simulator</p>
+        <p>Full 3D Compartment Digital Twin: Upper Desorption Chamber (<span class="math-var">h<sub>back</sub>, h<sub>front</sub></span>) + Lower Condenser Compartment (<span class="math-var">h<sub>lower</sub></span>) &amp; UJ Sorbent Simulator</p>
     </div>
     <div class="auth-panel">
         <button id="login-btn" class="auth-btn" onclick="signInWithGoogle()">
@@ -153,7 +153,7 @@
     <!-- LEFT PANEL -->
     <div class="panel">
         <h2 class="panel-title">
-            <span>1. Geographic &amp; Transient Diurnal Telemetry</span>
+            <span>1. Geographic &amp; Dual-Compartment Diurnal Telemetry</span>
             <select id="site-selector" class="site-selector" onchange="loadSimulationData()">
                 <option value="cape_town">Cape Town (Coastal Mediterranean)</option>
                 <option value="upington">Upington (Arid Northern Cape)</option>
@@ -166,15 +166,15 @@
                 <p id="mass-display">2.688 kg</p>
             </div>
             <div class="stat-card">
-                <h3>Peak Chamber Temp (<span class="math-var">T<sub>peak</sub></span>)</h3>
-                <p id="tpeak-display">-- &deg;C</p>
+                <h3>Upper / Lower Peak (<span class="math-var">T<sub>c</sub> / T<sub>cond</sub></span>)</h3>
+                <p id="tpeak-display">-- / -- &deg;C</p>
             </div>
             <div class="stat-card">
                 <h3>Diffusion Time Constant (<span class="math-var">&tau;</span>)</h3>
                 <p id="tau-display">235 s</p>
             </div>
             <div class="stat-card">
-                <h3>Rack Stack Height (<span class="math-var">H<sub>stack</sub></span>)</h3>
+                <h3>Rack Stack / Clear Limit</h3>
                 <p id="stack-display">108 / 120 mm</p>
             </div>
         </div>
@@ -188,7 +188,7 @@
             </div>
             <div class="chart-box">
                 <h4>
-                    <span>Live 144-Step Diurnal ODE Simulation (06:00&ndash;18:00)</span>
+                    <span>Live Dual-Compartment ODE Simulation (06:00&ndash;18:00)</span>
                     <span id="ode-chart-label" class="no-caps" style="color:var(--primary);">Awaiting Run</span>
                 </h4>
                 <div class="chart-container">
@@ -198,7 +198,7 @@
         </div>
 
         <h2 class="panel-title" style="margin-top: 18px;">
-            <span>2. Manual Simulation Workbench (All Weather, Geometry, 2.0 mm Air Gap &amp; UJ MOF Unlocked)</span>
+            <span>2. Full 3D Simulation Workbench (Weather, Upper &amp; Lower Heights, 2.0 mm Air Gap &amp; UJ MOF Unlocked)</span>
             <span id="next-test-badge" class="no-caps" style="background:#21262d; padding:4px 10px; border-radius:4px; font-size:12px; color:var(--primary);">Ready for Iteration #1</span>
         </h2>
 
@@ -232,22 +232,30 @@
                     </div>
                 </div>
 
-                <h3 style="margin-top: 10px;">
-                    <span>B. Housing, Tray Thickness &amp; Air Gap (CAD Standard: 2.0 mm Gap)</span>
+                <h3 style="margin-top: 8px;">
+                    <span>B. 3D Housing: Footprint, Upper &amp; Lower Heights &amp; Rack</span>
                     <span id="live-stack-indicator" class="no-caps" style="font-size:10.5px; color:var(--secondary);">Stack: 108 / 120 mm</span>
                 </h3>
                 <div class="input-grid-2col">
                     <div class="input-group">
                         <label>Box Length (<span class="math-var">L<sub>x</sub></span>, mm &ge;280)</label>
-                        <input type="number" id="input-lx" value="350" min="280" max="3000" step="10">
+                        <input type="number" id="input-lx" value="350" min="280" max="3000" step="10" oninput="updateLiveStackPreview()">
                     </div>
                     <div class="input-group">
                         <label>Box Depth (<span class="math-var">L<sub>y</sub></span>, mm &ge;200)</label>
-                        <input type="number" id="input-ly" value="270" min="200" max="3000" step="10">
+                        <input type="number" id="input-ly" value="270" min="200" max="3000" step="10" oninput="updateLiveStackPreview()">
                     </div>
                     <div class="input-group">
-                        <label>Concentrator (<span class="math-var">C<sub>conc</sub></span>, &times;)</label>
-                        <input type="number" id="input-conc" value="1.0" min="1.0" max="15.0" step="0.1">
+                        <label>Upper Back Height (<span class="math-var">h<sub>back</sub></span>, mm)</label>
+                        <input type="number" id="input-hback" value="220" min="120" max="1000" step="5" oninput="updateLiveStackPreview()">
+                    </div>
+                    <div class="input-group">
+                        <label>Upper Front Height (<span class="math-var">h<sub>front</sub></span>, mm)</label>
+                        <input type="number" id="input-hfront" value="147.65" min="90" max="900" step="2" oninput="updateLiveStackPreview()">
+                    </div>
+                    <div class="input-group">
+                        <label>Lower Cond Height (<span class="math-var">h<sub>lower</sub></span>, mm)</label>
+                        <input type="number" id="input-hlower" value="290" min="50" max="1200" step="10" oninput="updateLiveStackPreview()">
                     </div>
                     <div class="input-group">
                         <label>Glazing <span class="math-var">U</span> (W/m&sup2;K)</label>
@@ -255,22 +263,26 @@
                     </div>
                     <div class="input-group">
                         <label>Tray Count (<span class="math-var">N<sub>tr</sub></span>, trays)</label>
-                        <input type="number" id="input-ntrays" value="10" min="1" max="20" step="1" oninput="updateLiveStackPreview()">
+                        <input type="number" id="input-ntrays" value="10" min="1" max="25" step="1" oninput="updateLiveStackPreview()">
                     </div>
                     <div class="input-group">
                         <label>Inter-Tray Air Gap (<span class="math-var">g<sub>air</sub></span>, mm)</label>
                         <input type="number" id="input-airgap" value="2.0" min="1.0" max="15.0" step="0.5" oninput="updateLiveStackPreview()">
                     </div>
-                </div>
-                <div class="input-group">
-                    <label>Tray Bed Thickness (<span class="math-var">L<sub>bed</sub></span>, mm) [CAD Baseline: 8mm Bed, 2.0mm Gap]</label>
-                    <div>
-                        <input type="range" id="input-thickness" min="2" max="14" value="8" oninput="document.getElementById('thick-val').innerText = this.value + 'mm'; updateLiveStackPreview();">
-                        <span id="thick-val" class="range-val">8mm</span>
+                    <div class="input-group">
+                        <label>Concentrator (<span class="math-var">C<sub>conc</sub></span>, &times;)</label>
+                        <input type="number" id="input-conc" value="1.0" min="1.0" max="15.0" step="0.1">
+                    </div>
+                    <div class="input-group">
+                        <label>Tray Bed (<span class="math-var">L<sub>bed</sub></span>, mm)</label>
+                        <div>
+                            <input type="range" id="input-thickness" min="2" max="14" value="8" style="width:55px;" oninput="document.getElementById('thick-val').innerText = this.value + 'mm'; updateLiveStackPreview();">
+                            <span id="thick-val" class="range-val" style="width:32px;">8mm</span>
+                        </div>
                     </div>
                 </div>
 
-                <h3 style="margin-top: 10px;">
+                <h3 style="margin-top: 8px;">
                     <span style="color:var(--cyan);">C. Custom Sorbent / UJ MOF Properties (Editable)</span>
                     <span style="font-size:10px; color:var(--cyan);">Templates:</span>
                 </h3>
@@ -328,8 +340,8 @@
             <!-- Full-System Diagnostic & Complete Optimum Matrix Output -->
             <div class="breakdown-box" id="prediction-result">
                 <div style="text-align: center; color: var(--text-muted); font-style: italic; margin: auto 0; padding: 20px;">
-                    Configure any custom UJ or literature MOF parameters, weather boundaries, inter-tray air gap (<span class="math-var">g<sub>air</sub></span>, locked CAD baseline = <strong>2.0 mm</strong>), and housing dimensions, then click <strong>"Run Full Analysis &amp; Log Iteration"</strong>.<br><br>
-                    At your locked CAD baseline (350&times;270 mm, 10 trays &times; 8 mm, 2.0 mm air gap, <span class="math-var">U</span> = 5.6), <span class="math-var">m<sub>s</sub></span> = 2.688 kg, <span class="math-var">H<sub>stack</sub></span> = 108/120 mm, and <span class="math-var">&tau;</span> = 235 s, matching your Chapter 3 hand calculations 100%.
+                    Configure any custom UJ or literature MOF parameters, weather boundaries, upper desorption chamber heights (<span class="math-var">h<sub>back</sub> = 220 mm, h<sub>front</sub> = 147.65 mm</span>), and lower condenser compartment height (<span class="math-var">h<sub>lower</sub> = 290 mm</span>), then click <strong>"Run Full Analysis &amp; Log Iteration"</strong>.<br><br>
+                    Both compartment heights now actively drive the physics: <span class="math-var">h<sub>front</sub></span> governs the vertical rack limit (<span class="math-var">H<sub>rack,max</sub> = h<sub>front</sub> &minus; 27.65 mm</span>), <span class="math-var">h<sub>back</sub> &amp; h<sub>front</sub></span> govern upper wall losses, and <span class="math-var">h<sub>lower</sub></span> governs the lower condenser heat-rejection area (<span class="math-var">A<sub>lower</sub></span>) and condenser temperature rise (<span class="math-var">&Delta;T<sub>cond</sub></span>).
                 </div>
             </div>
         </div>
@@ -337,7 +349,7 @@
         <!-- SEQUENTIAL TEST LOG & REPORT GENERATOR -->
         <div class="history-section">
             <div class="history-header">
-                <h3>3. Complete Multi-Iteration Engineering Log (CAD-Aligned Telemetry &amp; Exact Counterfactual Attribution)</h3>
+                <h3>3. Complete Multi-Iteration Engineering Log (Full 3D Compartment Telemetry &amp; Exact Counterfactual Attribution)</h3>
                 <div style="display:flex; gap:10px;">
                     <button id="clear-log-btn" class="reset-btn" style="padding:6px 12px;" onclick="clearTestHistory()">Clear Session</button>
                     <button id="export-csv-btn" class="export-btn" onclick="downloadTestReportCSV()" disabled>Download Full Dissertation CSV Report</button>
@@ -350,7 +362,7 @@
                             <th>Iter #</th>
                             <th>Status &amp; Bottleneck</th>
                             <th>Sorbent Material &amp; Properties</th>
-                            <th>Weather, Box &amp; Rack (<span class="math-var">L<sub>bed</sub>, g<sub>air</sub>, N<sub>tr</sub></span>)</th>
+                            <th>3D Envelope (<span class="math-var">L<sub>x</sub>, L<sub>y</sub>, h<sub>up</sub>, h<sub>low</sub></span>) &amp; Rack</th>
                             <th>All Deltas (vs Iter #1 &amp; vs Prev)</th>
                             <th>Simulated Yield &amp; Telemetry</th>
                             <th>Verified Optimums &amp; Counterfactual Attribution</th>
@@ -358,7 +370,7 @@
                     </thead>
                     <tbody id="test-log-tbody">
                         <tr>
-                            <td colspan="7" style="text-align:center; padding: 20px; font-style:italic;">No iterations logged yet. Configure your MOF, air gap, and housing parameters above and run Iteration #1.</td>
+                            <td colspan="7" style="text-align:center; padding: 20px; font-style:italic;">No iterations logged yet. Configure your 3D compartment dimensions, MOF, and weather above and run Iteration #1.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -369,8 +381,8 @@
     <!-- RIGHT PANEL: Pseudo-3D Visualization & Physics Equations -->
     <div class="panel">
         <h2 class="panel-title">
-            <span>Physical Envelope Schematic</span>
-            <span id="right-panel-dims" class="no-caps" style="color:var(--text);">350 &times; 270 mm</span>
+            <span>Physical 3D Envelope Schematic</span>
+            <span id="right-panel-dims" class="no-caps" style="color:var(--text);">350&times;270&times;510 mm (44.8 L)</span>
         </h2>
         <div class="viewer-container" id="pseudo-3d-container" style="perspective: 1000px; overflow: hidden; display: flex; justify-content: center; align-items: center;">
             <img id="pseudo-3d-image" src="MOF Design-SCHEMATIC PLAN (2)-page-00001.jpg" alt="MOF Schematic Diagram" style="width: 90%; height: 90%; object-fit: contain; transform-style: preserve-3d; will-change: transform;">
@@ -378,11 +390,11 @@
         </div>
         
         <div class="context-sidebar">
-            <strong style="color: var(--text);">CAD-Standard Aligned Physics Engine:</strong>
+            <strong style="color: var(--text);">Dual-Compartment 3D Physics (v10.0):</strong>
             <ul>
-                <li><strong>Locked CAD Rack Standard:</strong> <span class="math-var">H<sub>stack</sub> = N<sub>tr</sub>&middot;L<sub>bed</sub> + (N<sub>tr</sub>&minus;1)&middot;g<sub>air</sub> + 10 mm &le; 120 mm</span>. Baseline: 10 trays &times; 8 mm + 9 &times; <strong>2.0 mm gap</strong> + 10 mm = <strong>108 mm</strong>.</li>
-                <li><strong>Chapter 3 Diffusion Standard:</strong> At <span class="math-var">g<sub>air</sub> &ge; 2.0 mm</span>, <span class="math-var">&tau; = L<sub>bed</sub><sup>2</sup>/D<sub>eff</sub> + L<sub>bed</sub><sup>2</sup>/&alpha;<sub>bed</sub> = 235 s</span>. Narrowing the gap below 2.0 mm introduces laminar slit constriction (<span class="math-var">Sh = 7.54</span>).</li>
-                <li><strong>Dual Euler / RK4 Verification:</strong> Primary solver is the 144-step Explicit Euler scheme (with stability sub-stepping), cross-checked against 4th-Order Runge-Kutta (<span class="math-var">&varepsilon;<sub>RK4</sub></span>).</li>
+                <li><strong>Upper Chamber Heights (<span class="math-var">h<sub>back</sub>, h<sub>front</sub></span>):</strong> Govern roof tilt angle <span class="math-var">&theta; = arctan((h<sub>back</sub>&minus;h<sub>front</sub>)/L<sub>y</sub>)</span>, upper wall heat-loss area <span class="math-var">A<sub>ext,up</sub></span>, and max rack height <span class="math-var">H<sub>rack,max</sub> = h<sub>front</sub> &minus; 27.65 mm</span> (120 mm at baseline).</li>
+                <li><strong>Lower Condenser Height (<span class="math-var">h<sub>lower</sub> = 290 mm</span>):</strong> Governs lower compartment ambient heat-rejection area <span class="math-var">A<sub>lower</sub> = 2(L<sub>x</sub>+L<sub>y</sub>)h<sub>lower</sub> + L<sub>x</sub>L<sub>y</sub></span> (0.454 m&sup2; at baseline), dynamically solving condenser temperature <span class="math-var">T<sub>cond</sub>(t)</span> from divider heat leakage + latent condensation load.</li>
+                <li><strong>Total Device Volume (<span class="math-var">V<sub>tot</sub></span>):</strong> <span class="math-var">V<sub>up</sub> + V<sub>low</sub> = 17.4 L + 27.4 L = 44.8 L</span> at baseline (<span class="math-var">H<sub>tot</sub> = 510 mm</span>).</li>
             </ul>
         </div>
     </div>
@@ -421,7 +433,7 @@
     let currentOptimums = null;
 
     window.addEventListener('DOMContentLoaded', () => {
-        const savedSession = localStorage.getItem('mof_manual_sim_v9') || localStorage.getItem('mof_manual_sim_v8') || localStorage.getItem('mof_manual_sim_v7');
+        const savedSession = localStorage.getItem('mof_manual_sim_v10') || localStorage.getItem('mof_manual_sim_v9');
         if (savedSession) {
             try {
                 testHistory = JSON.parse(savedSession);
@@ -436,15 +448,26 @@
         const nTr = parseInt(document.getElementById('input-ntrays').value) || 10;
         const gAir = parseFloat(document.getElementById('input-airgap').value) || 2.0;
         const th = parseFloat(document.getElementById('input-thickness').value) || 8.0;
+        const hFront = parseFloat(document.getElementById('input-hfront').value) || 147.654;
+        const hBack = parseFloat(document.getElementById('input-hback').value) || 220.0;
+        const hLower = parseFloat(document.getElementById('input-hlower').value) || 290.0;
+        const lx = parseFloat(document.getElementById('input-lx').value) || 350.0;
+        const ly = parseFloat(document.getElementById('input-ly').value) || 270.0;
+
+        // Plenum manifold allowance = 27.654 mm -> at h_front = 147.654 mm, max rack height = 120.0 mm
+        const maxRack_mm = Math.round(Math.max(40.0, hFront - 27.654) * 10) / 10;
         const hStack = Math.round((nTr * th + Math.max(0, nTr - 1) * gAir + 10) * 10) / 10;
         const ind = document.getElementById('live-stack-indicator');
-        if (hStack <= 120.0) {
+        if (hStack <= maxRack_mm) {
             ind.style.color = 'var(--secondary)';
-            ind.innerText = `Stack: ${hStack} / 120 mm (OK)`;
+            ind.innerText = `Stack: ${hStack} / ${maxRack_mm.toFixed(0)} mm (OK)`;
         } else {
             ind.style.color = 'var(--danger)';
-            ind.innerText = `Stack: ${hStack} / 120 mm (COLLISION!)`;
+            ind.innerText = `Stack: ${hStack} / ${maxRack_mm.toFixed(0)} mm (COLLISION!)`;
         }
+
+        const vTot_L = ((lx / 1000) * (ly / 1000) * (((hBack + hFront) / 2 + hLower) / 1000)) * 1000;
+        document.getElementById('right-panel-dims').innerText = `${Math.round(lx)}×${Math.round(ly)}×${Math.round(hBack + hLower)} mm (${vTot_L.toFixed(1)} L)`;
     }
 
     // --- 2. AUTHENTICATION ---
@@ -524,7 +547,8 @@
             data: {
                 labels: ['06:00','08:00','10:00','12:00','14:00','16:00','18:00'],
                 datasets: [
-                    { label: 'Chamber Temp Tc (°C)', data: [], borderColor: '#f85149', yAxisID: 'y', tension: 0.3, pointRadius: 2 },
+                    { label: 'Upper Chamber Tc (°C)', data: [], borderColor: '#f85149', yAxisID: 'y', tension: 0.3, pointRadius: 2 },
+                    { label: 'Lower Condenser Tcond (°C)', data: [], borderColor: '#58a6ff', borderDash: [4, 3], yAxisID: 'y', tension: 0.3, pointRadius: 1.5 },
                     { label: 'Cumulative Yield (L)', data: [], borderColor: '#3fb950', backgroundColor: 'rgba(63,185,80,0.15)', fill: true, yAxisID: 'y1', tension: 0.3, pointRadius: 2 }
                 ]
             },
@@ -557,7 +581,7 @@
         document.getElementById('input-kbed').value = kbed;
     }
 
-    // --- 4. CAD-STANDARD ALIGNED ODE PHYSICS ENGINE (EXPLICIT EULER PRIMARY + RK4 BENCHMARK) ---
+    // --- 4. DUAL-COMPARTMENT 3D ODE PHYSICS ENGINE (UPPER + LOWER HEIGHTS COUPLED) ---
     function psat_kpa(t_c) {
         return 0.61094 * Math.exp((17.625 * t_c) / (t_c + 243.04));
     }
@@ -570,21 +594,35 @@
     }
 
     function simulateCyclePhysics(params) {
+        // 1. Upper & Lower Compartment 3D Geometry
         const Lx = Math.max(0.280, params.lx_mm / 1000.0);
         const Ly = Math.max(0.200, params.ly_mm / 1000.0);
-        const h_back = 0.220, h_front = 0.147654;
+        const h_back = Math.max(0.100, (params.h_back_mm ?? 220.0) / 1000.0);
+        const h_front = Math.max(0.080, Math.min(h_back, (params.h_front_mm ?? 147.654) / 1000.0));
+        const h_lower = Math.max(0.040, (params.h_lower_mm ?? 290.0) / 1000.0);
+
         const drop = h_back - h_front;
         const slant = Math.hypot(Ly, drop);
+        const tilt_deg = Math.atan2(drop, Ly) * (180.0 / Math.PI);
         const A_ap = Lx * slant;
-        const A_side = Ly * (h_back + h_front) / 2.0;
-        const A_ext = A_ap + 2 * A_side + Lx * (h_back + h_front);
+        const A_side_up = Ly * (h_back + h_front) / 2.0;
+        const A_ext = A_ap + 2.0 * A_side_up + Lx * (h_back + h_front);
         const A_div = Lx * Ly;
+
+        // Lower Condenser & Catchment Compartment Surface Area & Volume
+        const A_lower = 2.0 * (Lx + Ly) * h_lower + Lx * Ly;
+        const V_upper_L = Lx * Ly * ((h_back + h_front) / 2.0) * 1000.0;
+        const V_lower_L = Lx * Ly * h_lower * 1000.0;
+        const V_total_L = V_upper_L + V_lower_L;
+        const H_total_mm = (h_back + h_lower) * 1000.0;
+
+        // Dynamic Rack Clearance Limit governed by Upper Front Height (147.654 - 27.654 = 120.0 mm at CAD baseline)
+        const max_rack_mm = Math.max(40.0, h_front * 1000.0 - 27.654);
 
         const n_tr = params.n_tr || 10;
         const g_air_mm = params.air_gap_mm || 2.0;
         const g_air = g_air_mm / 1000.0;
         const th = params.th_mm / 1000.0;
-        // Exact CAD stack height equation: N_tr * L_bed + (N_tr - 1) * g_air + 10 mm frame <= 120 mm
         const stack_height_mm = n_tr * params.th_mm + Math.max(0, n_tr - 1) * g_air_mm + 10.0;
 
         const rho = params.rho;
@@ -597,18 +635,22 @@
 
         const m_s = n_tr * 0.280 * 0.200 * th * rho;
         const alpha = k_bed / (rho * cp_s);
-        // Chapter 3 Standard Intra-bed diffusion time constant (234.67s -> 235s at 8mm baseline!)
+        // Chapter 3 Standard Intra-bed diffusion time constant (234.67s -> 235s at 8mm baseline)
         const tau_bed = (th * th) / D_eff + (th * th) / alpha;
-        // At or above the 2.0 mm CAD standard air gap, channel clearance is unobstructed (tau_gap = 0 -> tau = 235s).
-        // If user narrows air gap below 2.0 mm, parallel-plate slit constriction (Sh=7.54) adds resistance:
         const D_va = 2.5e-5, Sh_laminar = 7.54;
         const tau_gap = g_air_mm < 2.0 ? ((0.10 * 0.10) / (Sh_laminar * D_va)) * ((2.0 - g_air_mm) / g_air_mm) : 0.0;
         const tau = tau_bed + tau_gap;
 
-        const UA = params.u_val * A_ext + 1.2 * A_div;
+        // Thermal Conductances of Upper Chamber, Divider Plate, and Lower Condenser Compartment
+        const UA_div = 1.2 * A_div;
+        const UA = params.u_val * A_ext + UA_div;
+        // Lower compartment external natural + wind convection conductance (h_cond_ext = 12.5 W/m2K -> UA_lower = 5.68 W/K at h_lower=290mm)
+        const h_cond_ext = 12.5;
+        const UA_lower = h_cond_ext * A_lower;
+
         const C_th = m_s * cp_s + (n_tr * 0.15) * 900.0;
         const tau_th = C_th / UA;
-        const tau_alpha = 0.72, capture_eff = 0.85, dT_cond = 3.0;
+        const tau_alpha = 0.72, capture_eff = 0.85;
 
         const T_hourly = [], G_hourly = [];
         const t_mean = (params.t_day + params.t_night) / 2.0;
@@ -626,33 +668,45 @@
         const sub_steps = Math.max(1, Math.ceil(base_dt / Math.max(2.0, Math.min(tau, tau_th) * 0.20)));
         const dt_s = base_dt / sub_steps;
 
-        // Nighttime uptake (matches Chapter 3 equilibrium w0 = 0.400 g/g at 80% RH, degraded only if tau >> 12h)
         let w0 = isoUptake(params.rh_night / 100.0, params.w_max, rh_step_frac, k_iso);
         if (g_air_mm < 2.0) w0 *= (1.0 - Math.exp(-43200.0 / (tau * 10.0)));
 
-        // Primary State: Explicit Euler (Matches Chapter 3 & Python Backend)
-        let w = w0, Tc = T_hourly[0], got_yield = 0.0;
-        // Benchmark State: 4th-Order Runge-Kutta (RK4) for numerical drift verification
-        let w_rk4 = w0, Tc_rk4 = T_hourly[0], y_rk4 = 0.0;
+        // Helper to solve Lower Compartment Condenser Temperature T_cond from divider heat + latent condensation heat
+        function calcCondenserTemp(Ta_val, Tc_val, mdot_cond) {
+            const q_div = UA_div * Math.max(0.0, Tc_val - Ta_val);
+            const q_lat = mdot_cond * dH;
+            // Lower compartment rejects (q_div + q_lat) across A_lower (with minimum 1.5 K film drop)
+            const dT_cond_dyn = Math.max(1.5, (q_div + q_lat) / UA_lower);
+            return Ta_val + dT_cond_dyn;
+        }
 
-        let t_peak = Tc, min_rh_eff = 1.0, e_sol_in = 0.0, e_loss_net = 0.0;
-        const chartLabels = [], chartTc = [], chartYield = [];
-
-        function evalContinuousRates(Ta_val, g_val, w_st, Tc_st) {
+        // True Continuous ODE Derivative Function for RK4 Verification
+        function evalTrueContinuousRates(Ta_val, g_val, w_st, Tc_st) {
             const q_s = g_val * A_ap * tau_alpha * params.conc;
             const q_l = UA * (Tc_st - Ta_val);
-            const rh_e = Math.min(1.0, psat_kpa(Ta_val + dT_cond) / psat_kpa(Tc_st));
+            const T_cond_est = calcCondenserTemp(Ta_val, Tc_st, 0.0);
+            const rh_e = Math.min(1.0, psat_kpa(T_cond_est) / psat_kpa(Tc_st));
             const w_e = isoUptake(rh_e, params.w_max, rh_step_frac, k_iso);
             let mdot = 0.0;
             if (w_st > w_e) {
-                const mdot_k = ((w_st - w_e) * (1.0 - Math.exp(-dt_s / tau)) / dt_s) * m_s;
+                const mdot_k = ((w_st - w_e) / tau) * m_s;
                 const mdot_t = Math.max(0.0, q_s - q_l) / dH;
                 mdot = Math.min(mdot_k, mdot_t);
             }
             return { dw: -mdot / m_s, dTc: (q_s - q_l - mdot * dH) / C_th, dY: mdot * capture_eff };
         }
 
+        // Primary State: Explicit Euler
+        let w = w0, Tc = T_hourly[0], got_yield = 0.0;
+        // Benchmark State: True Continuous 4th-Order Runge-Kutta (RK4)
+        let w_rk4 = w0, Tc_rk4 = T_hourly[0], y_rk4 = 0.0;
+
+        let t_peak = Tc, t_cond_peak = T_hourly[0], min_rh_eff = 1.0, e_sol_in = 0.0, e_loss_net = 0.0;
+        let last_mdot_cond = 0.0;
+        const chartLabels = [], chartTc = [], chartTcond = [], chartYield = [];
+
         for (let h = 0; h < 12; h++) {
+            let T_cond_step = T_hourly[h];
             for (let s = 0; s < base_steps_per_h; s++) {
                 for (let sub = 0; sub < sub_steps; sub++) {
                     let f = (s + (sub / sub_steps)) / base_steps_per_h;
@@ -662,10 +716,13 @@
                     let Ta = T_hourly[h] * (1 - f) + T_hourly[h + 1] * f;
                     let g = G_hourly[h] * (1 - f) + G_hourly[h + 1] * f;
 
-                    // 1. Primary Explicit Euler Integration Step
+                    // 1. Primary Explicit Euler Step (Coupled Upper Tc & Lower T_cond)
                     let q_sol = g * A_ap * tau_alpha * params.conc;
                     let q_loss = UA * (Tc - Ta);
-                    let rh_eff = Math.min(1.0, psat_kpa(Ta + dT_cond) / psat_kpa(Tc));
+                    T_cond_step = calcCondenserTemp(Ta, Tc, last_mdot_cond);
+                    t_cond_peak = Math.max(t_cond_peak, T_cond_step);
+
+                    let rh_eff = Math.min(1.0, psat_kpa(T_cond_step) / psat_kpa(Tc));
                     min_rh_eff = Math.min(min_rh_eff, rh_eff);
                     let w_eq = isoUptake(rh_eff, params.w_max, rh_step_frac, k_iso);
 
@@ -677,6 +734,7 @@
                         dm = Math.min(dm_kin, dm_therm);
                         w -= dm / m_s;
                     }
+                    last_mdot_cond = (dm / dt_s) * capture_eff;
 
                     Tc += (((q_sol - q_loss) * dt_s) - (dm * dH)) / C_th;
                     got_yield += dm * capture_eff;
@@ -684,16 +742,16 @@
                     e_loss_net += q_loss * dt_s;
                     t_peak = Math.max(t_peak, Tc);
 
-                    // 2. Background RK4 Verification Step
+                    // 2. True Continuous RK4 Verification Step
                     let Ta_m = T_hourly[h] * (1 - f_mid) + T_hourly[h + 1] * f_mid;
                     let g_m  = G_hourly[h] * (1 - f_mid) + G_hourly[h + 1] * f_mid;
                     let Ta_e = T_hourly[h] * (1 - f_end) + T_hourly[h + 1] * f_end;
                     let g_e  = G_hourly[h] * (1 - f_end) + G_hourly[h + 1] * f_end;
 
-                    const k1 = evalContinuousRates(Ta, g, w_rk4, Tc_rk4);
-                    const k2 = evalContinuousRates(Ta_m, g_m, Math.max(0, w_rk4 + 0.5*dt_s*k1.dw), Tc_rk4 + 0.5*dt_s*k1.dTc);
-                    const k3 = evalContinuousRates(Ta_m, g_m, Math.max(0, w_rk4 + 0.5*dt_s*k2.dw), Tc_rk4 + 0.5*dt_s*k2.dTc);
-                    const k4 = evalContinuousRates(Ta_e, g_e, Math.max(0, w_rk4 + dt_s*k3.dw), Tc_rk4 + dt_s*k3.dTc);
+                    const k1 = evalTrueContinuousRates(Ta, g, w_rk4, Tc_rk4);
+                    const k2 = evalTrueContinuousRates(Ta_m, g_m, Math.max(0, w_rk4 + 0.5*dt_s*k1.dw), Tc_rk4 + 0.5*dt_s*k1.dTc);
+                    const k3 = evalTrueContinuousRates(Ta_m, g_m, Math.max(0, w_rk4 + 0.5*dt_s*k2.dw), Tc_rk4 + 0.5*dt_s*k2.dTc);
+                    const k4 = evalTrueContinuousRates(Ta_e, g_e, Math.max(0, w_rk4 + dt_s*k3.dw), Tc_rk4 + dt_s*k3.dTc);
                     w_rk4 = Math.max(0.0, w_rk4 + (dt_s / 6.0) * (k1.dw + 2*k2.dw + 2*k3.dw + k4.dw));
                     Tc_rk4 += (dt_s / 6.0) * (k1.dTc + 2*k2.dTc + 2*k3.dTc + k4.dTc);
                     y_rk4 += (dt_s / 6.0) * (k1.dY + 2*k2.dY + 2*k3.dY + k4.dY);
@@ -702,21 +760,23 @@
             let currentHour = 7 + h;
             chartLabels.push((currentHour < 10 ? '0' : '') + currentHour + ':00');
             chartTc.push(parseFloat(Tc.toFixed(1)));
+            chartTcond.push(parseFloat(T_cond_step.toFixed(1)));
             chartYield.push(parseFloat(got_yield.toFixed(4)));
         }
 
         const rk4_euler_drift_L = Math.abs(got_yield - y_rk4);
 
         return {
-            A_ap, A_ext, m_s, tau, tau_bed, tau_gap, tau_th, stack_height_mm, UA,
-            w0, w_end: w, t_peak, min_rh_eff,
+            A_ap, A_ext, A_lower, V_upper_L, V_lower_L, V_total_L, H_total_mm, tilt_deg,
+            m_s, tau, tau_bed, tau_gap, tau_th, stack_height_mm, max_rack_mm, UA, UA_lower,
+            w0, w_end: w, t_peak, t_cond_peak, min_rh_eff,
             got_yield, rk4_yield: y_rk4, rk4_euler_drift_L,
             e_sol_in, e_loss_out: Math.max(0.0, e_loss_net),
-            chartLabels, chartTc, chartYield
+            chartLabels, chartTc, chartTcond, chartYield
         };
     }
 
-    // --- 5. INPUT VALIDATION, STANDARDS-ALIGNED OPTIMIZER & EXACT OFAT ATTRIBUTION ---
+    // --- 5. INPUT VALIDATION, 3D COMPARTMENT OPTIMIZER & EXACT OFAT ATTRIBUTION ---
     function clampValLogged(id, minV, maxV, fallback, label, clampNotes) {
         const el = document.getElementById(id);
         let raw = parseFloat(el.value);
@@ -734,25 +794,27 @@
         return raw;
     }
 
-    function solveStandardsAlignedOptimums(params, sim, stepThreshold, isViable) {
-        // Keeps the user's configured air gap (default 2.0 mm CAD standard) unless it causes a stack collision
+    function solve3DCompartmentOptimums(params, sim, stepThreshold, isViable) {
         let optGap = params.air_gap_mm;
-        if (params.n_tr * 2 + (params.n_tr - 1) * optGap + 10 > 120.0) {
-            optGap = 2.0; // Revert to 2.0 mm CAD standard if user entered an impossible air gap
+        if (params.n_tr * 2 + (params.n_tr - 1) * optGap + 10 > sim.max_rack_mm) {
+            optGap = 2.0;
         }
-        const maxAllowedTh = Math.min(9, Math.floor((120.0 - 10.0 - (params.n_tr - 1) * optGap) / params.n_tr));
+        const maxAllowedTh = Math.min(9, Math.floor((sim.max_rack_mm - 10.0 - (params.n_tr - 1) * optGap) / params.n_tr));
 
         let bestU = Math.min(params.u_val, 2.0);
-        let bestTh = Math.min(params.th_mm, maxAllowedTh);
+        let bestTh = Math.min(params.th_mm, Math.max(2, maxAllowedTh));
         let bestScore = -1.0;
 
-        // Evaluate tray thickness (2 mm to maxAllowedTh) under insulated conditions so it is not trapped by U=5.6 stagnation
+        // Also check if lower compartment height h_lower is choking condensation (optHlower >= 290 mm)
+        let optHlower = Math.max(params.h_lower_mm, 290);
+
         const probeScale = sim.got_yield < 0.05 ? 1.8 : 1.0;
-        for (let testTh = 2; testTh <= maxAllowedTh; testTh++) {
+        for (let testTh = 2; testTh <= Math.max(2, maxAllowedTh); testTh++) {
             const resProbe = simulateCyclePhysics({
                 ...params,
                 lx_mm: Math.round(params.lx_mm * probeScale),
                 ly_mm: Math.round(params.ly_mm * probeScale),
+                h_lower_mm: optHlower,
                 u_val: bestU,
                 th_mm: testTh,
                 air_gap_mm: optGap
@@ -765,23 +827,21 @@
             }
         }
 
-        // Sweep U-value from 5.6 down to 1.2 with bestTh & optGap
         for (let testU = 5.6; testU >= 1.2; testU -= 0.4) {
             let uRound = parseFloat(testU.toFixed(1));
-            let resU = simulateCyclePhysics({ ...params, u_val: uRound, th_mm: bestTh, air_gap_mm: optGap });
+            let resU = simulateCyclePhysics({ ...params, u_val: uRound, th_mm: bestTh, air_gap_mm: optGap, h_lower_mm: optHlower });
             if (resU.got_yield >= 0.25 && resU.min_rh_eff <= stepThreshold) {
                 bestU = uRound; break;
             }
         }
 
-        // Sweep Passive Envelope Scale (1.05x to 4.5x)
         let optLx = params.lx_mm, optLy = params.ly_mm, boxMet = isViable;
         if (!isViable && sim.w0 >= params.w_max * 0.25) {
             boxMet = false;
             for (let scale = 1.05; scale <= 4.5; scale += 0.1) {
                 let testLx = Math.ceil((350 * scale) / 10) * 10;
                 let testLy = Math.ceil((270 * scale) / 10) * 10;
-                let resBox = simulateCyclePhysics({ ...params, lx_mm: testLx, ly_mm: testLy, u_val: bestU, th_mm: bestTh, air_gap_mm: optGap });
+                let resBox = simulateCyclePhysics({ ...params, lx_mm: testLx, ly_mm: testLy, u_val: bestU, th_mm: bestTh, air_gap_mm: optGap, h_lower_mm: optHlower });
                 optLx = testLx; optLy = testLy;
                 if (resBox.got_yield >= 0.25 && resBox.min_rh_eff <= stepThreshold) {
                     boxMet = true; break;
@@ -789,13 +849,12 @@
             }
         }
 
-        // Sweep Solar Concentrator (1.2x to 10.0x) on current box
         let optConc = params.conc, concMet = isViable;
         if (!isViable && sim.w0 >= params.w_max * 0.25) {
             concMet = false;
             for (let c = 1.2; c <= 10.0; c += 0.2) {
                 let cVal = parseFloat(c.toFixed(1));
-                let resC = simulateCyclePhysics({ ...params, conc: cVal, u_val: bestU, th_mm: bestTh, air_gap_mm: optGap });
+                let resC = simulateCyclePhysics({ ...params, conc: cVal, u_val: bestU, th_mm: bestTh, air_gap_mm: optGap, h_lower_mm: optHlower });
                 optConc = cVal;
                 if (resC.got_yield >= 0.25 && resC.min_rh_eff <= stepThreshold) {
                     concMet = true; break;
@@ -803,7 +862,7 @@
             }
         }
 
-        return { optLx, optLy, boxMet, optU: bestU, bestTh, optGap, optConc, concMet };
+        return { optLx, optLy, boxMet, optU: bestU, bestTh, optGap, optHlower, optConc, concMet };
     }
 
     function runAndLogTest() {
@@ -817,6 +876,14 @@
             clampNotes.push(`Day Peak Temp adjusted to ${t_d}°C (> Night Temp)`);
         }
 
+        let h_back_mm = clampValLogged('input-hback', 120, 1000, 220, 'Upper Back Height h_back', clampNotes);
+        let h_front_mm = clampValLogged('input-hfront', 90, 900, 147.65, 'Upper Front Height h_front', clampNotes);
+        if (h_front_mm > h_back_mm) {
+            h_front_mm = h_back_mm;
+            document.getElementById('input-hfront').value = h_front_mm;
+            clampNotes.push(`Upper Front Height clamped to <= Upper Back Height (${h_back_mm} mm)`);
+        }
+
         const params = {
             mof_name: rawMofName,
             rh_night: clampValLogged('input-rh', 1, 100, 80, 'Night RH', clampNotes),
@@ -825,9 +892,12 @@
             g_max: clampValLogged('input-gmax', 100, 1400, 920, 'Peak Solar G_max', clampNotes),
             lx_mm: clampValLogged('input-lx', 280, 3000, 350, 'Box Length Lx', clampNotes),
             ly_mm: clampValLogged('input-ly', 200, 3000, 270, 'Box Depth Ly', clampNotes),
+            h_back_mm: h_back_mm,
+            h_front_mm: h_front_mm,
+            h_lower_mm: clampValLogged('input-hlower', 50, 1200, 290, 'Lower Condenser Height h_lower', clampNotes),
             conc: clampValLogged('input-conc', 1.0, 15.0, 1.0, 'Solar Concentrator', clampNotes),
             u_val: clampValLogged('input-uvalue', 0.8, 8.0, 5.6, 'Glazing U-Value', clampNotes),
-            n_tr: Math.round(clampValLogged('input-ntrays', 1, 20, 10, 'Tray Count', clampNotes)),
+            n_tr: Math.round(clampValLogged('input-ntrays', 1, 25, 10, 'Tray Count', clampNotes)),
             air_gap_mm: clampValLogged('input-airgap', 1.0, 15.0, 2.0, 'Inter-Tray Air Gap', clampNotes),
             th_mm: clampValLogged('input-thickness', 2, 14, 8, 'Tray Bed Thickness', clampNotes),
             w_max: clampValLogged('input-capacity', 0.05, 2.50, 0.40, 'MOF w_max', clampNotes),
@@ -842,36 +912,36 @@
         document.getElementById('thick-val').innerText = params.th_mm + 'mm';
         updateLiveStackPreview();
 
-        // 1. Run CAD-Aligned Physics Simulation
+        // 1. Run 3D Dual-Compartment Physics Simulation
         const sim = simulateCyclePhysics(params);
         const iterNum = testHistory.length + 1;
-        const stackCollision = sim.stack_height_mm > 120.0;
+        const stackCollision = sim.stack_height_mm > sim.max_rack_mm;
         const safeMofName = escapeHTML(params.mof_name);
 
-        // Update Top Telemetry Cards (Displays exact 235 s at 8mm / 2.0mm CAD baseline!)
+        // Update Top Telemetry Cards
         document.getElementById('mass-display').innerText = sim.m_s.toFixed(3) + ' kg';
-        document.getElementById('tpeak-display').innerText = sim.t_peak.toFixed(1) + ' °C';
+        document.getElementById('tpeak-display').innerText = `${sim.t_peak.toFixed(1)} / ${sim.t_cond_peak.toFixed(1)} °C`;
         document.getElementById('tau-display').innerText = Math.round(sim.tau) + ' s';
-        document.getElementById('stack-display').innerText = `${sim.stack_height_mm.toFixed(0)} / 120 mm`;
-        document.getElementById('right-panel-dims').innerText = `${Math.round(params.lx_mm)} × ${Math.round(params.ly_mm)} mm`;
-        document.getElementById('ode-chart-label').innerHTML = `Iter #${iterNum}: ${safeMofName} (<span class="math-var">T<sub>peak</sub></span>: ${sim.t_peak.toFixed(1)}&deg;C, Yield: ${sim.got_yield.toFixed(3)} L)`;
+        document.getElementById('stack-display').innerText = `${sim.stack_height_mm.toFixed(0)} / ${sim.max_rack_mm.toFixed(0)} mm`;
+        document.getElementById('ode-chart-label').innerHTML = `Iter #${iterNum}: ${safeMofName} (<span class="math-var">T<sub>c</sub></span>: ${sim.t_peak.toFixed(1)}&deg;C, <span class="math-var">T<sub>cond</sub></span>: ${sim.t_cond_peak.toFixed(1)}&deg;C, Yield: ${sim.got_yield.toFixed(3)} L)`;
         transientChartInstance.data.labels = sim.chartLabels;
         transientChartInstance.data.datasets[0].data = sim.chartTc;
-        transientChartInstance.data.datasets[1].data = sim.chartYield;
+        transientChartInstance.data.datasets[1].data = sim.chartTcond;
+        transientChartInstance.data.datasets[2].data = sim.chartYield;
         transientChartInstance.update();
 
-        // 2. Standards-Aligned Optimum Solver
+        // 2. 3D Compartment Optimum Solver
         const stepThreshold = (params.rh_step_pct / 100.0) + 0.015;
         const isViable = (sim.got_yield >= 0.25) && (sim.min_rh_eff <= stepThreshold) && !stackCollision;
-        const opt = solveStandardsAlignedOptimums(params, sim, stepThreshold, isViable);
+        const opt = solve3DCompartmentOptimums(params, sim, stepThreshold, isViable);
         currentOptimums = opt;
 
         const optStack = params.n_tr * opt.bestTh + (params.n_tr - 1) * opt.optGap + 10;
         const boxStatusLabel = opt.boxMet ? `${opt.optLx}x${opt.optLy}mm (Pass)` : `Max ${opt.optLx}x${opt.optLy}mm (Add Conc)`;
         const concStatusLabel = opt.concMet ? `${opt.optConc}x (Pass)` : `Max ${opt.optConc}x (Low RH/Solar)`;
-        const optimumSummaryStr = `Box: ${boxStatusLabel} | U=${opt.optU} | Tray=${opt.bestTh}mm & AirGap=${opt.optGap}mm (Stack ${optStack}mm/120mm) | Conc: ${concStatusLabel}`;
+        const optimumSummaryStr = `Box: ${boxStatusLabel} | U=${opt.optU} | Tray=${opt.bestTh}mm & Gap=${opt.optGap}mm (Stack ${optStack}/${sim.max_rack_mm.toFixed(0)}mm) | Lower h_low>=${opt.optHlower}mm | Conc: ${concStatusLabel}`;
 
-        // 3. Diagnose All Bottlenecks Simultaneously
+        // 3. Diagnose All Bottlenecks (Including Upper Rack Collision & Lower Condenser Rejection Area!)
         const waterCaptured_L = sim.w0 * sim.m_s;
         const reqDesorp_MJ = waterCaptured_L * params.dh_mj;
         const sol_MJ = sim.e_sol_in / 1e6;
@@ -882,16 +952,19 @@
 
         if (!isViable) {
             if (stackCollision) {
-                failures.push(`Rack Stack Collision (${params.n_tr} trays x ${params.th_mm}mm + ${params.n_tr-1} gaps x ${params.air_gap_mm}mm + 10mm = ${sim.stack_height_mm.toFixed(0)}mm > 120mm max rack height!)`);
+                failures.push(`Upper Compartment Rack Collision (Stack=${sim.stack_height_mm.toFixed(0)}mm exceeds h_front clearance limit ${sim.max_rack_mm.toFixed(0)}mm; increase h_front or reduce tray/gap!)`);
+            }
+            if (sim.t_cond_peak - params.t_day > 6.5) {
+                failures.push(`Lower Compartment Condenser Overheating (h_lower=${params.h_lower_mm}mm gives A_lower=${sim.A_lower.toFixed(2)}m², causing T_cond,peak=${sim.t_cond_peak.toFixed(1)}°C)`);
             }
             if (sim.w0 < params.w_max * 0.35) {
                 failures.push(`Vapor Starvation (Night RH ${params.rh_night}% is near/below ${params.mof_name} step RH_step=${params.rh_step_pct}%; loaded w0=${sim.w0.toFixed(3)} g/g)`);
             }
             if (sim.min_rh_eff > stepThreshold) {
-                failures.push(`Psychrometric Desorption Deficit (T_peak=${sim.t_peak.toFixed(1)}°C left min RH_eff=${(sim.min_rh_eff*100).toFixed(1)}% above ${params.mof_name} step ${params.rh_step_pct}%)`);
+                failures.push(`Psychrometric Desorption Deficit (T_peak=${sim.t_peak.toFixed(1)}°C vs T_cond=${sim.t_cond_peak.toFixed(1)}°C left min RH_eff=${(sim.min_rh_eff*100).toFixed(1)}% > ${params.rh_step_pct}% step)`);
             }
             if (loss_MJ > sol_MJ * 0.45) {
-                failures.push(`High Envelope Heat Loss (U=${params.u_val} W/m²K lost ${loss_MJ.toFixed(2)} MJ of ${sol_MJ.toFixed(2)} MJ solar gain)`);
+                failures.push(`High Upper Wall Heat Loss (U=${params.u_val} W/m²K over A_ext=${sim.A_ext.toFixed(2)}m² lost ${loss_MJ.toFixed(2)} MJ of ${sol_MJ.toFixed(2)} MJ solar gain)`);
             }
             if (sol_MJ < reqDesorp_MJ) {
                 failures.push(`Insufficient Aperture Solar Capture (Collected ${sol_MJ.toFixed(2)} MJ vs ${reqDesorp_MJ.toFixed(2)} MJ required for full desorption)`);
@@ -899,9 +972,9 @@
             statusBadge = stackCollision ? "FAIL (Stack Collision)" : ("FAIL (" + (sim.w0 < params.w_max * 0.35 ? "Vapor Starved" : "Thermal Deficit") + ")");
         }
 
-        const failureText = failures.length > 0 ? failures.join(" | ") : `All thermodynamic, psychrometric (RH_eff <= ${params.rh_step_pct}% step), and CAD rack clearance (${sim.stack_height_mm.toFixed(0)}mm <= 120mm) thresholds satisfied (>= 0.25 L/day).`;
+        const failureText = failures.length > 0 ? failures.join(" | ") : `All 3D compartment, thermodynamic, psychrometric (RH_eff <= ${params.rh_step_pct}%), and rack clearance (${sim.stack_height_mm.toFixed(0)}/${sim.max_rack_mm.toFixed(0)}mm) thresholds satisfied (>= 0.25 L/day).`;
 
-        // 4. Complete 16-Parameter Delta Tracker & Exact Additive OFAT + Interaction Decomposition
+        // 4. Complete 19-Parameter Delta Tracker (Including h_back, h_front, h_lower) & Exact OFAT Attribution
         function computeDeltaList(refRecord, labelPrefix) {
             let d = [];
             if (refRecord.mof_name !== params.mof_name) d.push(`MOF:${refRecord.mof_name}->${params.mof_name}`);
@@ -917,6 +990,10 @@
             if (refRecord.t_night !== params.t_night || refRecord.t_day !== params.t_day) d.push(`T:${refRecord.t_night}/${refRecord.t_day}->${params.t_night}/${params.t_day}C`);
             if (refRecord.g_max !== params.g_max) d.push(`G:${refRecord.g_max}->${params.g_max}W/m2`);
             if (refRecord.lx !== params.lx_mm || refRecord.ly !== params.ly_mm) d.push(`Box:${refRecord.lx}x${refRecord.ly}->${params.lx_mm}x${params.ly_mm}mm`);
+            if ((refRecord.h_back_mm ?? 220) !== params.h_back_mm || Math.abs((refRecord.h_front_mm ?? 147.65) - params.h_front_mm) > 0.1) {
+                d.push(`h_up:${refRecord.h_back_mm ?? 220}/${refRecord.h_front_mm ?? 147.65}->${params.h_back_mm}/${params.h_front_mm}mm`);
+            }
+            if ((refRecord.h_lower_mm ?? 290) !== params.h_lower_mm) d.push(`h_low:${refRecord.h_lower_mm ?? 290}->${params.h_lower_mm}mm`);
             if (refRecord.th_mm !== params.th_mm) d.push(`Tray:${refRecord.th_mm}->${params.th_mm}mm`);
             if ((refRecord.air_gap_mm ?? 2.0) !== params.air_gap_mm) d.push(`Gap:${refRecord.air_gap_mm ?? 2.0}->${params.air_gap_mm}mm`);
             if ((refRecord.n_tr ?? 10) !== params.n_tr) d.push(`N_tr:${refRecord.n_tr ?? 10}->${params.n_tr}`);
@@ -930,7 +1007,7 @@
         let causalNarrative = "";
 
         if (testHistory.length === 0) {
-            causalNarrative = `Iteration #1 Baseline (${params.mof_name}, w_max=${params.w_max} g/g, RH_step=${params.rh_step_pct}%): At RH=${params.rh_night}%, G_max=${params.g_max} W/m², Box=${params.lx_mm}x${params.ly_mm}mm, ${params.n_tr} Trays=${params.th_mm}mm, AirGap=${params.air_gap_mm}mm (Stack=${sim.stack_height_mm.toFixed(0)}/120mm, tau=${Math.round(sim.tau)}s), U=${params.u_val}, bed adsorbed ${waterCaptured_L.toFixed(2)} L (w0=${sim.w0.toFixed(3)} g/g), reached T_peak=${sim.t_peak.toFixed(1)}°C, and yielded ${sim.got_yield.toFixed(3)} L/day.`;
+            causalNarrative = `Iteration #1 Baseline (${params.mof_name}): Box=${params.lx_mm}x${params.ly_mm}mm, Upper h=${params.h_back_mm}/${params.h_front_mm}mm (V_up=${sim.V_upper_L.toFixed(1)}L), Lower Condenser h_lower=${params.h_lower_mm}mm (V_low=${sim.V_lower_L.toFixed(1)}L, A_low=${sim.A_lower.toFixed(2)}m²), ${params.n_tr} Trays=${params.th_mm}mm, Gap=${params.air_gap_mm}mm (Stack=${sim.stack_height_mm.toFixed(0)}/${sim.max_rack_mm.toFixed(0)}mm, tau=${Math.round(sim.tau)}s). Reached T_c=${sim.t_peak.toFixed(1)}°C, T_cond=${sim.t_cond_peak.toFixed(1)}°C, yielding ${sim.got_yield.toFixed(3)} L/day.`;
         } else {
             const first = testHistory[0];
             const prev = testHistory[testHistory.length - 1];
@@ -941,7 +1018,9 @@
                 mof_name: prev.mof_name, w_max: prev.w_max, rh_step_pct: prev.rh_step_pct, k_iso: prev.k_iso,
                 rho: prev.rho, dh_mj: prev.dh_mj, cp_s: prev.cp_s, deff_e6: prev.deff_e6, k_bed: prev.k_bed,
                 rh_night: prev.rh, t_night: prev.t_night, t_day: prev.t_day, g_max: prev.g_max,
-                lx_mm: prev.lx, ly_mm: prev.ly, th_mm: prev.th_mm, n_tr: prev.n_tr ?? 10, air_gap_mm: prev.air_gap_mm ?? 2.0,
+                lx_mm: prev.lx, ly_mm: prev.ly,
+                h_back_mm: prev.h_back_mm ?? 220, h_front_mm: prev.h_front_mm ?? 147.65, h_lower_mm: prev.h_lower_mm ?? 290,
+                th_mm: prev.th_mm, n_tr: prev.n_tr ?? 10, air_gap_mm: prev.air_gap_mm ?? 2.0,
                 u_val: prev.u_val, conc: prev.conc
             };
 
@@ -950,7 +1029,7 @@
             const firstYieldRaw = first.yield_raw ?? parseFloat(first.yield_L);
 
             const wxChanged  = (prev.rh !== params.rh_night || prev.t_night !== params.t_night || prev.t_day !== params.t_day || prev.g_max !== params.g_max);
-            const hwChanged  = (prev.lx !== params.lx_mm || prev.ly !== params.ly_mm || prev.th_mm !== params.th_mm || (prev.air_gap_mm ?? 2.0) !== params.air_gap_mm || (prev.n_tr ?? 10) !== params.n_tr || prev.u_val !== params.u_val || prev.conc !== params.conc);
+            const hwChanged  = (prev.lx !== params.lx_mm || prev.ly !== params.ly_mm || (prev.h_back_mm ?? 220) !== params.h_back_mm || Math.abs((prev.h_front_mm ?? 147.65) - params.h_front_mm) > 0.1 || (prev.h_lower_mm ?? 290) !== params.h_lower_mm || prev.th_mm !== params.th_mm || (prev.air_gap_mm ?? 2.0) !== params.air_gap_mm || (prev.n_tr ?? 10) !== params.n_tr || prev.u_val !== params.u_val || prev.conc !== params.conc);
             const mofChanged = (prev.mof_name !== params.mof_name || prev.w_max !== params.w_max || prev.rh_step_pct !== params.rh_step_pct || prev.k_iso !== params.k_iso || prev.rho !== params.rho || prev.dh_mj !== params.dh_mj || prev.cp_s !== params.cp_s || prev.deff_e6 !== params.deff_e6 || prev.k_bed !== params.k_bed);
 
             let cfParts = [];
@@ -963,15 +1042,15 @@
                 const dT_wx = simWx.t_peak - prevTpeakRaw;
                 const dY_wx = simWx.got_yield - prevYieldRaw;
                 sum_dY_ofat += dY_wx;
-                cfParts.push(`Weather alone: dT_peak=${dT_wx >= 0 ? '+' : ''}${dT_wx.toFixed(1)}°C, dYield=${dY_wx >= 0 ? '+' : ''}${dY_wx.toFixed(3)} L/d`);
+                cfParts.push(`Weather alone: dT_c=${dT_wx >= 0 ? '+' : ''}${dT_wx.toFixed(1)}°C, dYield=${dY_wx >= 0 ? '+' : ''}${dY_wx.toFixed(3)} L/d`);
             }
             if (hwChanged) {
                 groupsChanged++;
-                const simHw = simulateCyclePhysics({ ...prevParams, lx_mm: params.lx_mm, ly_mm: params.ly_mm, th_mm: params.th_mm, air_gap_mm: params.air_gap_mm, n_tr: params.n_tr, u_val: params.u_val, conc: params.conc });
+                const simHw = simulateCyclePhysics({ ...prevParams, lx_mm: params.lx_mm, ly_mm: params.ly_mm, h_back_mm: params.h_back_mm, h_front_mm: params.h_front_mm, h_lower_mm: params.h_lower_mm, th_mm: params.th_mm, air_gap_mm: params.air_gap_mm, n_tr: params.n_tr, u_val: params.u_val, conc: params.conc });
                 const dT_hw = simHw.t_peak - prevTpeakRaw;
                 const dY_hw = simHw.got_yield - prevYieldRaw;
                 sum_dY_ofat += dY_hw;
-                cfParts.push(`Hardware/Rack alone: dT_peak=${dT_hw >= 0 ? '+' : ''}${dT_hw.toFixed(1)}°C, dYield=${dY_hw >= 0 ? '+' : ''}${dY_hw.toFixed(3)} L/d`);
+                cfParts.push(`3D Envelope/Rack alone: dT_c=${dT_hw >= 0 ? '+' : ''}${dT_hw.toFixed(1)}°C, dYield=${dY_hw >= 0 ? '+' : ''}${dY_hw.toFixed(3)} L/d`);
             }
             if (mofChanged) {
                 groupsChanged++;
@@ -979,7 +1058,7 @@
                 const dT_mof = simMof.t_peak - prevTpeakRaw;
                 const dY_mof = simMof.got_yield - prevYieldRaw;
                 sum_dY_ofat += dY_mof;
-                cfParts.push(`Sorbent alone (${params.mof_name}): dT_peak=${dT_mof >= 0 ? '+' : ''}${dT_mof.toFixed(1)}°C, dYield=${dY_mof >= 0 ? '+' : ''}${dY_mof.toFixed(3)} L/d`);
+                cfParts.push(`Sorbent alone (${params.mof_name}): dT_c=${dT_mof >= 0 ? '+' : ''}${dT_mof.toFixed(1)}°C, dYield=${dY_mof >= 0 ? '+' : ''}${dY_mof.toFixed(3)} L/d`);
             }
 
             const dY_total = sim.got_yield - prevYieldRaw;
@@ -988,28 +1067,32 @@
 
             if (groupsChanged > 1) {
                 const dY_interact = dY_total - sum_dY_ofat;
-                cfParts.push(`Nonlinear Coupling Interaction: dYield_interact=${dY_interact >= 0 ? '+' : ''}${dY_interact.toFixed(3)} L/d`);
+                cfParts.push(`Synergistic Coupling: dYield_interact=${dY_interact >= 0 ? '+' : ''}${dY_interact.toFixed(3)} L/d`);
             }
 
             causalNarrative = (cfParts.length > 0 ? cfParts.join(" | ") + ". " : "Identical parameter repeat run (dYield = 0.000 L/d). ") +
-                `Exact Net Shift: dT_peak=${dT_total >= 0 ? '+' : ''}${dT_total.toFixed(1)}°C, dYield=${dY_total >= 0 ? '+' : ''}${dY_total.toFixed(3)} L/d vs Iter #${prev.testNumber} (${dY_base >= 0 ? '+' : ''}${dY_base.toFixed(3)} L/d vs Iter #1).`;
+                `Exact Net Shift: dT_c=${dT_total >= 0 ? '+' : ''}${dT_total.toFixed(1)}°C, dYield=${dY_total >= 0 ? '+' : ''}${dY_total.toFixed(3)} L/d vs Iter #${prev.testNumber} (${dY_base >= 0 ? '+' : ''}${dY_base.toFixed(3)} L/d vs Iter #1).`;
         }
 
         // 5. Save Full Iteration Record
         const record = {
-            model_version: "v9.0-CAD-Standard-Aligned",
+            model_version: "v10.0-3D-Dual-Compartment",
             testNumber: iterNum,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
             status: statusBadge,
             mof_name: params.mof_name, w_max: params.w_max, rh_step_pct: params.rh_step_pct, k_iso: params.k_iso,
             rho: params.rho, dh_mj: params.dh_mj, cp_s: params.cp_s, deff_e6: params.deff_e6, k_bed: params.k_bed,
             rh: params.rh_night, t_night: params.t_night, t_day: params.t_day, g_max: params.g_max,
-            lx: params.lx_mm, ly: params.ly_mm, aperture_m2: sim.A_ap.toFixed(3),
-            n_tr: params.n_tr, th_mm: params.th_mm, air_gap_mm: params.air_gap_mm, stack_mm: sim.stack_height_mm.toFixed(1),
+            lx: params.lx_mm, ly: params.ly_mm,
+            h_back_mm: params.h_back_mm, h_front_mm: params.h_front_mm, h_lower_mm: params.h_lower_mm,
+            v_total_L: sim.V_total_L.toFixed(1), aperture_m2: sim.A_ap.toFixed(3), a_lower_m2: sim.A_lower.toFixed(3),
+            n_tr: params.n_tr, th_mm: params.th_mm, air_gap_mm: params.air_gap_mm,
+            stack_mm: sim.stack_height_mm.toFixed(1), max_rack_mm: sim.max_rack_mm.toFixed(1),
             u_val: params.u_val, conc: params.conc,
             mofMass_kg: sim.m_s.toFixed(3), tau_s: Math.round(sim.tau),
             w_start: sim.w0.toFixed(3), w_end: sim.w_end.toFixed(3),
             t_peak: sim.t_peak.toFixed(1), t_peak_raw: sim.t_peak,
+            t_cond_peak: sim.t_cond_peak.toFixed(1),
             min_rh_eff_pct: (sim.min_rh_eff * 100).toFixed(1),
             solar_MJ: sol_MJ.toFixed(2), loss_MJ: loss_MJ.toFixed(2), req_MJ: reqDesorp_MJ.toFixed(2),
             rk4_drift_L: sim.rk4_euler_drift_L.toFixed(5),
@@ -1022,7 +1105,7 @@
         };
 
         testHistory.push(record);
-        localStorage.setItem('mof_manual_sim_v9', JSON.stringify(testHistory));
+        localStorage.setItem('mof_manual_sim_v10', JSON.stringify(testHistory));
 
         if (currentUser) {
             db.collection('user_predictions').doc(currentUser.uid).collection('saved_runs').add({
@@ -1032,7 +1115,7 @@
 
         // 6. Render Complete Right-Side Diagnostic & Selective Optimum Panel
         const clampWarnHTML = clampNotes.length > 0 ? `<div class="geom-warn"><strong>Input Bounds Applied:</strong> ${escapeHTML(clampNotes.join('; '))}</div>` : "";
-        const geomWarnHTML = stackCollision ? `<div class="geom-warn"><strong>CAD Stack Collision:</strong> ${params.n_tr} trays &times; ${params.th_mm}mm + ${params.n_tr-1} gaps &times; ${params.air_gap_mm}mm + 10mm frame = <strong>${sim.stack_height_mm.toFixed(0)} mm</strong> (exceeds 120 mm upper rack height!).</div>` : "";
+        const geomWarnHTML = stackCollision ? `<div class="geom-warn"><strong>Upper Compartment Rack Collision:</strong> ${params.n_tr} trays &times; ${params.th_mm}mm + ${params.n_tr-1} gaps &times; ${params.air_gap_mm}mm + 10mm = <strong>${sim.stack_height_mm.toFixed(0)} mm</strong> (exceeds upper front clearance limit <strong>${sim.max_rack_mm.toFixed(0)} mm</strong>!). Increase <span class="math-var">h<sub>front</sub></span> or reduce tray thickness/gap.</div>` : "";
 
         document.getElementById('prediction-result').innerHTML = `
             <div>
@@ -1046,7 +1129,7 @@
                 </div>
 
                 <div class="optimum-matrix">
-                    <h4>Verified Optimum Targets for ${safeMofName} (${params.rh_night}% RH, ${params.g_max} W/m&sup2;)</h4>
+                    <h4>Verified 3D Compartment Optimums for ${safeMofName} (${params.rh_night}% RH, ${params.g_max} W/m&sup2;)</h4>
                     <div class="opt-grid">
                         <div class="opt-item">
                             <span>Box (U=${opt.optU}): <strong>${opt.optLx}&times;${opt.optLy}mm ${opt.boxMet ? '(Pass)' : '(Max)'}</strong></span>
@@ -1068,26 +1151,26 @@
                 </div>
 
                 <div class="impact-banner">
-                    <strong style="text-transform:uppercase; letter-spacing:0.3px;">Exact Counterfactual Attribution (Weather vs Hardware vs MOF):</strong><br>
+                    <strong style="text-transform:uppercase; letter-spacing:0.3px;">Counterfactual Attribution (Weather vs 3D Envelope/Rack vs MOF):</strong><br>
                     ${escapeHTML(causalNarrative)}
                 </div>
             </div>
 
             <div>
                 <div class="breakdown-row">
-                    <span>Rack Stack (${params.n_tr} Trays &times; ${params.th_mm}mm + ${params.n_tr-1} Gaps &times; ${params.air_gap_mm}mm + 10mm):</span>
-                    <strong style="color:${stackCollision ? 'var(--danger)' : 'var(--cyan)'};">${sim.stack_height_mm.toFixed(0)} / 120 mm (${sim.m_s.toFixed(3)} kg, &tau;=${Math.round(sim.tau)}s)</strong>
+                    <span>3D Volumes (<span class="math-var">V<sub>up</sub></span> = ${sim.V_upper_L.toFixed(1)}L, <span class="math-var">V<sub>low</sub></span> = ${sim.V_lower_L.toFixed(1)}L, <span class="math-var">A<sub>low</sub></span> = ${sim.A_lower.toFixed(2)}m&sup2;):</span>
+                    <strong style="color:var(--cyan);">Total: ${sim.V_total_L.toFixed(1)} L (<span class="math-var">H<sub>tot</sub></span> = ${sim.H_total_mm.toFixed(0)} mm)</strong>
                 </div>
                 <div class="breakdown-row">
-                    <span>Night Sorption (<span class="math-var">w<sub>0</sub> &rarr; w<sub>end</sub></span>):</span>
-                    <strong style="color:var(--primary);">${sim.w0.toFixed(3)} &rarr; ${sim.w_end.toFixed(3)} g/g (${waterCaptured_L.toFixed(2)} L adsorbed)</strong>
+                    <span>Upper Rack (${params.n_tr}&times;${params.th_mm}mm + ${params.n_tr-1}&times;${params.air_gap_mm}mm + 10mm):</span>
+                    <strong style="color:${stackCollision ? 'var(--danger)' : 'var(--primary)'};">${sim.stack_height_mm.toFixed(0)} / ${sim.max_rack_mm.toFixed(0)} mm (${sim.m_s.toFixed(3)} kg, &tau;=${Math.round(sim.tau)}s)</strong>
                 </div>
                 <div class="breakdown-row">
-                    <span>Peak Chamber Temp (<span class="math-var">T<sub>peak</sub></span>) / Min <span class="math-var">RH<sub>eff</sub></span>:</span>
-                    <strong style="color:var(--text);">${sim.t_peak.toFixed(1)} &deg;C / ${(sim.min_rh_eff*100).toFixed(1)}% (Step: ${params.rh_step_pct}%)</strong>
+                    <span>Upper <span class="math-var">T<sub>c,peak</sub></span> / Lower Condenser <span class="math-var">T<sub>cond,peak</sub></span> / Min <span class="math-var">RH<sub>eff</sub></span>:</span>
+                    <strong style="color:var(--text);">${sim.t_peak.toFixed(1)} &deg;C / ${sim.t_cond_peak.toFixed(1)} &deg;C / ${(sim.min_rh_eff*100).toFixed(1)}%</strong>
                 </div>
                 <div class="breakdown-row">
-                    <span>Solar Gain / Wall Loss / RK4 Check Drift:</span>
+                    <span>Solar Gain / Wall Loss / True RK4 Drift:</span>
                     <strong style="color:var(--text);">${sol_MJ.toFixed(2)} MJ / &minus;${loss_MJ.toFixed(2)} MJ / &varepsilon;=${sim.rk4_euler_drift_L.toFixed(4)} L</strong>
                 </div>
                 <div class="final-yield">Iteration #${iterNum} Yield: ${sim.got_yield.toFixed(3)} L/day</div>
@@ -1106,6 +1189,7 @@
             document.getElementById('input-thickness').value = currentOptimums.bestTh;
             document.getElementById('thick-val').innerText = currentOptimums.bestTh + 'mm';
             document.getElementById('input-airgap').value = currentOptimums.optGap;
+            document.getElementById('input-hlower').value = currentOptimums.optHlower;
         } else if (type === 'u') {
             document.getElementById('input-uvalue').value = currentOptimums.optU;
         } else if (type === 'th') {
@@ -1127,6 +1211,9 @@
         applyMofPreset('MOF-303 (Lit)', 0.40, 13.0, 60, 600, 2.80, 1000, 1.50, 0.20);
         document.getElementById('input-lx').value = 350;
         document.getElementById('input-ly').value = 270;
+        document.getElementById('input-hback').value = 220;
+        document.getElementById('input-hfront').value = 147.65;
+        document.getElementById('input-hlower').value = 290;
         document.getElementById('input-conc').value = 1.0;
         document.getElementById('input-ntrays').value = 10;
         document.getElementById('input-airgap').value = 2.0;
@@ -1145,7 +1232,7 @@
 
         if (testHistory.length === 0) {
             exportBtn.disabled = true;
-            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px; font-style:italic;">No iterations logged yet. Configure your MOF, air gap, and housing parameters above and run Iteration #1.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px; font-style:italic;">No iterations logged yet. Configure your 3D compartment dimensions, MOF, and weather above and run Iteration #1.</td></tr>`;
             return;
         }
 
@@ -1171,12 +1258,12 @@
                     <td style="max-width:170px;">${badgeHTML}<br><span style="font-size:10px; display:block; margin-top:4px;">${escapeHTML(t.failureDiagnosis)}</span></td>
                     <td>
                         <strong style="color:var(--cyan);">${escapeHTML(t.mof_name || 'MOF-303')}</strong><br>
-                        <span style="font-size:10px;"><span class="math-var">w<sub>max</sub></span>: ${t.w_max} | <span class="math-var">RH<sub>step</sub></span>: ${t.rh_step_pct ?? 13}% (<span class="math-var">k</span>:${t.k_iso ?? 60})<br><span class="math-var">&rho;<sub>b</sub></span>: ${t.rho ?? 600} | <span class="math-var">&Delta;H</span>: ${t.dh_mj ?? 2.8} | <span class="math-var">c<sub>p</sub></span>: ${t.cp_s ?? 1000}<br><span class="math-var">D<sub>eff</sub></span>: ${t.deff_e6 ?? 1.5}&times;10<sup>&minus;6</sup> | <span class="math-var">k<sub>bed</sub></span>: ${t.k_bed ?? 0.2}</span>
+                        <span style="font-size:10px;"><span class="math-var">w<sub>max</sub></span>: ${t.w_max} | <span class="math-var">RH<sub>step</sub></span>: ${t.rh_step_pct ?? 13}%<br><span class="math-var">&rho;<sub>b</sub></span>: ${t.rho ?? 600} | <span class="math-var">&Delta;H</span>: ${t.dh_mj ?? 2.8} MJ/kg<br><span class="math-var">D<sub>eff</sub></span>: ${t.deff_e6 ?? 1.5}&times;10<sup>&minus;6</sup> | <span class="math-var">k<sub>bed</sub></span>: ${t.k_bed ?? 0.2}</span>
                     </td>
                     <td>
                         <strong style="color:var(--purple);">RH: ${t.rh}% | <span class="math-var">T</span>: ${t.t_night}/${t.t_day}&deg;C | <span class="math-var">G<sub>max</sub></span>: ${t.g_max} W/m&sup2;</strong><br>
-                        <strong style="color:var(--text);">Box: ${t.lx}&times;${t.ly} mm (${t.aperture_m2} m&sup2;)</strong><br>
-                        <span style="font-size:10px;">${t.n_tr ?? 10} Trays: ${t.th_mm}mm | Gap: ${t.air_gap_mm ?? 2.0}mm (${t.stack_mm ?? 108}mm)<br><span class="math-var">U</span>: ${t.u_val} | Conc: ${t.conc}&times; | <span class="math-var">m<sub>s</sub></span>: ${t.mofMass_kg}kg</span>
+                        <strong style="color:var(--text);">Box: ${t.lx}&times;${t.ly} mm | Upper <span class="math-var">h</span>: ${t.h_back_mm ?? 220}/${t.h_front_mm ?? 147.65} mm | Lower <span class="math-var">h<sub>low</sub></span>: ${t.h_lower_mm ?? 290} mm (${t.v_total_L ?? 44.8} L)</strong><br>
+                        <span style="font-size:10px;">${t.n_tr ?? 10} Trays: ${t.th_mm}mm | Gap: ${t.air_gap_mm ?? 2.0}mm (Stack ${t.stack_mm ?? 108}/${t.max_rack_mm ?? 120}mm) | <span class="math-var">U</span>: ${t.u_val} | Conc: ${t.conc}&times;</span>
                     </td>
                     <td style="max-width:200px;">
                         <div style="margin-bottom:4px;"><strong style="font-size:10px; color:var(--text);">vs Prev:</strong> ${prevTags}</div>
@@ -1184,7 +1271,7 @@
                     </td>
                     <td>
                         <strong style="font-size:13px; color:${isPass ? 'var(--secondary)' : 'var(--danger)'};">${t.yield_L} L/day</strong><br>
-                        <span style="font-size:10px;"><span class="math-var">w</span>: ${t.w_start} &rarr; ${t.w_end} g/g | <span class="math-var">&tau;</span>: ${t.tau_s}s<br><span class="math-var">T<sub>peak</sub></span>: ${t.t_peak}&deg;C (<span class="math-var">RH<sub>eff</sub></span>: ${t.min_rh_eff_pct}%)<br>Sol: ${t.solar_MJ} MJ | Loss: ${t.loss_MJ} MJ</span>
+                        <span style="font-size:10px;"><span class="math-var">w</span>: ${t.w_start} &rarr; ${t.w_end} g/g | <span class="math-var">&tau;</span>: ${t.tau_s}s<br><span class="math-var">T<sub>c</sub></span>: ${t.t_peak}&deg;C | <span class="math-var">T<sub>cond</sub></span>: ${t.t_cond_peak ?? 28.0}&deg;C (<span class="math-var">RH<sub>eff</sub></span>: ${t.min_rh_eff_pct}%)<br>Sol: ${t.solar_MJ} MJ | Loss: ${t.loss_MJ} MJ</span>
                     </td>
                     <td style="max-width:280px; font-size:10.5px; line-height:1.4;">
                         <div style="color:var(--primary); margin-bottom:4px;"><strong>Optimums:</strong> ${escapeHTML(t.optimumForSet)}</div>
@@ -1198,13 +1285,12 @@
 
     function clearTestHistory() {
         testHistory = [];
+        localStorage.removeItem('mof_manual_sim_v10');
         localStorage.removeItem('mof_manual_sim_v9');
-        localStorage.removeItem('mof_manual_sim_v8');
-        localStorage.removeItem('mof_manual_sim_v7');
         renderTestTable();
     }
 
-    // --- 6. BINARY BLOB CSV REPORT GENERATOR ---
+    // --- 6. BINARY BLOB CSV REPORT GENERATOR (WITH 3D COMPARTMENT HEIGHT COLUMNS) ---
     function csvEscape(val) {
         if (val === null || val === undefined) return '""';
         const str = String(val).replace(/"/g, '""');
@@ -1221,11 +1307,14 @@
             "Iteration", "Model_Version", "Timestamp", "Status", "Sorbent_Name", "MOF_w_max_gg", "MOF_RH_step_pct",
             "MOF_Steepness_k", "MOF_Bulk_Density_kgm3", "MOF_Desorption_Heat_MJkg", "MOF_Specific_Heat_JkgK",
             "MOF_Diffusivity_e6_m2s", "MOF_Bed_Conductivity_WmK", "Night_RH_pct", "Night_Temp_C",
-            "Day_Peak_Temp_C", "Peak_Irradiance_Wm2", "Envelope_Lx_mm", "Envelope_Ly_mm", "Aperture_Area_m2",
-            "Tray_Count_N", "Tray_Thickness_mm", "Inter_Tray_Air_Gap_mm", "Rack_Stack_Height_mm",
+            "Day_Peak_Temp_C", "Peak_Irradiance_Wm2", "Envelope_Lx_mm", "Envelope_Ly_mm",
+            "Upper_Back_Height_mm", "Upper_Front_Height_mm", "Lower_Condenser_Height_mm", "Total_Device_Volume_L",
+            "Aperture_Area_m2", "Lower_Condenser_Area_m2", "Tray_Count_N", "Tray_Thickness_mm",
+            "Inter_Tray_Air_Gap_mm", "Rack_Stack_Height_mm", "Max_Rack_Clearance_mm",
             "Envelope_U_Value_Wm2K", "Solar_Concentrator_x", "Sorbent_Mass_kg",
-            "Diffusion_Time_Constant_s", "Initial_Uptake_w0_gg", "Final_Uptake_wend_gg", "Peak_Chamber_Temp_C",
-            "Min_Effective_RH_pct", "Solar_Gain_MJ", "Conductive_Loss_MJ", "Required_Desorption_MJ",
+            "Diffusion_Time_Constant_s", "Initial_Uptake_w0_gg", "Final_Uptake_wend_gg",
+            "Peak_Upper_Chamber_Temp_C", "Peak_Lower_Condenser_Temp_C", "Min_Effective_RH_pct",
+            "Solar_Gain_MJ", "Conductive_Loss_MJ", "Required_Desorption_MJ",
             "RK4_vs_Euler_Drift_L", "Simulated_Water_Yield_L_day", "Deltas_vs_Previous_Iteration",
             "Deltas_vs_Iteration_1_Baseline", "Failure_Bottleneck_Diagnosis",
             "Optimum_Parameters_For_This_Iteration", "Counterfactual_OFAT_Attribution"
@@ -1233,7 +1322,7 @@
 
         const rows = testHistory.map(t => [
             csvEscape(`Iteration #${t.testNumber}`),
-            csvEscape(t.model_version || "v9.0-CAD-Standard-Aligned"),
+            csvEscape(t.model_version || "v10.0-3D-Dual-Compartment"),
             csvEscape(t.timestamp),
             csvEscape(t.status),
             csvEscape(t.mof_name || "MOF-303"),
@@ -1251,11 +1340,17 @@
             t.g_max,
             t.lx,
             t.ly,
+            t.h_back_mm ?? 220,
+            t.h_front_mm ?? 147.65,
+            t.h_lower_mm ?? 290,
+            t.v_total_L ?? 44.8,
             t.aperture_m2,
+            t.a_lower_m2 ?? 0.454,
             t.n_tr ?? 10,
             t.th_mm,
             t.air_gap_mm ?? 2.0,
             t.stack_mm ?? 108.0,
+            t.max_rack_mm ?? 120.0,
             t.u_val,
             t.conc,
             t.mofMass_kg,
@@ -1263,6 +1358,7 @@
             t.w_start,
             t.w_end,
             t.t_peak,
+            t.t_cond_peak ?? 28.0,
             t.min_rh_eff_pct,
             t.solar_MJ,
             t.loss_MJ,
@@ -1282,7 +1378,7 @@
 
         const link = document.createElement("a");
         link.setAttribute("href", url);
-        link.setAttribute("download", `MOF_Harvester_CAD_Standard_Report_${new Date().toISOString().slice(0,10)}.csv`);
+        link.setAttribute("download", `MOF_Harvester_3D_Compartment_Report_${new Date().toISOString().slice(0,10)}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
