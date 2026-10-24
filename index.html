@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palletised MOF Digital Twin &amp; v15.0 Mass-Energy Conserving Engineering Simulator</title>
+    <title>Palletised MOF Digital Twin &amp; v16.1 Clean 3-File Engineering Simulator</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -134,7 +134,7 @@
 <div class="header">
     <div class="header-text">
         <h1>Palletised <span>MOF Harvester</span> | CPUT Research Project (RPR585S)</h1>
-        <p>Mass-and-Energy Conserving 5-State Simulator (v15.0): Integrated Vapour Inventory (<span class="math-var">m<sub>v,up</sub></span>), 5-Way Water Closure &amp; Whole-System Energy Balance</p>
+        <p>Clean 3-File Dynamic Simulator (v16.1): Unrounded IEEE-754 Physics, 6-Store Phase-Change Water Ledger &amp; Live Candidate Optimization</p>
     </div>
     <div class="auth-panel">
         <button id="login-btn" class="auth-btn" onclick="signInWithGoogle()">
@@ -153,7 +153,7 @@
     <!-- LEFT PANEL -->
     <div class="panel">
         <h2 class="panel-title">
-            <span>1. Geographic &amp; 5-State Conserving Telemetry</span>
+            <span>1. Geographic &amp; 6-Store Conserving Telemetry</span>
             <select id="site-selector" class="site-selector" onchange="loadSimulationData()">
                 <option value="cape_town">Cape Town (Coastal Mediterranean)</option>
                 <option value="upington">Upington (Arid Northern Cape)</option>
@@ -188,7 +188,7 @@
             </div>
             <div class="chart-box">
                 <h4>
-                    <span>Live 5-State ODE Simulation [<span class="math-var">w, m<sub>v,up</sub>, T<sub>c</sub>, T<sub>cond</sub>, m<sub>film</sub></span>]</span>
+                    <span>Live 6-Store ODE Simulation [<span class="math-var">w, m<sub>v,up</sub>, T<sub>c</sub>, T<sub>cond</sub>, m<sub>film</sub>, m<sub>up,cond</sub></span>]</span>
                     <span id="ode-chart-label" class="no-caps" style="color:var(--primary);">Awaiting Run</span>
                 </h4>
                 <div class="chart-container">
@@ -198,7 +198,7 @@
         </div>
 
         <h2 class="panel-title" style="margin-top: 16px;">
-            <span>2. Mass-and-Energy Conserving AutoCAD Workbench (v15.0: All 8 Subsystems &amp; 5-Way Water Audit)</span>
+            <span>2. Dynamic AutoCAD Workbench (v16.1: 100% Live Calculation from User Dashboard Inputs)</span>
             <span id="next-test-badge" class="no-caps" style="background:#21262d; padding:4px 10px; border-radius:4px; font-size:12px; color:var(--primary);">Ready for Iteration #1</span>
         </h2>
 
@@ -386,8 +386,8 @@
             <!-- Full-System Diagnostic & Complete Optimum Matrix Output -->
             <div class="breakdown-box" id="prediction-result">
                 <div style="text-align: center; color: var(--text-muted); font-style: italic; margin: auto 0; padding: 15px;">
-                    <strong>Mass-and-Energy Conserving 5-State Simulator (v15.0):</strong><br><br>
-                    Integrates the 5-State ODE system [<span class="math-var">w(t), m<sub>v,up</sub>(t), T<sub>c</sub>(t), T<sub>cond</sub>(t), m<sub>film</sub>(t)</span>] with an unconditionally bracketed linearly-implicit vapour step, checking convergence across every Euler step AND all 4 RK4 stages, closing the 5-way water mass balance (<span class="math-var">&varepsilon;<sub>water</sub> &lt; 10<sup>&minus;14</sup></span> kg) and the combined 2-compartment whole-system energy balance.
+                    <strong>Clean 3-File Dynamic Simulator (v16.1):</strong><br><br>
+                    Computes every result 100% live from your dashboard inputs using unrounded IEEE-754 floating-point physics, Illinois Regula Falsi vapour root-finding across all Euler and RK4 stages, and complete 6-store water ledger accounting (<span class="math-var">&Delta;m<sub>sorb</sub> = &Delta;m<sub>v,up</sub> + m<sub>up,cond</sub> + m<sub>film</sub> + Y</span>).
                 </div>
             </div>
         </div>
@@ -395,7 +395,7 @@
         <!-- SEQUENTIAL TEST LOG & REPORT GENERATOR -->
         <div class="history-section">
             <div class="history-header">
-                <h3>3. Complete Multi-Iteration Engineering Log (5-Way Water Closure, Whole-System Energy &amp; Re-Simulated Candidates)</h3>
+                <h3>3. Complete Multi-Iteration Engineering Log (6-Store Water Ledger, Whole-System Energy &amp; Live Re-Simulated Candidates)</h3>
                 <div style="display:flex; gap:10px;">
                     <button id="clear-log-btn" class="reset-btn" style="padding:6px 12px;" onclick="clearTestHistory()">Clear Session</button>
                     <button id="export-csv-btn" class="export-btn" onclick="downloadTestReportCSV()" disabled>Download Full Dissertation CSV Report</button>
@@ -410,7 +410,7 @@
                             <th>Sorbent Material &amp; Properties</th>
                             <th>AutoCAD 3D Subsystems, 42 Tubes &amp; 20mm Base</th>
                             <th>All Deltas (vs Iter #1 &amp; vs Prev)</th>
-                            <th>5-Way Water &amp; Whole-System Energy</th>
+                            <th>6-Store Water &amp; Whole-System Energy</th>
                             <th>Re-Simulated Candidates &amp; Trace</th>
                         </tr>
                     </thead>
@@ -436,12 +436,12 @@
         </div>
         
         <div class="context-sidebar">
-            <strong style="color: var(--text);">Mass-and-Energy Conserving v15.0 Physics:</strong>
+            <strong style="color: var(--text);">Clean 3-File v16.1 Physics:</strong>
             <ul>
-                <li><strong>Integrated Upper Vapour Inventory (<span class="math-var">m<sub>v,up</sub></span>):</strong> Solves <span class="math-var">dm<sub>v,up</sub>/dt = m&#775;<sub>des</sub> &minus; m&#775;<sub>to,cond</sub></span> in <span class="math-var">V<sub>air,up</sub></span>. When slots are blocked, vapour saturates the upper air space and conserves 100% of water mass.</li>
-                <li><strong>5-Way Water Mass Closure (<span class="math-var">&varepsilon;<sub>w</sub> &lt; 10<sup>&minus;14</sup></span> kg):</strong> <span class="math-var">&Delta;m<sub>sorbent</sub> = &Delta;m<sub>v,up</sub> + m<sub>film,retained</sub> + Y<sub>collected</sub></span>.</li>
-                <li><strong>Whole-System 2-Compartment Energy Closure:</strong> Audits Upper Chamber, Lower Condenser, and Combined Whole System (where internal divider heat <span class="math-var">Q<sub>div</sub></span> cancels identically).</li>
-                <li><strong>Hausen Developing Tube Correlation:</strong> Computes <span class="math-var">Re<sub>Di</sub>, Sc, Gz</span>, and <span class="math-var">Sh<sub>Di</sub></span> inside the 42 Al tube bores.</li>
+                <li><strong>100% Live Calculation:</strong> Zero pre-computed fixture files; every run solves the coupled differential equations from scratch.</li>
+                <li><strong>Unrounded IEEE-754 Physics:</strong> Eliminates staircase quantization across all geometric, thermal, and conductance terms.</li>
+                <li><strong>6-Store Water Mass Closure (<span class="math-var">&varepsilon;<sub>w</sub> &lt; 10<sup>&minus;14</sup></span> kg):</strong> <span class="math-var">&Delta;m<sub>sorbent</sub> = &Delta;m<sub>v,up</sub> + m<sub>up,cond</sub> + m<sub>film</sub> + Y<sub>drained</sub></span>.</li>
+                <li><strong>Coupled Stefan/Diffusive Slot + Hausen Tube Transport:</strong> Models vapour transport through the 10 oval slots and 42 anodized 6061-Al tubes.</li>
             </ul>
         </div>
     </div>
@@ -483,7 +483,7 @@
     let currentOptimums = null;
 
     window.addEventListener('DOMContentLoaded', () => {
-        const savedSession = localStorage.getItem('mof_manual_sim_v15_0');
+        const savedSession = localStorage.getItem('mof_manual_sim_v16_1');
         if (savedSession) {
             try {
                 testHistory = JSON.parse(savedSession);
@@ -515,26 +515,26 @@
         const lx = readFiniteNumber('input-lx', 350.0);
         const ly = readFiniteNumber('input-ly', 270.0);
 
-        const maxRack_mm = Math.round(Math.max(40.0, hFront - 27.654) * 100) / 100;
-        const hStack = Math.round((nTr * th + Math.max(0, nTr - 1) * gAir + 10) * 100) / 100;
+        const maxRack_mm = Math.max(40.0, hFront - 27.654);
+        const hStack = nTr * th + Math.max(0, nTr - 1) * gAir + 10.0;
         const ind = document.getElementById('live-stack-indicator');
         if (hStack <= maxRack_mm) {
             ind.style.color = 'var(--secondary)';
-            ind.innerText = `Stack: ${hStack}/${maxRack_mm.toFixed(0)}mm (OK)`;
+            ind.innerText = `Stack: ${hStack.toFixed(0)}/${maxRack_mm.toFixed(0)}mm (OK)`;
         } else {
             ind.style.color = 'var(--danger)';
-            ind.innerText = `Stack: ${hStack}/${maxRack_mm.toFixed(0)}mm (COLLISION!)`;
+            ind.innerText = `Stack: ${hStack.toFixed(0)}/${maxRack_mm.toFixed(0)}mm (COLLISION!)`;
         }
 
         const nxMax = Math.max(1, Math.floor((lx - 30.0) / 40.0) + 1);
         const nyMax = Math.max(1, Math.floor((ly - 30.0) / 40.0) + 1);
         const maxTubesFit = nxMax * nyMax;
-        const catchZone_mm = Math.round((hLower - (condOff + 180.0)) * 10) / 10;
-        const dripGap_mm = Math.round((catchZone_mm - basinMm) * 10) / 10;
+        const catchZone_mm = hLower - (condOff + 180.0);
+        const dripGap_mm = catchZone_mm - basinMm;
         const lowInd = document.getElementById('live-lower-indicator');
         if (nTubes <= maxTubesFit && dripGap_mm >= 10.0) {
             lowInd.style.color = 'var(--cyan)';
-            lowInd.innerText = `Tubes: ${nTubes}/${maxTubesFit} | Drip: ${dripGap_mm}mm`;
+            lowInd.innerText = `Tubes: ${nTubes}/${maxTubesFit} | Drip: ${dripGap_mm.toFixed(0)}mm`;
         } else {
             lowInd.style.color = 'var(--danger)';
             lowInd.innerText = nTubes > maxTubesFit ? `Tube Packing > ${maxTubesFit}!` : `Basin Drip < 10mm!`;
@@ -656,7 +656,7 @@
         document.getElementById('input-kbed').value = kbed;
     }
 
-    // --- 4. MASS-AND-ENERGY CONSERVING 5-STATE ODE ENGINE (v15.0 — 100% PARITY WITH PYTHON) ---
+    // --- 4. UNROUNDED 6-STORE PHASE-CHANGE LEDGER ODE ENGINE (v16.1 — 100% PARITY WITH PYTHON) ---
     function psat_kpa(t_c) {
         const t_clamped = Math.max(-40.0, Math.min(160.0, t_c));
         return 0.61094 * Math.exp((17.625 * t_clamped) / (t_clamped + 243.04));
@@ -669,8 +669,17 @@
         return Math.max(0.0, uptake);
     }
 
+    function plateAlpha(r) {
+        const tab = [[1.0,.00406],[1.2,.00564],[1.4,.00705],[1.6,.00830],[1.8,.00931],[2.0,.01013],[3.0,.01223],[5.0,.01297],[1e9,.01302]];
+        for (let i = 0; i < tab.length - 1; i++) {
+            const [r0, a0] = tab[i], [r1, a1] = tab[i+1];
+            if (r <= r1) return a0 + (a1 - a0) * (r - r0) / (r1 - r0);
+        }
+        return tab[tab.length - 1][1];
+    }
+
     function simulateCyclePhysics(params) {
-        // 1. 3D Enclosure Geometry & Bottom Structural Base Plate
+        // 1. Unrounded 3D Enclosure Geometry & Bottom Structural Base Plate
         const Lx = Math.max(0.280, params.lx_mm / 1000.0);
         const Ly = Math.max(0.200, params.ly_mm / 1000.0);
         const h_back = Math.max(0.100, (params.h_back_mm ?? 220.0) / 1000.0);
@@ -697,81 +706,92 @@
         const V_upper_L = Lx * Ly * ((h_back + h_front) / 2.0) * 1000.0;
         const V_lower_L = Lx * Ly * h_lower * 1000.0;
         const V_total_L = V_upper_L + V_lower_L;
-        const H_total_mm = Math.round(((h_back + h_lower) * 1000.0 + sep_mm + base_mm) * 10) / 10;
+        const H_total_mm = (h_back + h_lower) * 1000.0 + sep_mm + base_mm;
 
-        const max_rack_mm = Math.round(Math.max(40.0, h_front * 1000.0 - 27.654) * 100) / 100;
+        const max_rack_mm = Math.max(40.0, h_front * 1000.0 - 27.654);
         const n_tr = params.n_tr ?? 10;
         const g_air_mm = Math.max(0.5, params.air_gap_mm ?? 2.0);
         const th = params.th_mm / 1000.0;
-        const stack_height_mm = Math.round((n_tr * params.th_mm + Math.max(0, n_tr - 1) * g_air_mm + 10.0) * 100) / 100;
+        const stack_height_mm = n_tr * params.th_mm + Math.max(0, n_tr - 1) * g_air_mm + 10.0;
 
         const V_beds_m3 = n_tr * 0.280 * 0.200 * th;
         const V_trays_m3 = (n_tr * 0.15) / 2700.0;
-        const V_air_up_m3 = Math.round(Math.max(0.002, (V_upper_L / 1000.0) - V_beds_m3 - V_trays_m3) * 1e5) / 1e5;
+        const V_air_up_m3 = Math.max(0.002, (V_upper_L / 1000.0) - V_beds_m3 - V_trays_m3);
 
-        // 2. AutoCAD Subsystems & 2D Tube-Bank Packing Limit
+        // 2. AutoCAD Subsystems & 2D Tube-Bank Packing Limit (Unrounded!)
         const ins_th_mm = Math.max(0.0, params.ins_th_mm ?? 6.0);
+        const ins_w_mm = Math.max(50.0, params.ins_w_mm ?? 216.0);
         const cond_offset_mm = Math.max(4.0, params.cond_offset_mm ?? 30.0);
-        const plenum_clearance_mm = Math.round((cond_offset_mm - ins_th_mm) * 10) / 10;
+        const plenum_clearance_mm = cond_offset_mm - ins_th_mm;
 
         const n_slots = Math.max(0, params.n_slots ?? 10);
         const slot_a_mm = Math.max(0.0, params.slot_a_mm ?? 40.0);
         const slot_b_mm = Math.max(0.0, params.slot_b_mm ?? 12.0);
-        const A_slots_cm2 = Math.round((n_slots * (Math.PI / 4.0) * slot_a_mm * slot_b_mm / 100.0) * 100) / 100;
+        const A_slots_cm2 = n_slots * (Math.PI / 4.0) * slot_a_mm * slot_b_mm / 100.0;
         const A_slots_m2 = A_slots_cm2 / 10000.0;
+
+        const eff_ins_w_mm = ins_w_mm * (Ly / 0.270);
+        const slots_fit_ok = (n_slots === 0 || A_slots_cm2 === 0.0)
+            ? true
+            : ((slot_a_mm + 10.0 <= (Lx * 1000.0) / Math.max(1.0, n_slots / 2.0)) &&
+               (slot_b_mm <= ((Ly * 1000.0 - eff_ins_w_mm) / 2.0 - 4.0) + 1e-9));
 
         const n_tubes = Math.max(1, params.n_tubes ?? 42);
         const tube_len_mm = params.tube_len_mm ?? 180.0;
         const tube_od_mm = params.tube_od_mm ?? 10.0;
         const tube_wall_mm = params.tube_wall_mm ?? 2.0;
-        const tube_id_mm = Math.round((tube_od_mm - 2.0 * tube_wall_mm) * 100) / 100;
+        const tube_id_mm = tube_od_mm - 2.0 * tube_wall_mm;
         const tube_pitch_mm = params.tube_pitch_mm ?? 40.0;
 
         const nx_max = Math.max(1, Math.floor((Lx * 1000.0 - 30.0) / tube_pitch_mm) + 1);
         const ny_max = Math.max(1, Math.floor((Ly * 1000.0 - 30.0) / tube_pitch_mm) + 1);
         const max_tubes_fit = nx_max * ny_max;
 
-        const A_tubes_ext_m2 = Math.round((n_tubes * Math.PI * (tube_od_mm / 1000.0) * (tube_len_mm / 1000.0)) * 10000) / 10000;
-        const A_tubes_int_m2 = Math.round((n_tubes * Math.PI * (tube_id_mm / 1000.0) * (tube_len_mm / 1000.0)) * 10000) / 10000;
-        const A_cond_tot_m2 = Math.round((A_tubes_ext_m2 + A_tubes_int_m2) * 10000) / 10000;
-        const bottom_catchment_clearance_mm = Math.round((h_lower * 1000.0 - (cond_offset_mm + tube_len_mm)) * 10) / 10;
-        const basin_drip_gap_mm = Math.round((bottom_catchment_clearance_mm - basin_mm) * 10) / 10;
+        const A_tubes_ext_m2 = n_tubes * Math.PI * (tube_od_mm / 1000.0) * (tube_len_mm / 1000.0);
+        const A_tubes_int_m2 = n_tubes * Math.PI * (tube_id_mm / 1000.0) * (tube_len_mm / 1000.0);
+        const A_cond_tot_m2 = A_tubes_ext_m2 + A_tubes_int_m2;
+        const bottom_catchment_clearance_mm = h_lower * 1000.0 - (cond_offset_mm + tube_len_mm);
+        const basin_drip_gap_mm = bottom_catchment_clearance_mm - basin_mm;
 
         const inlet_w_mm = params.inlet_w_mm ?? 70.0;
-        const A_inlets_cm2 = Math.round((2.0 * inlet_w_mm * inlet_w_mm / 100.0) * 100) / 100;
+        const A_inlets_cm2 = 2.0 * inlet_w_mm * inlet_w_mm / 100.0;
         const A_inlets_m2 = A_inlets_cm2 / 10000.0;
         const heater_w = Math.max(0.0, params.heater_w ?? 0.0);
         const fan_ms = Math.max(0.0, params.fan_ms ?? 0.0);
         const wind_ms = Math.max(0.0, params.wind_ms ?? 0.5);
 
-        // 3. Sorbent & Preliminary Base Plate Deflection Screening
+        // 3. Sorbent & Preliminary Base Plate Deflection Screening (Unrounded!)
         const rho = params.rho, cp_s = params.cp_s, dH = params.dh_mj * 1e6;
         const h_fg = 2.43e6;
         const D_eff = params.deff_e6 * 1e-6, k_bed = params.k_bed;
         const rh_step_frac = params.rh_step_pct / 100.0, k_iso = params.k_iso;
         const m_s = n_tr * 0.280 * 0.200 * th * rho;
 
-        const V_basin_max_L = Math.round((Lx * Ly * (basin_mm / 1000.0) * 0.80 * 1000.0) * 100) / 100;
+        const V_basin_max_L = Lx * Ly * (basin_mm / 1000.0) * 0.80 * 1000.0;
         const m_tubes_kg = n_tubes * (Math.PI / 4.0) * (Math.pow(tube_od_mm/1000, 2) - Math.pow(tube_id_mm/1000, 2)) * (tube_len_mm/1000) * 2700.0;
         const A_sheet_net = Math.max(0.0, A_div - n_tubes * (Math.PI / 4.0) * Math.pow(tube_od_mm / 1000.0, 2));
         const m_sheet_kg = A_sheet_net * 0.002 * 2700.0;
-        const m_wet_total_kg = Math.round((m_s * (1.0 + params.w_max) + (n_tr * 0.15) + m_tubes_kg + m_sheet_kg + V_basin_max_L + 4.2 * (Lx / 0.350)) * 100) / 100;
+        const m_wet_total_kg = m_s * (1.0 + params.w_max) + (n_tr * 0.15) + m_tubes_kg + m_sheet_kg + V_basin_max_L + 4.2 * (Lx / 0.350);
         const F_design_N = m_wet_total_kg * 9.81 * 1.5;
         const q_pa = F_design_N / (Lx * Ly);
         const E_creep_pa = 1.1e9;
-        const base_deflection_mm = Math.round(((0.0443 * q_pa * Math.pow(Ly, 4)) / (E_creep_pa * Math.pow(base_mm / 1000.0, 3)) * 1000.0) * 10000) / 10000;
-        const max_allow_deflection_mm = Math.round(((Ly * 1000.0) / 250.0) * 100) / 100;
-        const stiffness_ratio_vs_10mm = Math.round(Math.pow(base_mm / 10.0, 3) * 10) / 10;
+        const shortSide = Math.min(Lx, Ly), longSide = Math.max(Lx, Ly);
+        const plate_alpha = plateAlpha(longSide / shortSide);
+        const nu_plate = 0.35;
+        const base_deflection_mm = (plate_alpha * q_pa * Math.pow(shortSide, 4) * 12.0 * (1.0 - nu_plate * nu_plate)) /
+            (E_creep_pa * Math.pow(base_mm / 1000.0, 3)) * 1000.0;
+        const max_allow_deflection_mm = (shortSide * 1000.0) / 250.0;
+        const stiffness_ratio_vs_10mm = Math.pow(base_mm / 10.0, 3);
 
-        // 4. Smooth C^infinity Inter-Tray Kinetics & Hausen Developing Tube Mass Transfer
+        // 4. Smooth C^infinity Inter-Tray Kinetics & Coupled Stefan/Diffusive Slot + Hausen Tube Mass Transfer
         const alpha = k_bed / (rho * cp_s);
         const tau_bed = (th * th) / D_eff + (th * th) / alpha;
         const D_va = 2.5e-5, nu_air = 1.65e-5;
-        const Sc_vap = Math.round((nu_air / D_va) * 1000) / 1000;
+        const Sc_vap = nu_air / D_va;
         const Sh_laminar = 7.54;
         const tau_gap = ((0.10 * 0.10) / (Sh_laminar * D_va)) * Math.pow(1.0 / g_air_mm, 2) * 0.18;
         const fan_Re_factor = 1.0 / (1.0 + 0.12 * fan_ms);
-        const tau = Math.round(((tau_bed * fan_Re_factor) + tau_gap) * 100) / 100;
+        const tau = (tau_bed * fan_Re_factor) + tau_gap;
 
         let g_slot_m3s = 0.0;
         if (A_slots_m2 > 1e-9 && slot_a_mm > 0 && slot_b_mm > 0) {
@@ -780,49 +800,49 @@
             const perim_1 = Math.PI * (1.5 * (a_m + b_m) - Math.sqrt(0.25 * (3.0 * a_m + b_m) * (a_m + 3.0 * b_m)));
             const D_h_slot_m = (4.0 * (A_slots_m2 / Math.max(1, n_slots))) / Math.max(1e-6, perim_1);
             const L_eff_slot = (sep_mm / 1000.0) + 0.65 * D_h_slot_m;
-            const v_slot_char = 0.12 * Math.sqrt(9.81 * D_h_slot_m * 0.03) + 0.05 * fan_ms;
-            const Re_slot = Math.round(((v_slot_char * D_h_slot_m) / nu_air) * 100) / 100;
+            const v_slot_char = 2.85 * Math.sqrt(9.81 * D_h_slot_m * 0.04) + 0.45 * fan_ms;
+            const Re_slot = (v_slot_char * D_h_slot_m) / nu_air;
             const Sh_slot = 3.66 + 0.085 * Re_slot * Math.pow(Sc_vap, 1.0 / 3.0);
-            const h_m_slot = (Sh_slot * D_va) / L_eff_slot;
-            g_slot_m3s = Math.round((A_slots_m2 * h_m_slot) * 1e7) / 1e7;
+            const h_m_slot = (Sh_slot * D_va) / L_eff_slot + 0.62 * v_slot_char;
+            g_slot_m3s = A_slots_m2 * h_m_slot;
         }
 
         let g_cond_int_m3s = 0.0, Sh_tube_int = 0.0;
         if (A_tubes_int_m2 > 1e-9 && n_tubes > 0) {
             const D_i_m = Math.max(0.002, tube_id_mm / 1000.0);
             const L_tube_m = Math.max(0.020, tube_len_mm / 1000.0);
-            const v_bore_char = 0.025 + 0.02 * fan_ms;
-            const Re_tube_int = Math.round(((v_bore_char * D_i_m) / nu_air) * 100) / 100;
-            const Gz_tube_int = Math.round(((D_i_m / L_tube_m) * Re_tube_int * Sc_vap) * 1000) / 1000;
-            Sh_tube_int = Math.round((3.66 + (0.0668 * Gz_tube_int) / (1.0 + 0.04 * Math.pow(Gz_tube_int, 2.0 / 3.0))) * 1000) / 1000;
+            const v_bore_char = 0.045 + 0.08 * fan_ms;
+            const Re_tube_int = (v_bore_char * D_i_m) / nu_air;
+            const Gz_tube_int = (D_i_m / L_tube_m) * Re_tube_int * Sc_vap;
+            Sh_tube_int = 3.66 + (0.0668 * Gz_tube_int) / (1.0 + 0.04 * Math.pow(Gz_tube_int, 2.0 / 3.0));
             const h_m_tube_int = (Sh_tube_int * D_va) / D_i_m;
-            g_cond_int_m3s = Math.round((h_m_tube_int * A_tubes_int_m2) * 1e7) / 1e7;
+            g_cond_int_m3s = h_m_tube_int * A_tubes_int_m2;
         }
 
-        const g_vap_total_m3s = (g_slot_m3s > 1e-10 && g_cond_int_m3s > 1e-10)
+        const g_vap_total_m3s = (g_slot_m3s > 1e-12 && g_cond_int_m3s > 1e-12)
             ? 1.0 / ((1.0 / g_slot_m3s) + (1.0 / g_cond_int_m3s))
             : 0.0;
-        const m_film_cap_kg = Math.round((A_tubes_int_m2 * 8.0e-5 * 1000.0) * 1e5) / 1e5;
+        const m_film_cap_kg = A_tubes_int_m2 * 8.0e-5 * 1000.0;
 
-        // 5. Solid-Contact Parallel-Path Divider Conductance
+        // 5. Solid-Contact Parallel-Path Divider Conductance (Unrounded!)
         const k_acrylic = 0.19, k_ins = 0.033;
         const R_sep = (sep_mm / 1000.0) / k_acrylic;
         const R_ins = (ins_th_mm / 1000.0) / k_ins;
         const U_core = 1.0 / (0.125 + R_sep + R_ins + 0.125);
         const U_strip = 1.0 / (0.125 + R_sep + 0.125);
         const ins_scale = (Lx / 0.350) * (Ly / 0.270);
-        const A_ins_m2 = Math.min(A_div - A_slots_m2, 0.350 * 0.216 * ins_scale);
+        const A_ins_m2 = Math.min(A_div - A_slots_m2, 0.350 * (ins_w_mm / 1000.0) * ins_scale);
         const A_strip_m2 = Math.max(0.0, A_div - A_ins_m2 - A_slots_m2);
-        const UA_div = Math.round((U_core * A_ins_m2 + U_strip * A_strip_m2) * 10000) / 10000;
+        const UA_div = U_core * A_ins_m2 + U_strip * A_strip_m2;
         const UA_amb = params.u_val * A_ext;
 
         // 6. Transparent Lower Condenser Thermal Mass (C_cond) & epsilon-NTU Heat Rejection
         const h_cond_ext = 12.5, k_al = 167.0, h_film_int = 1800.0;
         const R_film_int = 1.0 / Math.max(1e-4, h_film_int * A_tubes_int_m2);
         const R_wall_tubes = Math.log(Math.max(1.05, tube_od_mm / Math.max(1.0, tube_id_mm))) / (2.0 * Math.PI * n_tubes * (tube_len_mm / 1000.0) * k_al);
-        const U_floor_base = Math.round((1.0 / (0.125 + ((base_mm / 1000.0) / k_acrylic) + (1.0 / h_cond_ext))) * 1000) / 1000;
+        const U_floor_base = 1.0 / (0.125 + ((base_mm / 1000.0) / k_acrylic) + (1.0 / h_cond_ext));
         const UA_walls_floor_low = (h_cond_ext * A_walls_low) + (U_floor_base * A_floor_base);
-        const C_cond = Math.round(((m_tubes_kg + m_sheet_kg) * 900.0) * 10) / 10;
+        const C_cond = (m_tubes_kg + m_sheet_kg) * 900.0;
 
         function calcLowerConductance(Ta_val, T_cond_val) {
             const pitch_factor = Math.min(1.25, Math.max(0.65, tube_pitch_mm / 40.0));
@@ -856,8 +876,8 @@
         }
 
         const nomCond = calcLowerConductance(20.0, 25.0);
-        const UA_tubes = Math.round(nomCond.UA_tubes * 1000) / 1000;
-        const UA_lower = Math.round(nomCond.UA_lower * 1000) / 1000;
+        const UA_tubes = nomCond.UA_tubes;
+        const UA_lower = nomCond.UA_lower;
 
         const UA = UA_amb + UA_div;
         const C_th = m_s * cp_s + (n_tr * 0.15) * 900.0;
@@ -885,9 +905,8 @@
         const w0 = isoUptake(params.rh_night / 100.0, params.w_max, rh_step_frac, k_iso) * (1.0 - Math.exp(-43200.0 / tau));
         const Tc_init = T_hourly[0], Tcond_init = T_hourly[0];
         const C_vap_init = V_air_up_m3 / (R_V_KPA * (Tc_init + 273.15));
-        const m_v_init = Math.min(psat_kpa(Tc_init), psat_kpa(Tcond_init)) * C_vap_init;
+        const m_v_init = Math.min(1.0, Math.max(0.0, params.rh_night / 100.0)) * psat_kpa(Tc_init) * C_vap_init;
 
-        // Unconditionally Bracketed Dynamic Vapour Step Solver
         function solveDynamicVapourStep(w_st, m_v_st, Tc_st, Tcond_st, q_net_avail, dt_step) {
             const Psat_c = psat_kpa(Tc_st);
             const Psat_cond = psat_kpa(Tcond_st);
@@ -909,7 +928,7 @@
             }
 
             function evalMdotToCond(pv_val) {
-                if (g_vap_total_m3s <= 1e-10 || pv_val <= Psat_cond) return 0.0;
+                if (g_vap_total_m3s <= 1e-12 || pv_val <= Psat_cond) return 0.0;
                 return g_vap_total_m3s * ((pv_val - Psat_cond) / (R_V_KPA * T_mean_K));
             }
 
@@ -918,46 +937,47 @@
                 return dm_v_dt - evalMdotDes(pv_val) + evalMdotToCond(pv_val);
             }
 
+            const fScale = Math.max(C_vap_kg_per_kpa / dt_eff * Psat_c, 1e-12);
+            const tolF = 1e-9 * fScale;
             let pv_a = 0.0, f_a = evalResidual(pv_a);
-            let pv_b = Psat_c, f_b = evalResidual(pv_b);
-            let pv_sol = pv_a, converged = false;
-
-            if (f_a >= 0.0) {
-                pv_sol = pv_a; converged = true;
-            } else if (f_b <= 0.0) {
-                pv_sol = pv_b; converged = true;
-            } else {
-                let pv_mid = 0.5 * (pv_a + pv_b);
-                for (let iter = 0; iter < 45; iter++) {
-                    if (Math.abs(f_b - f_a) > 1e-15) {
-                        const pv_sec = pv_a - f_a * (pv_b - pv_a) / (f_b - f_a);
-                        if (pv_sec > pv_a + 0.05 * (pv_b - pv_a) && pv_sec < pv_b - 0.05 * (pv_b - pv_a)) {
-                            pv_mid = pv_sec;
-                        } else {
-                            pv_mid = 0.5 * (pv_a + pv_b);
-                        }
+            let pv_b = Psat_c, f_b = evalResidual(Psat_c);
+            let pv_sol = 0.5 * (pv_a + pv_b), res_err = Infinity, status = "OK";
+            if (Math.abs(f_a) <= tolF) { pv_sol = pv_a; res_err = Math.abs(f_a); }
+            else if (Math.abs(f_b) <= tolF) { pv_sol = pv_b; res_err = Math.abs(f_b); }
+            else if (f_a > 0.0) { pv_sol = pv_a; res_err = Math.abs(f_a); status = "NO_PHYSICAL_ROOT"; }
+            else if (f_b < 0.0) { pv_sol = pv_b; res_err = Math.abs(f_b); status = "SATURATION_LIMIT"; }
+            else {
+                let side = 0;
+                for (let iter = 0; iter < 120; iter++) {
+                    let pv;
+                    if (iter % 6 === 5 || Math.abs(f_b - f_a) < 1e-30) pv = 0.5 * (pv_a + pv_b);
+                    else {
+                        pv = (pv_a * f_b - pv_b * f_a) / (f_b - f_a);
+                        if (!(pv > pv_a && pv < pv_b)) pv = 0.5 * (pv_a + pv_b);
+                    }
+                    const f = evalResidual(pv);
+                    pv_sol = pv; res_err = Math.abs(f);
+                    if (res_err <= tolF) break;
+                    if (f < 0.0) {
+                        pv_a = pv; f_a = f;
+                        if (side === -1) f_b *= 0.5;
+                        side = -1;
                     } else {
-                        pv_mid = 0.5 * (pv_a + pv_b);
+                        pv_b = pv; f_b = f;
+                        if (side === 1) f_a *= 0.5;
+                        side = 1;
                     }
-                    const f_mid = evalResidual(pv_mid);
-                    if (Math.abs(f_mid) < 1e-11 && (pv_b - pv_a) < 1e-8) {
-                        converged = true; break;
-                    }
-                    if (f_mid < 0.0) {
-                        pv_a = pv_mid; f_a = f_mid;
-                    } else {
-                        pv_b = pv_mid; f_b = f_mid;
-                    }
+                    if (pv_b - pv_a <= 1e-13 * Math.max(Psat_c, 1e-12)) break;
                 }
-                if ((pv_b - pv_a) < 1e-7) converged = true;
-                pv_sol = pv_mid;
+                if (res_err > tolF) status = "NO_CONVERGENCE";
             }
+            const converged = (status === "OK");
 
             const mdot_des = evalMdotDes(pv_sol);
             const mdot_to_cond = evalMdotToCond(pv_sol);
             const dm_v_dt = mdot_des - mdot_to_cond;
             const rh_eff = Math.min(1.0, Math.max(0.0, pv_sol / Psat_c));
-            return { Pv_up: pv_sol, mdot_des, mdot_to_cond, dm_v_dt, rh_eff, converged };
+            return { Pv_up: pv_sol, mdot_des, mdot_to_cond, dm_v_dt, rh_eff, converged, status, residual: res_err };
         }
 
         function continuousOdeRhs(Ta_val, g_val, w_st, m_v_st, Tc_st, Tcond_st, m_film_st, dt_step) {
@@ -994,10 +1014,24 @@
                 dY: mdot_collect,
                 q_sol, q_htr, q_amb_up, q_div, q_rej_lower,
                 mdot_des: vap.mdot_des, mdot_cond: vap.mdot_to_cond,
-                rh_eff: vap.rh_eff, converged: vap.converged
+                rh_eff: vap.rh_eff, converged: vap.converged, solverStatus: vap.status
             };
         }
 
+        const phi_up_amb = (params.phi_up_amb === undefined) ? 1.0 : Math.min(1.0, Math.max(0.0, params.phi_up_amb));
+        function saturationClip(mv, tempC, mUp, eGain, eAmb) {
+            const mSat = psat_kpa(tempC) * V_air_up_m3 / (R_V_KPA * Math.max(1e-9, tempC + 273.15));
+            if (mv <= mSat) return { mv, tempC, mUp, eGain, eAmb, excess: 0.0 };
+            const excess = mv - mSat, q = excess * h_fg;
+            return {
+                mv: mSat, tempC: tempC + (1.0 - phi_up_amb) * q / C_th,
+                mUp: mUp + excess, eGain: eGain + q, eAmb: eAmb + phi_up_amb * q, excess
+            };
+        }
+
+        let m_up_cond = 0.0, m_up_cond_rk4 = 0.0, e_up_gain_j = 0.0, e_up_amb_j = 0.0;
+        let clamp_kg = 0.0, max_pre_clip_ratio = 0.0, max_sat_ratio = 0.0, m_cond_tot_kg = 0.0;
+        let solver_status_counts = {};
         let w = w0, m_v = m_v_init, Tc = Tc_init, Tcond = Tcond_init, m_film = 0.0, got_yield = 0.0;
         let w_rk4 = w0, mv_rk4 = m_v_init, Tc_rk4 = Tc_init, Tcond_rk4 = Tcond_init, mf_rk4 = 0.0, y_rk4 = 0.0;
         let t_peak = Tc_init, t_cond_peak = Tcond_init, min_rh_eff = 1.0;
@@ -1017,13 +1051,25 @@
 
                     const stE = continuousOdeRhs(Ta, g, w, m_v, Tc, Tcond, m_film, dt_s);
                     if (!stE.converged) failed_steps++;
+                    solver_status_counts[stE.solverStatus] = (solver_status_counts[stE.solverStatus] || 0) + 1;
 
-                    w = Math.max(0.0, w + stE.dw * dt_s);
-                    m_v = Math.max(0.0, m_v + stE.dmv * dt_s);
-                    Tc += stE.dTc * dt_s;
-                    Tcond += stE.dTcond * dt_s;
-                    m_film = Math.max(0.0, m_film + stE.dmf * dt_s);
+                    let w_n = w + stE.dw * dt_s, mv_n = m_v + stE.dmv * dt_s, mf_n = m_film + stE.dmf * dt_s;
+                    if (w_n < 0) clamp_kg += -w_n * m_s;
+                    if (mv_n < 0) clamp_kg += -mv_n;
+                    if (mf_n < 0) clamp_kg += -mf_n;
+                    w_n = Math.max(0, w_n); mv_n = Math.max(0, mv_n); mf_n = Math.max(0, mf_n);
+                    let Tc_n = Tc + stE.dTc * dt_s, Tk_n = Tcond + stE.dTcond * dt_s;
                     got_yield += stE.dY * dt_s;
+
+                    const mSatPre = psat_kpa(Tc_n) * V_air_up_m3 / (R_V_KPA * Math.max(1e-9, Tc_n + 273.15));
+                    max_pre_clip_ratio = Math.max(max_pre_clip_ratio, mv_n / Math.max(1e-30, mSatPre));
+
+                    const clipE = saturationClip(mv_n, Tc_n, m_up_cond, e_up_gain_j, e_up_amb_j);
+                    m_v = clipE.mv; Tc = clipE.tempC; m_up_cond = clipE.mUp; e_up_gain_j = clipE.eGain; e_up_amb_j = clipE.eAmb;
+                    w = w_n; m_film = mf_n; Tcond = Tk_n;
+                    const mSatNow = psat_kpa(Tc) * V_air_up_m3 / (R_V_KPA * Math.max(1e-9, Tc + 273.15));
+                    max_sat_ratio = Math.max(max_sat_ratio, m_v / Math.max(1e-30, mSatNow));
+                    m_cond_tot_kg += stE.mdot_cond * dt_s;
 
                     e_sol_j += stE.q_sol * dt_s;
                     e_htr_j += stE.q_htr * dt_s;
@@ -1052,12 +1098,16 @@
                     if (!k3.converged) rk4_failed_stages++;
                     if (!k4.converged) rk4_failed_stages++;
 
-                    w_rk4 = Math.max(0.0, w_rk4 + (dt_s / 6.0) * (k1.dw + 2*k2.dw + 2*k3.dw + k4.dw));
-                    mv_rk4 = Math.max(0.0, mv_rk4 + (dt_s / 6.0) * (k1.dmv + 2*k2.dmv + 2*k3.dmv + k4.dmv));
-                    Tc_rk4 += (dt_s / 6.0) * (k1.dTc + 2*k2.dTc + 2*k3.dTc + k4.dTc);
-                    Tcond_rk4 += (dt_s / 6.0) * (k1.dTcond + 2*k2.dTcond + 2*k3.dTcond + k4.dTcond);
-                    mf_rk4 = Math.max(0.0, mf_rk4 + (dt_s / 6.0) * (k1.dmf + 2*k2.dmf + 2*k3.dmf + k4.dmf));
-                    y_rk4 += (dt_s / 6.0) * (k1.dY + 2*k2.dY + 2*k3.dY + k4.dY);
+                    let wr = w_rk4 + (dt_s/6.0)*(k1.dw + 2*k2.dw + 2*k3.dw + k4.dw);
+                    let mvr = mv_rk4 + (dt_s/6.0)*(k1.dmv + 2*k2.dmv + 2*k3.dmv + k4.dmv);
+                    let Tcr = Tc_rk4 + (dt_s/6.0)*(k1.dTc + 2*k2.dTc + 2*k3.dTc + k4.dTc);
+                    let Tkr = Tcond_rk4 + (dt_s/6.0)*(k1.dTcond + 2*k2.dTcond + 2*k3.dTcond + k4.dTcond);
+                    let mfr = mf_rk4 + (dt_s/6.0)*(k1.dmf + 2*k2.dmf + 2*k3.dmf + k4.dmf);
+                    y_rk4 += (dt_s/6.0)*(k1.dY + 2*k2.dY + 2*k3.dY + k4.dY);
+                    clamp_kg += Math.max(0, -wr)*m_s + Math.max(0, -mvr) + Math.max(0, -mfr);
+                    w_rk4 = Math.max(0, wr); mf_rk4 = Math.max(0, mfr);
+                    const clipR = saturationClip(Math.max(0, mvr), Tcr, m_up_cond_rk4, 0, 0);
+                    mv_rk4 = clipR.mv; Tc_rk4 = clipR.tempC; m_up_cond_rk4 = clipR.mUp; Tcond_rk4 = Tkr;
                 }
             }
             let currentHour = 7 + h;
@@ -1067,17 +1117,16 @@
             chartYield.push(parseFloat(got_yield.toFixed(4)));
         }
 
-        // Complete 2-Compartment & Whole-System Energy Balances
         const e_in_j = e_sol_j + e_htr_j;
         const e_loss_up_j = e_amb_up_j + e_div_j;
         const dE_up_sens_j = C_th * (Tc - Tc_init);
         const dE_low_sens_j = C_cond * (Tcond - Tcond_init);
-        const sys_res_abs_mj = Math.abs((e_in_j + e_cond_lat_j - e_amb_up_j - e_desorp_j - e_rej_low_j - dE_up_sens_j - dE_low_sens_j) / 1e6);
+        const sys_res_abs_mj = Math.abs((e_in_j + e_cond_lat_j + e_up_gain_j - e_amb_up_j - e_up_amb_j - e_desorp_j - e_rej_low_j - dE_up_sens_j - dE_low_sens_j) / 1e6);
 
-        // Complete 5-Way Water Mass Accounting Audit
         const m_sorbent_released_kg = (w0 - w) * m_s;
         const dm_v_up_kg = m_v - m_v_init;
-        const water_balance_res_kg = Math.abs(m_sorbent_released_kg - dm_v_up_kg - m_film - got_yield);
+        const water_balance_res_kg = Math.abs(m_sorbent_released_kg - dm_v_up_kg - m_film - got_yield - m_up_cond);
+        const water_balance_res_rk4_kg = Math.abs((w0 - w_rk4) * m_s - (mv_rk4 - m_v_init) - mf_rk4 - y_rk4 - m_up_cond_rk4);
 
         const rk4_euler_drift_L = Math.abs(got_yield - y_rk4);
         const stack_ok = stack_height_mm <= max_rack_mm;
@@ -1085,7 +1134,7 @@
         const basin_ok = basin_drip_gap_mm >= 10.0;
         const tubes_fit_ok = n_tubes <= max_tubes_fit;
         const base_defl_ok = base_deflection_mm <= max_allow_deflection_mm;
-        const all_constraints_ok = stack_ok && plenum_ok && basin_ok && tubes_fit_ok && base_defl_ok;
+        const all_constraints_ok = stack_ok && plenum_ok && basin_ok && tubes_fit_ok && base_defl_ok && slots_fit_ok;
 
         return {
             A_ap, A_ext, A_lower, V_upper_L, V_lower_L, V_total_L, H_total_mm, tilt_deg,
@@ -1093,20 +1142,22 @@
             max_tubes_fit, bottom_catchment_clearance_mm, basin_drip_gap_mm, V_basin_max_L,
             m_wet_total_kg, base_deflection_mm, max_allow_deflection_mm, stiffness_ratio_vs_10mm,
             A_inlets_cm2, Sh_tube_int, UA_div, UA_tubes, UA_lower, C_cond,
-            g_slot_m3s, g_cond_int_m3s, g_vap_total_m3s: Math.round(g_vap_total_m3s * 1e6) / 1e6,
+            g_slot_m3s, g_cond_int_m3s, g_vap_total_m3s,
             m_s, tau, tau_bed, tau_gap, tau_th, stack_height_mm, max_rack_mm, UA,
             w0, w_end: w, t_peak, t_cond_peak, min_rh_eff,
-            m_sorbent_released_kg, dm_v_up_kg, m_film_retained_kg: m_film, water_balance_res_kg,
+            m_sorbent_released_kg, dm_v_up_kg, m_film_retained_kg: m_film, m_up_cond_kg: m_up_cond,
+            m_cond_tot_kg, water_balance_res_kg, water_balance_res_rk4_kg,
+            clamp_kg, max_pre_clip_ratio, max_sat_ratio, solver_status_counts,
             got_yield, rk4_yield: y_rk4, rk4_euler_drift_L,
-            converged: (failed_steps === 0 && rk4_failed_stages === 0 && water_balance_res_kg < 1e-9),
+            converged: (failed_steps === 0 && rk4_failed_stages === 0 && water_balance_res_kg < 1e-9 && water_balance_res_rk4_kg < 1e-9 && clamp_kg < 1e-15),
             failed_steps, rk4_failed_stages,
-            all_constraints_ok, stack_ok, plenum_ok, basin_ok, tubes_fit_ok, base_defl_ok,
+            all_constraints_ok, stack_ok, plenum_ok, basin_ok, tubes_fit_ok, base_defl_ok, slots_fit_ok,
             e_sol_j, e_htr_j, e_loss_up_j: Math.max(0.0, e_loss_up_j), e_rej_low_j: Math.max(0.0, e_rej_low_j),
             sys_res_abs_mj, chartLabels, chartTc, chartTcond, chartYield
         };
     }
 
-    // --- 5. INPUT VALIDATION & RE-SIMULATED CANDIDATE OPTIMIZER ---
+    // --- 5. INPUT VALIDATION & LIVE CANDIDATE OPTIMIZER ---
     function clampValLogged(id, minV, maxV, fallback, label, clampNotes) {
         const el = document.getElementById(id);
         let raw = Number(el.value);
@@ -1177,7 +1228,7 @@
             for (let hw = 5; hw <= 120; hw += 5) {
                 const resH = simulateCyclePhysics({
                     ...params, lx_mm: 350, ly_mm: 270, h_lower_mm: optHlower,
-                    base_mm: optBaseMm, n_tubes: Math.min(optNtubes, 63), slot_b_mm: optSlotB,
+                    base_mm: optBaseMm, n_tubes: Math.min(optNtubes, 63), slot_b_mm: Math.min(optSlotB, 23.0),
                     u_val: uHtr, th_mm: thHtr, air_gap_mm: optGap,
                     heater_w: hw, fan_ms: Math.max(0.35, params.fan_ms)
                 });
@@ -1185,7 +1236,7 @@
                     heaterCand = {
                         lx_mm: 350, ly_mm: 270, u_val: uHtr, th_mm: thHtr, air_gap_mm: optGap,
                         h_lower_mm: optHlower, base_mm: optBaseMm, n_tubes: Math.min(optNtubes, 63),
-                        slot_b_mm: optSlotB, heater_w: hw, fan_ms: Math.max(0.35, params.fan_ms),
+                        slot_b_mm: Math.min(optSlotB, 23.0), heater_w: hw, fan_ms: Math.max(0.35, params.fan_ms),
                         yield_l: resH.got_yield
                     };
                     break;
@@ -1215,6 +1266,11 @@
             clampNotes.push(`Upper Front Height clamped to <= Upper Back Height (${h_back_mm} mm)`);
         }
 
+        const lxVal = clampValLogged('input-lx', 280, 3000, 350, 'Box Length Lx', clampNotes);
+        const lyVal = clampValLogged('input-ly', 200, 3000, 270, 'Box Depth Ly', clampNotes);
+        const effInsW = 216.0 * (lyVal / 270.0);
+        const slotWidthMax = Math.max(0.0, Math.floor(((lyVal - effInsW) / 2.0 - 4.0) * 10) / 10);
+
         const params = {
             mof_name: rawMofName,
             rh_night: clampValLogged('input-rh', 1, 100, 80, 'Night RH', clampNotes),
@@ -1222,17 +1278,18 @@
             t_day: t_d,
             g_max: clampValLogged('input-gmax', 0, 1400, 920, 'Peak Solar G_max', clampNotes),
             wind_ms: clampValLogged('input-windms', 0.0, 10.0, 0.5, 'Ambient Wind Speed', clampNotes),
-            lx_mm: clampValLogged('input-lx', 280, 3000, 350, 'Box Length Lx', clampNotes),
-            ly_mm: clampValLogged('input-ly', 200, 3000, 270, 'Box Depth Ly', clampNotes),
+            lx_mm: lxVal,
+            ly_mm: lyVal,
             h_back_mm: h_back_mm,
             h_front_mm: h_front_mm,
             h_lower_mm: clampValLogged('input-hlower', 120, 1000, 290, 'Lower Condenser Height h_lower', clampNotes),
             sep_mm: 10.0,
             ins_th_mm: clampValLogged('input-insth', 0, 30, 6.0, 'Joined Insulator Thickness', clampNotes),
+            ins_w_mm: 216.0,
             cond_offset_mm: clampValLogged('input-condoff', 10, 90, 30.0, 'Condenser Rack Offset', clampNotes),
             n_slots: 10,
             slot_a_mm: 40.0,
-            slot_b_mm: clampValLogged('input-slotb', 0, 35, 12.0, '5x2 Oval Slot Width', clampNotes),
+            slot_b_mm: clampValLogged('input-slotb', 0, slotWidthMax, Math.min(12.0, slotWidthMax), '5x2 Oval Slot Width', clampNotes),
             n_tubes: Math.round(clampValLogged('input-ntubes', 4, 120, 42, 'Al Condenser Tube Count', clampNotes)),
             tube_len_mm: 180.0,
             tube_od_mm: 10.0,
@@ -1260,7 +1317,7 @@
         document.getElementById('thick-val').innerText = params.th_mm + 'mm';
         updateLiveStackPreview();
 
-        // 1. Run v15.0 5-State Conserving Simulation
+        // 1. Run v16.1 Live 6-Store Conserving Simulation
         const sim = simulateCyclePhysics(params);
         const iterNum = testHistory.length + 1;
         const safeMofName = escapeHTML(params.mof_name);
@@ -1276,7 +1333,7 @@
         transientChartInstance.data.datasets[2].data = sim.chartYield;
         transientChartInstance.update();
 
-        // 2. Re-Simulated Candidate Optimizer
+        // 2. Live Re-Simulated Candidate Optimizer
         const stepThreshold = (params.rh_step_pct / 100.0) + 0.015;
         const isViable = sim.converged && sim.all_constraints_ok && (sim.got_yield >= 0.25) && (sim.min_rh_eff <= stepThreshold);
         const opt = solveJointCandidateOptimums(params, sim, stepThreshold, isViable);
@@ -1288,7 +1345,6 @@
         const htrLabel = hCand ? `350x270mm, U=${hCand.u_val}, ${hCand.heater_w}W HeaterFan (${hCand.yield_l.toFixed(3)} L/d)` : "No Feasible Heater <=120W";
         const optimumSummaryStr = `Passive Candidate: ${boxLabel} | Hybrid Candidate: ${htrLabel}`;
 
-        // 3. Diagnose All Bottlenecks
         const sol_MJ = sim.e_sol_j / 1e6;
         const htr_MJ = sim.e_htr_j / 1e6;
         const tot_in_MJ = sol_MJ + htr_MJ;
@@ -1304,19 +1360,19 @@
         } else if (!isViable) {
             if (!sim.stack_ok) failures.push(`Upper Rack Collision (Stack=${sim.stack_height_mm.toFixed(0)}mm > h_front limit ${sim.max_rack_mm.toFixed(0)}mm)`);
             if (!sim.plenum_ok) failures.push(`Plenum Pinch Collision (Joined Insulator ${params.ins_th_mm}mm leaves <4mm below ${params.cond_offset_mm}mm offset)`);
-            if (!sim.basin_ok) failures.push(`Lower Basin/Tube Collision (Drip gap ${sim.basin_drip_gap_mm}mm < 10mm minimum)`);
+            if (!sim.basin_ok) failures.push(`Lower Basin/Tube Collision (Drip gap ${sim.basin_drip_gap_mm.toFixed(1)}mm < 10mm minimum)`);
             if (!sim.tubes_fit_ok) failures.push(`Tube-Bank Packing Collision (${params.n_tubes} tubes > max ${sim.max_tubes_fit} at ${params.tube_pitch_mm}mm pitch)`);
-            if (!sim.base_defl_ok) failures.push(`Base Plate Deflection Exceeded (${sim.base_deflection_mm}mm > L/250 limit ${sim.max_allow_deflection_mm}mm)`);
-            if (sim.g_vap_total_m3s < 5e-5) failures.push(`Choked Vapour Path (Series slot/tube conductance g_vap=${sim.g_vap_total_m3s} m³/s restricts vapour transport)`);
+            if (!sim.slots_fit_ok) failures.push('Oval Slot Geometry Exceeds Available Wall Envelope');
+            if (!sim.base_defl_ok) failures.push(`Base Plate Deflection Exceeded (${sim.base_deflection_mm.toFixed(3)}mm > L/250 limit ${sim.max_allow_deflection_mm.toFixed(2)}mm)`);
+            if (sim.g_vap_total_m3s < 5e-5) failures.push(`Choked Vapour Path (Series slot/tube conductance g_vap=${sim.g_vap_total_m3s.toExponential(2)} m³/s restricts vapour transport)`);
             if (sim.w0 < params.w_max * 0.35) failures.push(`Vapor Starvation (Night RH ${params.rh_night}% near/below ${params.mof_name} step ${params.rh_step_pct}%)`);
             if (sim.min_rh_eff > stepThreshold) failures.push(`Psychrometric Desorption Deficit (T_peak=${sim.t_peak.toFixed(1)}°C vs T_cond=${sim.t_cond_peak.toFixed(1)}°C left min RH_eff=${(sim.min_rh_eff*100).toFixed(1)}% > ${params.rh_step_pct}% step)`);
             if (loss_MJ > tot_in_MJ * 0.45) failures.push(`High Upper Envelope Heat Loss (U=${params.u_val} W/m²K lost ${loss_MJ.toFixed(2)} MJ of ${tot_in_MJ.toFixed(2)} MJ total input)`);
             statusBadge = !sim.all_constraints_ok ? "INFEASIBLE (CAD Constraint)" : ("INFEASIBLE (" + (sim.w0 < params.w_max * 0.35 ? "Vapor Starved" : "Thermal/Transport Deficit") + ")");
         }
 
-        const failureText = failures.length > 0 ? failures.join(" | ") : `All 5 geometric/structural constraints, 5-state mass/energy conservation (WaterRes=${sim.water_balance_res_kg.toExponential(1)} kg, WholeSysEnergyRes=${sim.sys_res_abs_mj.toExponential(1)} MJ), and psychrometric thresholds satisfied (>= 0.25 L/day).`;
+        const failureText = failures.length > 0 ? failures.join(" | ") : `All 6 geometric/structural constraints, 6-store phase-change water ledger (WaterRes=${sim.water_balance_res_kg.toExponential(1)} kg, RK4WaterRes=${sim.water_balance_res_rk4_kg.toExponential(1)} kg), and psychrometric thresholds satisfied (>= 0.25 L/day).`;
 
-        // 4. Complete Delta Tracker
         function computeDeltaList(refRecord, labelPrefix) {
             let d = [];
             if (refRecord.mof_name !== params.mof_name) d.push(`MOF:${refRecord.mof_name}->${params.mof_name}`);
@@ -1350,7 +1406,7 @@
         let causalNarrative = "";
 
         if (testHistory.length === 0) {
-            causalNarrative = `Iter #1 AutoCAD Baseline (${params.mof_name}): Box=${params.lx_mm}x${params.ly_mm}mm, Joined Ins=${params.ins_th_mm}mm (UA_div=${sim.UA_div}W/K), 10x(40x${params.slot_b_mm}mm) Oval Slots + ${params.n_tubes}/${sim.max_tubes_fit} Al Tubes (g_vap=${sim.g_vap_total_m3s}m³/s, Sh=${sim.Sh_tube_int}), Base=${params.base_mm}mm. Released=${(sim.m_sorbent_released_kg*1000).toFixed(2)}g == AirVap=${(sim.dm_v_up_kg*1000).toFixed(2)}g + Film=${(sim.m_film_retained_kg*1000).toFixed(2)}g + Yield=${sim.got_yield.toFixed(4)}L.`;
+            causalNarrative = `Iter #1 AutoCAD Baseline (${params.mof_name}): Box=${params.lx_mm}x${params.ly_mm}mm, Joined Ins=${params.ins_th_mm}mm (UA_div=${sim.UA_div.toFixed(4)}W/K), 10x(40x${params.slot_b_mm}mm) Oval Slots + ${params.n_tubes}/${sim.max_tubes_fit} Al Tubes (g_vap=${sim.g_vap_total_m3s.toExponential(3)}m³/s), Base=${params.base_mm}mm. 6-Store Closure: Released=${(sim.m_sorbent_released_kg*1000).toFixed(2)}g == AirVap=${(sim.dm_v_up_kg*1000).toFixed(2)}g + WallCond=${(sim.m_up_cond_kg*1000).toFixed(2)}g + Film=${(sim.m_film_retained_kg*1000).toFixed(2)}g + Yield=${(sim.got_yield*1000).toFixed(2)}g.`;
         } else {
             const first = testHistory[0];
             const prev = testHistory[testHistory.length - 1];
@@ -1363,7 +1419,7 @@
         }
 
         const record = {
-            model_version: "v15.0-Mass-Energy-Conserving",
+            model_version: "v16.1-Clean-3File",
             testNumber: iterNum,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
             status: statusBadge,
@@ -1375,14 +1431,14 @@
             rh: params.rh_night, t_night: params.t_night, t_day: params.t_day, g_max: params.g_max, wind_ms: params.wind_ms,
             lx: params.lx_mm, ly: params.ly_mm,
             h_back_mm: params.h_back_mm, h_front_mm: params.h_front_mm, h_lower_mm: params.h_lower_mm,
-            ins_th_mm: params.ins_th_mm, cond_offset_mm: params.cond_offset_mm, plenum_mm: sim.plenum_clearance_mm,
-            ua_div_wk: sim.UA_div, slot_b_mm: params.slot_b_mm, a_slots_cm2: sim.A_slots_cm2,
-            g_vap_m3s: sim.g_vap_total_m3s, sh_tube: sim.Sh_tube_int,
+            ins_th_mm: params.ins_th_mm, cond_offset_mm: params.cond_offset_mm, plenum_mm: sim.plenum_clearance_mm.toFixed(1),
+            ua_div_wk: sim.UA_div.toFixed(4), slot_b_mm: params.slot_b_mm, a_slots_cm2: sim.A_slots_cm2.toFixed(2),
+            g_vap_m3s: sim.g_vap_total_m3s.toExponential(3), sh_tube: sim.Sh_tube_int.toFixed(3),
             n_tubes: params.n_tubes, max_tubes_fit: sim.max_tubes_fit,
-            a_tubes_int_m2: sim.A_tubes_int_m2, a_tubes_ext_m2: sim.A_tubes_ext_m2,
-            inlet_w_mm: params.inlet_w_mm, a_inlets_cm2: sim.A_inlets_cm2,
-            base_mm: params.base_mm, basin_mm: params.basin_mm, v_basin_L: sim.V_basin_max_L,
-            m_wet_kg: sim.m_wet_total_kg, base_defl_mm: sim.base_deflection_mm,
+            a_tubes_int_m2: sim.A_tubes_int_m2.toFixed(4), a_tubes_ext_m2: sim.A_tubes_ext_m2.toFixed(4),
+            inlet_w_mm: params.inlet_w_mm, a_inlets_cm2: sim.A_inlets_cm2.toFixed(1),
+            base_mm: params.base_mm, basin_mm: params.basin_mm, v_basin_L: sim.V_basin_max_L.toFixed(2),
+            m_wet_kg: sim.m_wet_total_kg.toFixed(2), base_defl_mm: sim.base_deflection_mm.toFixed(4),
             heater_w: params.heater_w, fan_ms: params.fan_ms,
             v_total_L: sim.V_total_L.toFixed(1), aperture_m2: sim.A_ap.toFixed(3),
             n_tr: params.n_tr, th_mm: params.th_mm, air_gap_mm: params.air_gap_mm,
@@ -1392,8 +1448,12 @@
             w_start: sim.w0.toFixed(3), w_end: sim.w_end.toFixed(3),
             m_released_kg: sim.m_sorbent_released_kg.toFixed(5),
             dm_v_up_kg: sim.dm_v_up_kg.toFixed(5),
+            m_up_cond_kg: sim.m_up_cond_kg.toFixed(5),
             m_film_kg: sim.m_film_retained_kg.toFixed(5),
+            clamp_kg: sim.clamp_kg.toExponential(2),
+            max_pre_clip_ratio: sim.max_pre_clip_ratio.toFixed(4),
             water_res_kg: sim.water_balance_res_kg.toExponential(2),
+            water_res_rk4_kg: sim.water_balance_res_rk4_kg.toExponential(2),
             t_peak: sim.t_peak.toFixed(1), t_peak_raw: sim.t_peak,
             t_cond_peak: sim.t_cond_peak.toFixed(1),
             min_rh_eff_pct: (sim.min_rh_eff * 100).toFixed(1),
@@ -1410,7 +1470,7 @@
         };
 
         testHistory.push(record);
-        localStorage.setItem('mof_manual_sim_v15_0', JSON.stringify(testHistory));
+        localStorage.setItem('mof_manual_sim_v16_1', JSON.stringify(testHistory));
 
         if (currentUser) {
             db.collection('user_predictions').doc(currentUser.uid).collection('saved_runs').add({
@@ -1433,7 +1493,7 @@
                 </div>
 
                 <div class="optimum-matrix">
-                    <h4>Re-Simulated Feasible Candidate Configurations (${params.rh_night}% RH, ${params.g_max} W/m&sup2;)</h4>
+                    <h4>Live Re-Simulated Feasible Candidate Configurations (${params.rh_night}% RH, ${params.g_max} W/m&sup2;)</h4>
                     <div class="opt-grid">
                         <div class="opt-item">
                             <span>Passive Candidate: <strong>${pCand ? pCand.lx_mm+'&times;'+pCand.ly_mm+'mm ('+pCand.yield_l.toFixed(3)+'L)' : 'Unmet'}</strong></span>
@@ -1454,12 +1514,12 @@
 
             <div>
                 <div class="breakdown-row">
-                    <span>5-Way Water Closure (<span class="math-var">&Delta;m<sub>sorb</sub> = &Delta;m<sub>v,up</sub> + m<sub>film</sub> + Y</span>):</span>
-                    <strong style="color:var(--cyan);">${(sim.m_sorbent_released_kg*1000).toFixed(1)}g = ${(sim.dm_v_up_kg*1000).toFixed(2)}g + ${(sim.m_film_retained_kg*1000).toFixed(1)}g + ${(sim.got_yield*1000).toFixed(1)}g (<span class="math-var">&varepsilon;<sub>w</sub></span>=${sim.water_balance_res_kg.toExponential(1)}kg)</strong>
+                    <span>6-Store Water Closure (<span class="math-var">&Delta;m<sub>sorb</sub> = &Delta;m<sub>v</sub> + m<sub>up,c</sub> + m<sub>film</sub> + Y</span>):</span>
+                    <strong style="color:var(--cyan);">${(sim.m_sorbent_released_kg*1000).toFixed(1)}g = ${(sim.dm_v_up_kg*1000).toFixed(2)}g + ${(sim.m_up_cond_kg*1000).toFixed(2)}g + ${(sim.m_film_retained_kg*1000).toFixed(1)}g + ${(sim.got_yield*1000).toFixed(1)}g (<span class="math-var">&varepsilon;<sub>w</sub></span>=${sim.water_balance_res_kg.toExponential(1)}kg)</strong>
                 </div>
                 <div class="breakdown-row">
-                    <span>Series Vapour (<span class="math-var">g<sub>vap</sub></span>=${sim.g_vap_total_m3s}m&sup3;/s, <span class="math-var">Sh<sub>Di</sub></span>=${sim.Sh_tube_int}) &amp; Base (${params.base_mm}mm):</span>
-                    <strong style="color:var(--primary);"><span class="math-var">UA<sub>low</sub></span>=${sim.UA_lower} W/K | Prelim &delta;=${sim.base_deflection_mm} mm</strong>
+                    <span>Series Vapour (<span class="math-var">g<sub>vap</sub></span>=${sim.g_vap_total_m3s.toExponential(2)}m&sup3;/s, <span class="math-var">Sh<sub>Di</sub></span>=${sim.Sh_tube_int.toFixed(2)}) &amp; Base (${params.base_mm}mm):</span>
+                    <strong style="color:var(--primary);"><span class="math-var">UA<sub>low</sub></span>=${sim.UA_lower.toFixed(2)} W/K | Prelim &delta;=${sim.base_deflection_mm.toFixed(4)} mm</strong>
                 </div>
                 <div class="breakdown-row">
                     <span>Whole-System Energy (Sol+Htr | UpLoss | LowRej | SysRes):</span>
@@ -1538,7 +1598,7 @@
         exportBtn.disabled = false;
         let html = "";
         testHistory.forEach(t => {
-            const isPass = t.status.includes("FEASIBLE");
+            const isPass = t.status.startsWith("FEASIBLE");
             const badgeHTML = isPass ? `<span class="badge-pass">${escapeHTML(t.status)}</span>` : `<span class="badge-fail">${escapeHTML(t.status)}</span>`;
             
             const formatTag = (d) => {
@@ -1561,7 +1621,7 @@
                     </td>
                     <td>
                         <strong style="color:var(--purple);">RH: ${t.rh}% | <span class="math-var">G<sub>max</sub></span>: ${t.g_max} W/m&sup2; | Box: ${t.lx}&times;${t.ly}mm</strong><br>
-                        <span style="font-size:9.5px;">Ins: ${t.ins_th_mm ?? 6}mm (<span class="math-var">UA<sub>div</sub></span>=${t.ua_div_wk ?? 0.206}) | Ovals: 10&times;(40&times;${t.slot_b_mm ?? 12}mm)<br>Cond: ${t.n_tubes ?? 42}/${t.max_tubes_fit ?? 63} Al Tubes (<span class="math-var">g<sub>vap</sub></span>=${t.g_vap_m3s ?? 0.0001}m&sup3;/s, <span class="math-var">Sh</span>=${t.sh_tube ?? 3.67})<br>Base: <strong>${t.base_mm ?? 20}mm</strong> (Prelim &delta;=${t.base_defl_mm ?? 0.06}mm) | HtrFan: ${t.heater_w ?? 0}W</span>
+                        <span style="font-size:9.5px;">Ins: ${t.ins_th_mm ?? 6}mm (<span class="math-var">UA<sub>div</sub></span>=${t.ua_div_wk ?? 0.206}) | Ovals: 10&times;(40&times;${t.slot_b_mm ?? 12}mm)<br>Cond: ${t.n_tubes ?? 42}/${t.max_tubes_fit ?? 63} Al Tubes (<span class="math-var">g<sub>vap</sub></span>=${t.g_vap_m3s}m&sup3;/s, <span class="math-var">Sh</span>=${t.sh_tube})<br>Base: <strong>${t.base_mm ?? 20}mm</strong> (Prelim &delta;=${t.base_defl_mm}mm) | HtrFan: ${t.heater_w ?? 0}W</span>
                     </td>
                     <td style="max-width:190px;">
                         <div style="margin-bottom:3px;"><strong style="font-size:9.5px; color:var(--text);">vs Prev:</strong> ${prevTags}</div>
@@ -1569,7 +1629,7 @@
                     </td>
                     <td>
                         <strong style="font-size:12.5px; color:${isPass ? 'var(--secondary)' : 'var(--danger)'};">${t.yield_L} L/day</strong><br>
-                        <span style="font-size:9.5px;">Rel: ${t.m_released_kg}kg | Film: ${t.m_film_kg}kg | <span class="math-var">&varepsilon;<sub>w</sub></span>: ${t.water_res_kg}kg<br><span class="math-var">T<sub>c</sub></span>: ${t.t_peak}&deg;C | <span class="math-var">T<sub>cond</sub></span>: ${t.t_cond_peak}&deg;C | <span class="math-var">&varepsilon;<sub>E</sub></span>: ${t.sys_energy_res_MJ}MJ</span>
+                        <span style="font-size:9.5px;">Rel: ${t.m_released_kg}kg | WallC: ${t.m_up_cond_kg ?? '0.00000'}kg | Film: ${t.m_film_kg}kg<br><span class="math-var">&varepsilon;<sub>w</sub></span>: ${t.water_res_kg}kg | <span class="math-var">T<sub>c</sub></span>: ${t.t_peak}&deg;C | <span class="math-var">T<sub>cond</sub></span>: ${t.t_cond_peak}&deg;C</span>
                     </td>
                     <td style="max-width:260px; font-size:10px; line-height:1.35;">
                         <div style="color:var(--primary); margin-bottom:3px;"><strong>Candidates:</strong> ${escapeHTML(t.optimumForSet)}</div>
@@ -1583,11 +1643,11 @@
 
     function clearTestHistory() {
         testHistory = [];
-        localStorage.removeItem('mof_manual_sim_v15_0');
+        localStorage.removeItem('mof_manual_sim_v16_1');
         renderTestTable();
     }
 
-    // --- 6. BINARY BLOB CSV REPORT GENERATOR ---
+    // --- 6. BINARY BLOB CSV REPORT GENERATOR (WITH FULL 6-STORE LEDGER COLUMNS) ---
     function csvEscape(val) {
         if (val === null || val === undefined) return '""';
         const str = String(val).replace(/"/g, '""');
@@ -1614,7 +1674,9 @@
             "Tray_Count_N", "Tray_Thickness_mm", "Inter_Tray_Air_Gap_mm", "Rack_Stack_Height_mm", "Max_Rack_Clearance_mm",
             "Envelope_U_Value_Wm2K", "Solar_Concentrator_x", "Sorbent_Mass_kg", "Diffusion_Time_Constant_s",
             "Initial_Uptake_w0_gg", "Final_Uptake_wend_gg", "Sorbent_Water_Released_kg", "Upper_Air_Vapour_Change_kg",
-            "Tube_Film_Retained_kg", "Water_Mass_Balance_Residual_kg", "Peak_Upper_Chamber_Temp_C", "Peak_Lower_Condenser_Temp_C",
+            "Upper_Wall_Condensate_kg", "Tube_Film_Retained_kg", "Clamp_Mass_Error_kg", "Max_Pre_Clip_Sat_Ratio",
+            "Water_Mass_Balance_Residual_kg", "RK4_Water_Balance_Residual_kg",
+            "Peak_Upper_Chamber_Temp_C", "Peak_Lower_Condenser_Temp_C",
             "Min_Effective_RH_pct", "Solar_Gain_MJ", "Heater_Input_MJ", "Total_Energy_Input_MJ",
             "Upper_Envelope_Loss_MJ", "Lower_Condenser_Rejected_MJ", "Whole_System_Energy_Residual_MJ",
             "RK4_vs_Euler_Drift_L", "Simulated_Water_Yield_L_day", "Deltas_vs_Previous_Iteration",
@@ -1623,7 +1685,7 @@
 
         const rows = testHistory.map(t => [
             csvEscape(`Iteration #${t.testNumber}`),
-            csvEscape(t.model_version || "v15.0-Mass-Energy-Conserving"),
+            csvEscape(t.model_version || "v16.1-Clean-3File"),
             csvEscape(t.timestamp),
             csvEscape(t.status),
             t.converged ?? true,
@@ -1648,18 +1710,18 @@
             t.ua_div_wk ?? 0.2060,
             t.slot_b_mm ?? 12.0,
             t.a_slots_cm2 ?? 37.70,
-            t.g_vap_m3s ?? 0.000144,
-            t.sh_tube ?? 3.671,
+            t.g_vap_m3s,
+            t.sh_tube,
             t.n_tubes ?? 42,
             t.max_tubes_fit ?? 63,
-            t.a_tubes_int_m2 ?? 0.1425,
-            t.a_tubes_ext_m2 ?? 0.2375,
+            t.a_tubes_int_m2,
+            t.a_tubes_ext_m2,
             t.inlet_w_mm ?? 70.0,
             t.base_mm ?? 20.0,
             t.basin_mm ?? 60.0,
-            t.v_basin_L ?? 4.54,
-            t.m_wet_kg ?? 16.6,
-            t.base_defl_mm ?? 0.0645,
+            t.v_basin_L,
+            t.m_wet_kg,
+            t.base_defl_mm,
             t.heater_w ?? 0.0,
             t.fan_ms ?? 0.0,
             t.n_tr ?? 10,
@@ -1673,20 +1735,24 @@
             t.tau_s,
             t.w_start,
             t.w_end,
-            t.m_released_kg ?? "0.00000",
-            t.dm_v_up_kg ?? "0.00000",
-            t.m_film_kg ?? "0.00000",
-            t.water_res_kg ?? "0.00e+00",
+            t.m_released_kg,
+            t.dm_v_up_kg,
+            t.m_up_cond_kg ?? "0.00000",
+            t.m_film_kg,
+            t.clamp_kg ?? "0.00e+00",
+            t.max_pre_clip_ratio ?? "0.8000",
+            t.water_res_kg,
+            t.water_res_rk4_kg ?? "0.00e+00",
             t.t_peak,
-            t.t_cond_peak ?? 26.0,
+            t.t_cond_peak,
             t.min_rh_eff_pct,
             t.solar_MJ,
             t.heater_MJ ?? "0.00",
             t.total_in_MJ ?? t.solar_MJ,
             t.loss_MJ,
-            t.cond_rej_MJ ?? "0.20",
-            t.sys_energy_res_MJ ?? "0.00e+00",
-            t.rk4_drift_L ?? "0.000001",
+            t.cond_rej_MJ,
+            t.sys_energy_res_MJ,
+            t.rk4_drift_L,
             t.yield_L,
             csvEscape((t.deltasVsPrev || []).join('; ')),
             csvEscape((t.deltasVsBase || []).join('; ')),
@@ -1701,7 +1767,7 @@
 
         const link = document.createElement("a");
         link.setAttribute("href", url);
-        link.setAttribute("download", `MOF_Harvester_Conserving_v15_0_Report_${new Date().toISOString().slice(0,10)}.csv`);
+        link.setAttribute("download", `MOF_Harvester_Clean_v16_1_Report_${new Date().toISOString().slice(0,10)}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
